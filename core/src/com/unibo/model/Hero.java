@@ -11,6 +11,7 @@ public class Hero extends Character {
 
     /**
      * Constructor for the Hero.
+     * 
      * @param name
      * @param maxHp
      * @param speed
@@ -27,5 +28,13 @@ public class Hero extends Character {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return the description of the hero.
+     */
+    public String toString() {
+        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
+        return msg;
     }
 }
