@@ -147,7 +147,7 @@ public abstract class Character {
     }
 
     /**
-     * Hits an enemy (if in range)
+     * Hits an enemy (if in range).
      * 
      * @param enemy
      */
@@ -155,6 +155,22 @@ public abstract class Character {
         if (canHit(enemy) && !isDead()) {
             enemy.setCurrentHp(enemy.getCurrentHp() - this.getCurrentWeapon().getDamage());
         }
+    }
+
+    /**
+     * If in range, hits an enemy on the level.
+     * @param lvl
+     * @return true if an enemy was hit
+     */
+    public Boolean hitEnemyFromLevel(final Level lvl) {
+        if (!this.isDead()) {
+            for (Character e : lvl.getEnemies()) {
+                if (this.canHit(e)) {
+                    e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
+                }
+            }
+        }
+        return false;
     }
 
     // Inventory and Item related
@@ -168,7 +184,7 @@ public abstract class Character {
     }
 
     /**
-     * Uses the specified item (if present in the inventory)
+     * Uses the specified item (if present in the inventory).
      * 
      * @param item
      */
@@ -177,6 +193,34 @@ public abstract class Character {
             item.use(this);
             this.inv.removeItem(item);
         }
+    }
+
+    /**
+     * If in range, picks up an item from the level.
+     * 
+     * @param lvl
+     * @return true if an item was picked up.
+     */
+    public Boolean pickUpfromLevel(final Level lvl) {
+        if (!this.isDead()) {
+            List<Item> items = new LinkedList<>();
+            items.addAll(lvl.getConsumables());
+            items.addAll(lvl.getWeapons());
+            for (Item item : items) {
+                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) <= this.speed
+                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) <= this.speed) {
+                    if (item instanceof Weapon) {
+                        weapons.add((Weapon) item);
+                        lvl.removeWeapon((Weapon) item);
+                    } else {
+                        inv.addItem(item);
+                        lvl.removeConsumable((ConsumableItem) item);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -227,7 +271,7 @@ public abstract class Character {
     }
 
     /**
-     * Sets the character to the specified coordinates
+     * Sets the character to the specified coordinates.
      * 
      * @param xCoord
      * @param yCoord
@@ -265,5 +309,13 @@ public abstract class Character {
      */
     public void moveLeft() {
         this.setPos(this.pos.getxCoord() - this.speed, this.pos.getyCoord());
+    }
+
+    /**
+     * @return the description of the hero.
+     */
+    public String toString() {
+        String msg = "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
+        return msg;
     }
 }
