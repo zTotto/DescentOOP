@@ -20,7 +20,6 @@
 
 	<module name="SuppressionFilter">
 		<property name="file" value="${config_loc}/suppressions.xml" />
-		<property name="optional" value="false" />
 	</module>
 
 	<!-- Checks whether files end with a new line. -->
@@ -82,14 +81,14 @@
 		<!-- Checks for missing Javadoc comments. -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
 		<module name="MissingJavadocMethod">
-			<property name="scope" value="protected" />
+			<property name="accessModifiers" value="protected" />
 		</module>
 		<module name="MissingJavadocType">
 			<property name="severity" value="error" />
-			<property name="scope" value="protected" />
+			<property name="accessModifiers" value="protected" />
 		</module>
 		<module name="JavadocVariable">
-			<property name="scope" value="protected" />
+			<property name="accessModifiers" value="protected" />
 		</module>
 
 		<!-- Checks for well-formed Javadoc comments. -->
