@@ -53,4 +53,13 @@ public class Weapon extends Item {
     public void applyRangeMod(final int rangeMod) {
         this.range += rangeMod;
     }
+
+    /**
+     * @return the weapon description
+     */
+    public String toString() {
+        String msg = "";
+        msg += this.getName() + ", Damage: " + this.getDamage() + ", Range: " + this.getRange();
+        return msg;
+    }
 }
