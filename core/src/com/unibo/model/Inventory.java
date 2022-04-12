@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.unibo.util.Pair;
 
+/**
+ * Class to model a character's inventory.
+ */
 public class Inventory {
 
     private final List<Pair<Item, Integer>> inv = new LinkedList<>();
@@ -21,7 +24,7 @@ public class Inventory {
      * 
      * @param item to add to the inventory
      */
-    public Inventory(Pair<Item, Integer>... item) {
+    public Inventory(final Pair<Item, Integer>... item) {
         for (final Pair<Item, Integer> i : item) {
             inv.add(i);
         }
@@ -102,6 +105,9 @@ public class Inventory {
         return -1;
     }
 
+    /**
+     * @return the content of the inventory.
+     */
     public String toString() {
         if (inv.isEmpty()) {
             return "No Inventory!";

@@ -4,7 +4,7 @@ package com.unibo.model;
  * 
  * Class to model a consumable, like a health potion or damage buff potion.
  */
-public abstract class ConsumableItem extends Item{
+public abstract class ConsumableItem extends Item {
 
     private final double modifier;
 

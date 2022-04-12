@@ -65,6 +65,11 @@ public class Pair<X, Y> {
         this.second = second;
     }
 
+    /**
+     * A function that checks whether the item is contained in the Pair.
+     * @param obj
+     * @return true if it's contained.
+     */
     public Boolean contains(final Object obj) {
         if (this.first.equals(obj) || this.second.equals(obj)) {
             return true;

@@ -11,12 +11,16 @@ public class Position {
     private int x;
     private int y;
 
+    /**
+     * Empty constructor for a position.
+     */
     public Position() {
-        //Empty Constructor
+        // Empty Constructor
     }
 
     /**
      * Constructor with x and y coordinates.
+     * 
      * @param x coordinate
      * @param y coordinate
      */
@@ -43,6 +47,7 @@ public class Position {
 
     /**
      * Sets the y coordinate to the specified one.
+     * 
      * @param yCoord
      */
     public void setyCoord(final int yCoord) {
@@ -51,6 +56,7 @@ public class Position {
 
     /**
      * Sets the x coordinate to the specified one.
+     * 
      * @param xCoord
      */
     public void setxCoord(final int xCoord) {
@@ -66,21 +72,28 @@ public class Position {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(x, y);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public final boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final Position other = (Position) obj;
         return x == other.x && y == other.y;
     }
+
+    /**
+     * @return the position as a string.
+     */
     public String toString() {
         return "X: " + x + ", Y: " + y;
     }
