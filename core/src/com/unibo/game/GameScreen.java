@@ -25,7 +25,6 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private float elapsedTime;
-    private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64,1016));
     

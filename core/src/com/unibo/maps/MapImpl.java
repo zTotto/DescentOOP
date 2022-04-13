@@ -1,5 +1,7 @@
 package com.unibo.maps;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -16,6 +18,7 @@ public class MapImpl implements Map {
 	private final int height;
 	private final int width;
 	private final Position startingPosition;
+	private final List<Pair<Item, Position>> itemList = new ArrayList<Pair<Item, Position>>();
 	
 	
 	public MapImpl(final String path,final Position startingPos) {
@@ -31,7 +34,7 @@ public class MapImpl implements Map {
 	
 	@Override
 	public boolean validMovement(Character character, Direction dir) {
-		final Pair<Integer, Integer> pair = directionProjection(character, dir);
+		final Pair<Integer, Integer> pair = projectedMovement(character, dir);
 		int convertedX = pair.getFirst();
 		int convertedY = pair.getSecond();
 		if (isOutOfBounds(pair)) {
@@ -52,8 +55,7 @@ public class MapImpl implements Map {
 
 	@Override
 	public void addItem(Item item, Position pos) {
-		// TODO Auto-generated method stub
-		
+		itemList.add(new Pair<>(item, pos));
 	}
 
 	@Override
@@ -71,13 +73,18 @@ public class MapImpl implements Map {
 	public TiledMapTileLayer getLayer(int layerNumber) {
 		return (TiledMapTileLayer) map.getLayers().get(layerNumber);
 	}
+	
+	@Override
+	public TiledMapTileLayer getLayer(String path) {
+		return (TiledMapTileLayer) map.getLayers().get(path);
+	}
 
 	@Override
 	public TiledMapTileLayer getCollisionLayer() {
 		return collisionLayer;
 	}
 	
-	private Pair<Integer, Integer> directionProjection (final Character character, final Direction Direction){
+	private Pair<Integer, Integer> projectedMovement (final Character character, final Direction Direction){
 		Pair<Integer, Integer> pair;
 		int oldX = character.getPos().getxCoord();
 		int oldY = character.getPos().getyCoord();
@@ -105,4 +112,7 @@ public class MapImpl implements Map {
 	public TiledMap getTiledMap() {
 		return this.map;
 	}
+
+
+	
 }
