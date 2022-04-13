@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
@@ -25,12 +24,16 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private HeroView heroView;
-    private float elapsedTime;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
     private final Music soundtrack;
+    private float elapsedTime;
     private float attackTime;
 
+    /**
+     * Main game scene.
+     * @param game
+     */
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
@@ -117,4 +120,10 @@ public class GameScreen implements Screen {
     public void dispose() {
     }
 
+    /**
+     * @return the main game scene.
+     */
+    public GameScreen getGameScreen() {
+        return this;
+    }
 }
