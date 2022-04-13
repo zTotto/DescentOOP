@@ -24,6 +24,9 @@ public class HeroView {
     private Animation<TextureRegion> animationDown;
     private Animation<TextureRegion> animationAttack;
     private Direction dir = Direction.STILL;
+    /**
+     * Field to check whether this Hero is attacking.
+     */
     public Boolean isAttacking = false;
 
     /**

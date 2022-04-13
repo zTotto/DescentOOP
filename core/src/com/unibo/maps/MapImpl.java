@@ -18,32 +18,37 @@ public class MapImpl implements Map {
 
     private final TiledMapTileLayer collisionLayer;
     private final TiledMap map;
-    private int TILE_SIZE;
+    private final int tileSize;
     private final int height;
     private final int width;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<Pair<Item, Position>>();
 
+    /**
+     * Constructor for a map.
+     * @param path of the map
+     * @param startingPos
+     */
     public MapImpl(final String path, final Position startingPos) {
         super();
         this.map = new TmxMapLoader().load(path);
         this.collisionLayer = (TiledMapTileLayer) this.map.getLayers().get("Collision"); // by convention the collision
                                                                                          // layer is layer 0
         this.startingPosition = startingPos;
-        TILE_SIZE = collisionLayer.getTileHeight();
+        tileSize = collisionLayer.getTileHeight();
         height = collisionLayer.getHeight();
         width = collisionLayer.getWidth();
     }
 
     @Override
-    public boolean validMovement(final Character character, Direction dir) {
+    public boolean validMovement(final Character character, final Direction dir) {
         final Pair<Integer, Integer> pair = projectedMovement(character, dir);
         int convertedX = pair.getFirst();
         int convertedY = pair.getSecond();
         if (isOutOfBounds(pair)) {
             return false;
         } else {
-            return collisionLayer.getCell(convertedX / TILE_SIZE, convertedY / TILE_SIZE).getTile().getProperties()
+            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile().getProperties()
                     .containsKey("walkable");
         }
     }
@@ -51,11 +56,11 @@ public class MapImpl implements Map {
     private boolean isOutOfBounds(final Pair<Integer, Integer> pair) {
         int x = pair.getFirst();
         int y = pair.getSecond();
-        return (x >= width * TILE_SIZE || x <= 0 || y >= height * TILE_SIZE || y <= 0);
+        return (x >= width * tileSize || x <= 0 || y >= height * tileSize || y <= 0);
     }
 
     @Override
-    public void addItem(final Item item, Position pos) {
+    public void addItem(final Item item, final Position pos) {
         itemList.add(new Pair<>(item, pos));
     }
 
@@ -106,5 +111,4 @@ public class MapImpl implements Map {
     public TiledMap getTiledMap() {
         return this.map;
     }
-
 }
