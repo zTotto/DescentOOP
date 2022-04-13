@@ -29,7 +29,9 @@ public class Level {
      */
     public void addConsumables(final ConsumableItem... items) {
         for (ConsumableItem i : items) {
-            consumables.add(i);
+            if (i.getPos() != null) {
+                consumables.add(i);
+            }
         }
     }
 
@@ -51,7 +53,9 @@ public class Level {
      */
     public void addWeapons(final Weapon... weapons) {
         for (Weapon w : weapons) {
-            this.weapons.add(w);
+            if (w.getPos() != null) {
+                this.weapons.add(w);
+            }
         }
     }
 

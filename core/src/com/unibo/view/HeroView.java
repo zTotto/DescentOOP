@@ -24,6 +24,10 @@ public class HeroView {
     private Animation<TextureRegion> animationDown;
     private Animation<TextureRegion> animationAttack;
     private Direction dir = Direction.STILL;
+    /**
+     * Field to check whether this Hero is attacking.
+     */
+    public Boolean isAttacking = false;
 
     /**
      * Constructor for this class.
@@ -125,6 +129,14 @@ public class HeroView {
      */
     public TextureRegion getAttackText(final float time) {
         return animationAttack.getKeyFrame(time, true);
+    }
+
+    /**
+     * 
+     * @return the attack animation 
+     */
+    public Animation<TextureRegion> getAttackAnim() {
+        return animationAttack;
     }
 
     /**

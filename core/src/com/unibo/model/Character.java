@@ -24,7 +24,13 @@ public abstract class Character {
     private final Inventory inv;
     private Map currentMap;
     private Sound attackSound;
- 	Sound defaultSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Morgan che succede.mp3"));   //to fix, it attack sound needs to be in a constructor or something similar
+    private Sound defaultSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Morgan che succede.mp3")); // to fix, it
+                                                                                                        // attack sound
+                                                                                                        // needs to be
+                                                                                                        // in a
+                                                                                                        // constructor
+                                                                                                        // or something
+                                                                                                        // similar
 
     /**
      * Constructor for a character.
@@ -166,6 +172,7 @@ public abstract class Character {
 
     /**
      * If in range, hits an enemy on the level.
+     * 
      * @param lvl
      * @return true if an enemy was hit
      */
@@ -326,23 +333,38 @@ public abstract class Character {
         return msg;
     }
 
-	public Map getCurrentMap() {
-		return currentMap;
-	}
-
-	public void setCurrentMap(Map currentMap) {
-		this.currentMap = currentMap;
-	}
-    
-    public void setAttackSound(String path) {
-    	attackSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Hadouken.mp3"));
+    /**
+     * @return the current map
+     */
+    public Map getCurrentMap() {
+        return currentMap;
     }
-    
+
+    /**
+     * Sets a map as current.
+     * 
+     * @param map
+     */
+    public void setCurrentMap(final Map map) {
+        this.currentMap = map;
+    }
+
+    /**
+     * Sets a sound as the attack sound.
+     * 
+     * @param path of the sound
+     */
+    public void setAttackSound(final String path) {
+        attackSound = Gdx.audio.newSound(Gdx.files.internal(path));
+    }
+
+    /**
+     * @return the attack sound
+     */
     public Sound getAttackSound() {
-		if (attackSound != null) {
-    		return attackSound;
-    	}
-    	
-    	else return defaultSound;
+        if (attackSound != null) {
+            return attackSound;
+        }
+        return defaultSound;
     }
 }
