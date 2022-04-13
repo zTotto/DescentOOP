@@ -20,7 +20,7 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
-    final Descent game;
+    private final Descent game;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -29,12 +29,12 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
     private final Music soundtrack;
+    private float attackTime;
 
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
-        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3"); // to add: some sort of timer so that they don't
-                                                                        // overlap
+        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
@@ -63,7 +63,13 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
+            heroView.isAttacking = true;
+            heroView.getHero().getAttackSound().play();
+            heroView.attack();
+        }
+        if (heroView.isAttacking) {
+            attackTime += Gdx.graphics.getDeltaTime();
             batch.draw(heroView.getAttackText(elapsedTime),
                     heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
@@ -72,13 +78,15 @@ public class GameScreen implements Screen {
                     heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         }
+        if (heroView.isAttacking) {
+            if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
+                heroView.isAttacking = false;
+                attackTime = 0;
+            }
+        }
         batch.end();
 
         heroView.move();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            heroView.getHero().getAttackSound().play();
-            heroView.attack();
-        }
     }
 
     @Override
