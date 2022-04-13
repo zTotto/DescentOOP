@@ -3,6 +3,7 @@ package com.unibo.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,13 +26,18 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private float elapsedTime;
-    private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
+    private final Music soundtrack;
 
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
+        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");    // to add: some sort of timer so that they don't overlap
+        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));       
+        soundtrack.setLooping(true);
+        soundtrack.play();
+        soundtrack.setVolume(0.4f);
         heroView.getHero().setCurrentMap(mappa);
         heroView.getHero().setPos(heroView.getHero().getCurrentMap().getStartingPosition());
         camera = new OrthographicCamera();
@@ -58,6 +64,7 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        	heroView.getHero().getAttackSound().play();
             batch.draw(heroView.getAttackText(elapsedTime), heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         } else {

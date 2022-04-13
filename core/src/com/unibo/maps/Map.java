@@ -21,6 +21,8 @@ public interface Map {
 	
 	TiledMapTileLayer getLayer(int layerNumber);
 	
+	TiledMapTileLayer getLayer(String path);
+	
 	TiledMapTileLayer getCollisionLayer();
 	
 	TiledMap getTiledMap();
