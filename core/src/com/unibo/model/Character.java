@@ -3,6 +3,8 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.unibo.maps.Map;
 
 /**
@@ -21,6 +23,8 @@ public abstract class Character {
     private Weapon currentWeapon;
     private final Inventory inv;
     private Map currentMap;
+    private Sound attackSound;
+ 	Sound defaultSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Morgan che succede.mp3"));   //to fix, it attack sound needs to be in a constructor or something similar
 
     /**
      * Constructor for a character.
@@ -330,5 +334,15 @@ public abstract class Character {
 		this.currentMap = currentMap;
 	}
     
+    public void setAttackSound(String path) {
+    	attackSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Hadouken.mp3"));
+    }
     
+    public Sound getAttackSound() {
+		if (attackSound != null) {
+    		return attackSound;
+    	}
+    	
+    	else return defaultSound;
+    }
 }

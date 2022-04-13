@@ -34,7 +34,8 @@ public class GameScreen implements Screen {
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
-        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
+        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");    // to add: some sort of timer so that they don't overlap
+        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));       
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
@@ -64,6 +65,7 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        	heroView.getHero().getAttackSound().play();
             batch.draw(heroView.getAttackText(elapsedTime), heroView.getHero().getPos().getxCoord(),
                     heroView.getHero().getPos().getyCoord());
         } else {
