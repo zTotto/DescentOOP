@@ -27,8 +27,7 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64,1016));
-    
+    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
 
     public GameScreen(final Descent game) {
         this.game = game;
@@ -37,7 +36,6 @@ public class GameScreen implements Screen {
         heroView.getHero().setPos(heroView.getHero().getCurrentMap().getStartingPosition());
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
-
         batch = new SpriteBatch();
     }
 
@@ -53,16 +51,17 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.setView(camera);
-		renderer.render();
-        camera.position.set(heroView.getHero().getPos().getxCoord(), heroView.getHero().getPos().getyCoord(), 0);
+        renderer.render();
+        camera.position.set(heroView.getHero().getPos().getxCoord(),
+                heroView.getHero().getPos().getyCoord(), 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            batch.draw(heroView.getAttackText(elapsedTime), heroView.getHero().getPos().getxCoord(),
+            batch.draw(heroView.getAttackText(elapsedTime), heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         } else {
-            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroView.getHero().getPos().getxCoord(),
+            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         }
         batch.end();

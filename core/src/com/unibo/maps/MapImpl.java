@@ -9,100 +9,99 @@ import com.unibo.model.Position;
 import com.unibo.util.Direction;
 import com.unibo.util.Pair;
 
+/**
+ * Implementation of the map interface.
+ */
 public class MapImpl implements Map {
-	private final TiledMapTileLayer collisionLayer;
-	private final TiledMap map;
-	private int TILE_SIZE; 
-	private final int height;
-	private final int width;
-	private final Position startingPosition;
-	
-	
-	public MapImpl(final String path,final Position startingPos) {
-			super();
-			this.map = new TmxMapLoader().load(path);
-			this.collisionLayer = (TiledMapTileLayer) this.map.getLayers().get("Collision"); // by convention the collision layer is layer 0
-			this.startingPosition = startingPos;
-			TILE_SIZE = collisionLayer.getTileHeight();
-			height = collisionLayer.getHeight();
-			width = collisionLayer.getWidth();
-		}
-	
-	
-	@Override
-	public boolean validMovement(Character character, Direction dir) {
-		final Pair<Integer, Integer> pair = coordinatesConverter(character, dir);
-		int convertedX = pair.getFirst();
-		int convertedY = pair.getSecond();
-		if (isOutOfBounds(pair)) {
-			return false;
-		}
-		else {
-			return collisionLayer.getCell(convertedX/TILE_SIZE, convertedY/TILE_SIZE).
-				   getTile().getProperties().containsKey("walkable");	
-		}
-	}
+    private final TiledMapTileLayer collisionLayer;
+    private final TiledMap map;
+    private int TILE_SIZE;
+    private final int height;
+    private final int width;
+    private final Position startingPosition;
 
-	private boolean isOutOfBounds(Pair<Integer, Integer> pair) {
-		int x = pair.getFirst();
-		int y = pair.getSecond();
-		return (x >= width * TILE_SIZE || x <= 0 || y >= height*TILE_SIZE || y <= 0);
-	}
+    public MapImpl(final String path, final Position startingPos) {
+        super();
+        this.map = new TmxMapLoader().load(path);
+        this.collisionLayer = (TiledMapTileLayer) this.map.getLayers().get("Collision"); // by convention the collision
+                                                                                         // layer is layer 0
+        this.startingPosition = startingPos;
+        TILE_SIZE = collisionLayer.getTileHeight();
+        height = collisionLayer.getHeight();
+        width = collisionLayer.getWidth();
+    }
 
+    @Override
+    public boolean validMovement(Character character, Direction dir) {
+        final Pair<Integer, Integer> pair = coordinatesConverter(character, dir);
+        int convertedX = pair.getFirst();
+        int convertedY = pair.getSecond();
+        if (isOutOfBounds(pair)) {
+            return false;
+        } else {
+            return collisionLayer.getCell(convertedX / TILE_SIZE, convertedY / TILE_SIZE).getTile().getProperties()
+                    .containsKey("walkable");
+        }
+    }
 
-	@Override
-	public void addItem(Item item, Position pos) {
-		// TODO Auto-generated method stub
-		
-	}
+    private boolean isOutOfBounds(Pair<Integer, Integer> pair) {
+        int x = pair.getFirst();
+        int y = pair.getSecond();
+        return (x >= width * TILE_SIZE || x <= 0 || y >= height * TILE_SIZE || y <= 0);
+    }
 
-	@Override
-	public void addItem(Item item) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void addItem(Item item, Position pos) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public Position getStartingPosition() {
-		return startingPosition;
-	}
+    }
 
-	@Override
-	public TiledMapTileLayer getLayer(int layerNumber) {
-		return (TiledMapTileLayer) map.getLayers().get(layerNumber);
-	}
+    @Override
+    public void addItem(Item item) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public TiledMapTileLayer getCollisionLayer() {
-		return collisionLayer;
-	}
-	
-	private Pair<Integer, Integer> coordinatesConverter (final Character character, final Direction Direction){
-		Pair<Integer, Integer> pair;
-		int oldX = character.getPos().getxCoord();
-		int oldY = character.getPos().getyCoord();
-		switch (Direction) {
-		case RIGHT:
-			pair = new Pair<>(oldX+1, oldY);
-			break;
-		case LEFT:
-			pair = new Pair<>(oldX-1, oldY);
-			break;
-		case UP:
-			pair = new Pair<>(oldX, oldY+1);
-			break;
-		case DOWN:
-			pair = new Pair<>(oldX, oldY-1);
-			break;
-		default:
-			throw new RuntimeException("invalid direction");
-		}
-		return pair;
-	}
+    }
 
+    @Override
+    public Position getStartingPosition() {
+        return startingPosition;
+    }
 
-	@Override
-	public TiledMap getTiledMap() {
-		return this.map;
-	}
+    @Override
+    public TiledMapTileLayer getLayer(int layerNumber) {
+        return (TiledMapTileLayer) map.getLayers().get(layerNumber);
+    }
+
+    @Override
+    public TiledMapTileLayer getCollisionLayer() {
+        return collisionLayer;
+    }
+
+    private Pair<Integer, Integer> coordinatesConverter(final Character character, final Direction Direction) {
+        Pair<Integer, Integer> pair;
+        int oldX = character.getPos().getxCoord();
+        int oldY = character.getPos().getyCoord();
+        switch (Direction) {
+        case RIGHT:
+            pair = new Pair<>(oldX + 1, oldY);
+            break;
+        case LEFT:
+            pair = new Pair<>(oldX - 1, oldY);
+            break;
+        case UP:
+            pair = new Pair<>(oldX, oldY + 1);
+            break;
+        case DOWN:
+            pair = new Pair<>(oldX, oldY - 1);
+            break;
+        default:
+            throw new RuntimeException("invalid direction");
+        }
+        return pair;
+    }
+
+    @Override
+    public TiledMap getTiledMap() {
+        return this.map;
+    }
 }

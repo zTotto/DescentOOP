@@ -7,6 +7,9 @@ import com.unibo.model.Item;
 import com.unibo.model.Position;
 import com.unibo.util.Direction;
 
+/**
+ * Interface for a map.
+ */
 public interface Map {
 	boolean validMovement(Character character, Direction dir);
 	
