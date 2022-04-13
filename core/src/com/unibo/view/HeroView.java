@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.unibo.maps.Map;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
 
@@ -83,22 +84,23 @@ public class HeroView {
      */
     public void move() {
         dir = Direction.STILL;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        Map map = hero.getCurrentMap();
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(hero, Direction.LEFT)) {
             dir = Direction.LEFT;
             hero.setPos(hero.getPos().getxCoord() - (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()),
                     hero.getPos().getyCoord());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(hero, Direction.RIGHT)) {
             dir = Direction.RIGHT;
             hero.setPos(hero.getPos().getxCoord() + (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()),
                     hero.getPos().getyCoord());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(hero, Direction.UP)) {
             dir = Direction.UP;
             hero.setPos(hero.getPos().getxCoord(),
                     hero.getPos().getyCoord() + (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(hero, Direction.DOWN)) {
             dir = Direction.DOWN;
             hero.setPos(hero.getPos().getxCoord(),
                     hero.getPos().getyCoord() - (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()));

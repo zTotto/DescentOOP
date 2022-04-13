@@ -27,12 +27,14 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(0,0));
+    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64,1016));
     
 
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
+        heroView.getHero().setCurrentMap(mappa);
+        heroView.getHero().setPos(heroView.getHero().getCurrentMap().getStartingPosition());
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
 

@@ -3,6 +3,8 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.unibo.maps.Map;
+
 /**
  * 
  * Class that models a generic character, which has Health Points, speed,
@@ -18,6 +20,7 @@ public abstract class Character {
     private final List<Weapon> weapons;
     private Weapon currentWeapon;
     private final Inventory inv;
+    private Map currentMap;
 
     /**
      * Constructor for a character.
@@ -318,4 +321,14 @@ public abstract class Character {
         String msg = "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
         return msg;
     }
+
+	public Map getCurrentMap() {
+		return currentMap;
+	}
+
+	public void setCurrentMap(Map currentMap) {
+		this.currentMap = currentMap;
+	}
+    
+    
 }
