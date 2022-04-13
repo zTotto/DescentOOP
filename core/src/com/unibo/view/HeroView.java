@@ -169,4 +169,18 @@ public class HeroView {
             return new TextureRegion(still);
         }
     }
+
+    /**
+     * @return the sprite height
+     */
+    public float getHeight() {
+        return still.getRegionHeight();
+    }
+
+    /**
+     * @return the sprite width
+     */
+    public float getWidth() {
+        return still.getRegionWidth();
+    }
 }
