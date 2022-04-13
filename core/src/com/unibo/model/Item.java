@@ -10,7 +10,7 @@ public abstract class Item {
 
     private final String name;
     private final String id;
-    private Position pos = new Position();
+    private Position pos;
 
     /**
      * Constructor to build an item.
@@ -53,8 +53,7 @@ public abstract class Item {
      * @param p
      */
     public void setPos(final Position p) {
-        this.pos.setxCoord(p.getxCoord());
-        this.pos.setyCoord(p.getyCoord());
+        this.pos = p;
     }
 
     @Override
