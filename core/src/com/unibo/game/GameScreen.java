@@ -33,8 +33,9 @@ public class GameScreen implements Screen {
     public GameScreen(final Descent game) {
         this.game = game;
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
-        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");    // to add: some sort of timer so that they don't overlap
-        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));       
+        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3"); // to add: some sort of timer so that they don't
+                                                                        // overlap
+        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
@@ -58,29 +59,30 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.setView(camera);
         renderer.render();
-        camera.position.set(heroView.getHero().getPos().getxCoord(),
-                heroView.getHero().getPos().getyCoord(), 0);
+        camera.position.set(heroView.getHero().getPos().getxCoord(), heroView.getHero().getPos().getyCoord(), 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-        	heroView.getHero().getAttackSound().play();
-            batch.draw(heroView.getAttackText(elapsedTime), heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
+            batch.draw(heroView.getAttackText(elapsedTime),
+                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         } else {
-            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
+            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime),
+                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
                     heroView.getHero().getPos().getyCoord());
         }
         batch.end();
 
         heroView.move();
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            heroView.getHero().getAttackSound().play();
             heroView.attack();
         }
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         camera.viewportWidth = width / 2.5f;
         camera.viewportHeight = height / 2.5f;
     }
