@@ -31,7 +31,7 @@ public class MapImpl implements Map {
 	
 	@Override
 	public boolean validMovement(Character character, Direction dir) {
-		final Pair<Integer, Integer> pair = coordinatesConverter(character, dir);
+		final Pair<Integer, Integer> pair = directionProjection(character, dir);
 		int convertedX = pair.getFirst();
 		int convertedY = pair.getSecond();
 		if (isOutOfBounds(pair)) {
@@ -77,7 +77,7 @@ public class MapImpl implements Map {
 		return collisionLayer;
 	}
 	
-	private Pair<Integer, Integer> coordinatesConverter (final Character character, final Direction Direction){
+	private Pair<Integer, Integer> directionProjection (final Character character, final Direction Direction){
 		Pair<Integer, Integer> pair;
 		int oldX = character.getPos().getxCoord();
 		int oldY = character.getPos().getyCoord();
