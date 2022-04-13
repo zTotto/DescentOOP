@@ -11,19 +11,19 @@ import com.unibo.util.Direction;
  * Interface for a map.
  */
 public interface Map {
-	boolean validMovement(Character character, Direction dir);
-	
-	void addItem(Item item, Position pos);     //come segnalare posizione invalida?
-	
-	void addItem(Item item);
-	
-	Position getStartingPosition();
-	
-	TiledMapTileLayer getLayer(int layerNumber);
-	
-	TiledMapTileLayer getLayer(String path);
-	
-	TiledMapTileLayer getCollisionLayer();
-	
-	TiledMap getTiledMap();
+    boolean validMovement(Character character, Direction dir);
+
+    void addItem(Item item, Position pos); // come segnalare posizione invalida?
+
+    // void addItem(Item item);
+
+    Position getStartingPosition();
+
+    TiledMapTileLayer getLayer(int layerNumber);
+
+    TiledMapTileLayer getLayer(String path);
+
+    TiledMapTileLayer getCollisionLayer();
+
+    TiledMap getTiledMap();
 }
