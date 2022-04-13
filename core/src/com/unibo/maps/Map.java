@@ -1,5 +1,6 @@
 package com.unibo.maps;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.unibo.model.Character;
 import com.unibo.model.Item;
@@ -18,4 +19,6 @@ public interface Map {
 	TiledMapTileLayer getLayer(int layerNumber);
 	
 	TiledMapTileLayer getCollisionLayer();
+	
+	TiledMap getTiledMap();
 }

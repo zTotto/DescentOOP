@@ -7,7 +7,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(144);
+		config.setTitle("Descent");
+	    config.setWindowedMode(Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
+	    config.useVsync(true);
+	    config.setForegroundFPS(165);
 		new Lwjgl3Application(new Descent(), config);
 	}
 }

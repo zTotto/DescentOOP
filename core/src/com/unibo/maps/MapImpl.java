@@ -82,4 +82,10 @@ public class MapImpl implements Map {
 		}
 		return pair;
 	}
+
+
+	@Override
+	public TiledMap getTiledMap() {
+		return this.map;
+	}
 }
