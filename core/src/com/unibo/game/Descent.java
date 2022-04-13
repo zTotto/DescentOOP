@@ -16,7 +16,7 @@ public class Descent extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont(); // use libGDX's default Arial font
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new GameScreen(this));
 	}
 
 	public void render() {

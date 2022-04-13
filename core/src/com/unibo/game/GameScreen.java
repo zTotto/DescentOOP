@@ -6,7 +6,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.unibo.maps.Map;
+import com.unibo.maps.MapImpl;
 import com.unibo.model.Hero;
+import com.unibo.model.Position;
 import com.unibo.model.Weapon;
 import com.unibo.view.HeroView;
 
@@ -20,6 +25,10 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private float elapsedTime;
+    private TiledMap map;
+    private OrthogonalTiledMapRenderer renderer;
+    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(0,0));
+    
 
     public GameScreen(final Descent game) {
         this.game = game;
@@ -33,6 +42,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera();
+        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap());
     }
 
     @Override
@@ -40,6 +50,8 @@ public class GameScreen implements Screen {
         elapsedTime += Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderer.setView(camera);
+		renderer.render();
         camera.position.set(heroView.getHero().getPos().getxCoord(), heroView.getHero().getPos().getyCoord(), 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
