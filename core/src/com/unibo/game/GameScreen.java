@@ -13,6 +13,7 @@ import com.unibo.maps.MapImpl;
 import com.unibo.model.Hero;
 import com.unibo.model.Weapon;
 import com.unibo.util.Position;
+import com.unibo.view.CharacterView;
 import com.unibo.view.HeroView;
 
 /**
@@ -23,7 +24,7 @@ public class GameScreen implements Screen {
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
-    private HeroView heroView;
+    private CharacterView heroView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
     private final Music soundtrack;
@@ -36,7 +37,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(final Descent game) {
         this.game = game;
-        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
+        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
         heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
