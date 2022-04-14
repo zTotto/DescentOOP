@@ -2,6 +2,8 @@ package com.unibo.model;
 
 import java.util.Objects;
 
+import com.unibo.util.Position;
+
 /**
  * 
  * Basic class modeling a generic Item.

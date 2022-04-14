@@ -4,8 +4,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.unibo.model.Character;
 import com.unibo.model.Item;
-import com.unibo.model.Position;
 import com.unibo.util.Direction;
+import com.unibo.util.Position;
 
 /**
  * Interface for a map.
