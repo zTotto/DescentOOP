@@ -21,6 +21,7 @@ import com.unibo.view.HeroView;
  */
 public class GameScreen implements Screen {
     private final Descent game;
+    private final PauseMenu menu;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -30,13 +31,18 @@ public class GameScreen implements Screen {
     private final Music soundtrack;
     private float elapsedTime;
     private float attackTime;
+    private Boolean isPaused = false;
 
     /**
      * Main game scene.
+     * 
      * @param game
      */
     public GameScreen(final Descent game) {
         this.game = game;
+        menu = new PauseMenu(this);
+        menu.getMenu().setVisible(true);
+
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
         heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
@@ -58,39 +64,62 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
+
+        // Animation timer
         elapsedTime += Gdx.graphics.getDeltaTime();
+
+        // Hero Coordinates
+        int heroX = heroView.getHero().getPos().getxCoord();
+        int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
+        int heroY = heroView.getHero().getPos().getyCoord();
+
+        // Camera and batch initial settings
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.input.setInputProcessor(menu.getStage());
         renderer.setView(camera);
         renderer.render();
-        camera.position.set(heroView.getHero().getPos().getxCoord(), heroView.getHero().getPos().getyCoord(), 0);
+        camera.position.set(heroTextureX, heroY, 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
-            heroView.isAttacking = true;
-            heroView.getHero().getAttackSound().play();
-            heroView.attack();
+
+        // Pause Activation
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            this.isPaused = !this.isPaused;
         }
-        if (heroView.isAttacking) {
-            attackTime += Gdx.graphics.getDeltaTime();
-            batch.draw(heroView.getAttackText(elapsedTime),
-                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
-                    heroView.getHero().getPos().getyCoord());
-        } else {
-            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime),
-                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
-                    heroView.getHero().getPos().getyCoord());
+
+        // Still hero and music stopped during pause
+        if (this.isPaused) {
+            this.soundtrack.pause();
+            //batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
+            menu.getStage().act();
+            menu.getStage().draw();
         }
-        if (heroView.isAttacking) {
-            if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
-                heroView.isAttacking = false;
-                attackTime = 0;
+
+        if (!this.isPaused) {
+            this.soundtrack.play();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
+                heroView.isAttacking = true;
+                heroView.getHero().getAttackSound().play();
+                heroView.attack();
             }
+            if (heroView.isAttacking) {
+                attackTime += Gdx.graphics.getDeltaTime();
+
+                batch.draw(heroView.getAttackText(elapsedTime), heroTextureX, heroY);
+
+                if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
+                    heroView.isAttacking = false;
+                    attackTime = 0;
+                }
+            } else {
+                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+            }
+
+            heroView.move();
         }
         batch.end();
-
-        heroView.move();
     }
 
     @Override
@@ -126,5 +155,12 @@ public class GameScreen implements Screen {
      */
     public GameScreen getGameScreen() {
         return this;
+    }
+
+    /**
+     * Unpauses the game.
+     */
+    public void disablePause() {
+        this.isPaused = false;
     }
 }
