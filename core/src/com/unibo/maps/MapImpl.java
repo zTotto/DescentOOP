@@ -9,9 +9,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.unibo.model.Character;
 import com.unibo.model.Item;
-import com.unibo.model.Position;
 import com.unibo.util.Direction;
 import com.unibo.util.Pair;
+import com.unibo.util.Position;
 
 /**
  * Implementation of the map interface.
@@ -50,8 +50,8 @@ public class MapImpl implements Map {
         if (isOutOfBounds(pair)) {
             return false;
         } else {
-            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile().getProperties()
-                    .containsKey("walkable");
+            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile()
+            		.getProperties().containsKey("walkable");
         }
     }
 

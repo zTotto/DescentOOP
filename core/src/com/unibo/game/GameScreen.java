@@ -11,8 +11,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
 import com.unibo.model.Hero;
-import com.unibo.model.Position;
 import com.unibo.model.Weapon;
+import com.unibo.util.Position;
 import com.unibo.view.HeroView;
 
 /**

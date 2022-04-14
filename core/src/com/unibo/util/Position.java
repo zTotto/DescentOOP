@@ -1,4 +1,4 @@
-package com.unibo.model;
+package com.unibo.util;
 
 import java.util.Objects;
 
