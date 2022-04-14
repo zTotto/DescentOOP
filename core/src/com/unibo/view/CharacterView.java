@@ -5,16 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.unibo.model.Character;
 import com.unibo.maps.Map;
-import com.unibo.model.Hero;
 import com.unibo.util.Direction;
 
 /**
- * Class for the view of the Hero model.
+ * Class for the view of a generic character.
  */
-public class HeroView {
+public abstract class CharacterView {
 
-    private final Hero hero;
+    private final Character character;
 
     private Texture heroTextures;
     private TextureRegion still;
@@ -31,11 +31,12 @@ public class HeroView {
 
     /**
      * Constructor for this class.
-     * @param hero
+     * @param character
+     * @param path of the character movement animation
      */
-    public HeroView(final Hero hero) {
-        this.hero = hero;
-        this.createTextures("walkingAnim.png");
+    public CharacterView(final Character character, final String path) {
+        this.character = character;
+        this.createTextures(path);
     }
 
     private void createTextures(final String fileName) {
@@ -88,26 +89,26 @@ public class HeroView {
      */
     public void move() {
         dir = Direction.STILL;
-        Map map = hero.getCurrentMap();
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(hero, Direction.LEFT)) {
+        Map map = character.getCurrentMap();
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(character, Direction.LEFT)) {
             dir = Direction.LEFT;
-            hero.setPos(hero.getPos().getxCoord() - (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()),
-                    hero.getPos().getyCoord());
+            character.setPos(character.getPos().getxCoord() - (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()),
+                    character.getPos().getyCoord());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(hero, Direction.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(character, Direction.RIGHT)) {
             dir = Direction.RIGHT;
-            hero.setPos(hero.getPos().getxCoord() + (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()),
-                    hero.getPos().getyCoord());
+            character.setPos(character.getPos().getxCoord() + (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()),
+                    character.getPos().getyCoord());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(hero, Direction.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(character, Direction.UP)) {
             dir = Direction.UP;
-            hero.setPos(hero.getPos().getxCoord(),
-                    hero.getPos().getyCoord() + (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()));
+            character.setPos(character.getPos().getxCoord(),
+                    character.getPos().getyCoord() + (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(hero, Direction.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(character, Direction.DOWN)) {
             dir = Direction.DOWN;
-            hero.setPos(hero.getPos().getxCoord(),
-                    hero.getPos().getyCoord() - (int) (hero.getSpeed() * Gdx.graphics.getDeltaTime()));
+            character.setPos(character.getPos().getxCoord(),
+                    character.getPos().getyCoord() - (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()));
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && Gdx.input.isKeyPressed(Input.Keys.UP)
                 || Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -149,8 +150,8 @@ public class HeroView {
     /**
      * @return the hero model class
      */
-    public Hero getHero() {
-        return hero;
+    public Character getHero() {
+        return character;
     }
 
     /**
