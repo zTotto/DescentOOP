@@ -2,6 +2,8 @@ package com.unibo.maps;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -83,18 +85,19 @@ public class MapImpl implements Map {
         Pair<Integer, Integer> pair;
         int oldX = character.getPos().getxCoord();
         int oldY = character.getPos().getyCoord();
+        int speed = (int) (character.getSpeed() * Gdx.graphics.getDeltaTime());
         switch (direction) {
         case RIGHT:
-            pair = new Pair<>(oldX + 1, oldY);
+            pair = new Pair<>(oldX + speed , oldY);
             break;
         case LEFT:
-            pair = new Pair<>(oldX - 1, oldY);
+            pair = new Pair<>(oldX - speed, oldY);
             break;
         case UP:
-            pair = new Pair<>(oldX, oldY + 1);
+            pair = new Pair<>(oldX, oldY + speed);
             break;
         case DOWN:
-            pair = new Pair<>(oldX, oldY - 1);
+            pair = new Pair<>(oldX, oldY - speed);
             break;
         default:
             throw new RuntimeException("invalid direction");
