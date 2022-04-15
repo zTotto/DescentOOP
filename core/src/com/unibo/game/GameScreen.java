@@ -65,9 +65,6 @@ public class GameScreen implements Screen {
     @Override
     public void render(final float delta) {
 
-        // Animation timer
-        elapsedTime += Gdx.graphics.getDeltaTime();
-
         // Hero Coordinates
         int heroX = heroView.getHero().getPos().getxCoord();
         int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
@@ -79,7 +76,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(menu.getStage());
         renderer.setView(camera);
         renderer.render();
-        camera.position.set(heroTextureX, heroY, 0);
+        camera.position.set(heroX, heroY, 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -92,34 +89,48 @@ public class GameScreen implements Screen {
         // Still hero and music stopped during pause
         if (this.isPaused) {
             this.soundtrack.pause();
-            //batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
-            menu.getStage().act();
-            menu.getStage().draw();
+            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+            // batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
         }
 
         if (!this.isPaused) {
+
             this.soundtrack.play();
+
+            // Attack Check
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
                 heroView.isAttacking = true;
                 heroView.getHero().getAttackSound().play();
                 heroView.attack();
             }
+
             if (heroView.isAttacking) {
+                // Attack timer
                 attackTime += Gdx.graphics.getDeltaTime();
 
-                batch.draw(heroView.getAttackText(elapsedTime), heroTextureX, heroY);
+                batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
 
                 if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
                     heroView.isAttacking = false;
                     attackTime = 0;
                 }
             } else {
+                // Animation timer
+                elapsedTime += Gdx.graphics.getDeltaTime();
+
                 batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
             }
 
             heroView.move();
         }
+
         batch.end();
+
+        // Pause Menu
+        if (this.isPaused) {
+            menu.getStage().act();
+            menu.getStage().draw();
+        }
     }
 
     @Override
@@ -130,14 +141,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
