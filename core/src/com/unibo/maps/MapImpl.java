@@ -28,7 +28,8 @@ public class MapImpl implements Map {
 
     /**
      * Constructor for a map.
-     * @param path of the map
+     * 
+     * @param path        of the map
      * @param startingPos
      */
     public MapImpl(final String path, final Position startingPos) {
@@ -50,8 +51,8 @@ public class MapImpl implements Map {
         if (isOutOfBounds(pair)) {
             return false;
         } else {
-            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile()
-            		.getProperties().containsKey("walkable");
+            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile().getProperties()
+                    .containsKey("walkable");
         }
     }
 
@@ -88,7 +89,7 @@ public class MapImpl implements Map {
         int speed = (int) (character.getSpeed() * Gdx.graphics.getDeltaTime());
         switch (direction) {
         case RIGHT:
-            pair = new Pair<>(oldX + speed , oldY);
+            pair = new Pair<>(oldX + speed, oldY);
             break;
         case LEFT:
             pair = new Pair<>(oldX - speed, oldY);
