@@ -6,11 +6,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
+import com.unibo.model.ConsumableItem;
+import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
+import com.unibo.model.Level;
 import com.unibo.model.Weapon;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
@@ -28,10 +32,12 @@ public class GameScreen implements Screen {
     private CharacterView heroView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
+    private final Texture hpTexture;
     private final Music soundtrack;
     private float elapsedTime;
     private float attackTime;
     private Boolean isPaused = false;
+    private final Level lvlTest;
 
     /**
      * Main game scene.
@@ -42,6 +48,15 @@ public class GameScreen implements Screen {
         this.game = game;
         menu = new PauseMenu(this);
         menu.getMenu().setVisible(true);
+        lvlTest = new Level();
+        hpTexture = new Texture("hpPotion.png");
+        HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
+        HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
+        HealthPotion hp3 = new HealthPotion("Base Health Potion", "0", 15.0);
+        hp1.setPos(new Position(100, 900));
+        hp2.setPos(new Position(200, 1016));
+        hp3.setPos(new Position(300, 1016));
+        lvlTest.addConsumables(hp1, hp2, hp3);
 
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
         heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
@@ -86,6 +101,11 @@ public class GameScreen implements Screen {
             this.isPaused = !this.isPaused;
         }
 
+        // Hp Potion rendering
+        for (ConsumableItem i : lvlTest.getConsumables()) {
+            batch.draw(hpTexture, i.getPos().getxCoord(), i.getPos().getyCoord());
+        }
+
         // Still hero and music stopped during pause
         if (this.isPaused) {
             this.soundtrack.pause();
@@ -96,6 +116,11 @@ public class GameScreen implements Screen {
         if (!this.isPaused) {
 
             this.soundtrack.play();
+
+            // Item pick up
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                heroView.getHero().pickUpfromLevel(lvlTest);
+            }
 
             // Attack Check
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
