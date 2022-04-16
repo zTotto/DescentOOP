@@ -69,6 +69,15 @@ public class Level {
     }
 
     /**
+     * Removes a consumable item at a specified index from the level.
+     * 
+     * @param index of the item
+     */
+    public void removeConsumableAtIndex(final int index) {
+        consumables.remove(index);
+    }
+
+    /**
      * Removes a weapon from the level.
      * 
      * @param weapon
