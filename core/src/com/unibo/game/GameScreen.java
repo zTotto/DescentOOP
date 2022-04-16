@@ -56,10 +56,9 @@ public class GameScreen implements Screen {
         hp1.setPos(new Position(100, 900));
         hp2.setPos(new Position(200, 1016));
         hp3.setPos(new Position(300, 1016));
-        lvlTest.addConsumables(hp1, hp2, hp3);
+        lvlTest.addConsumables(hp2, hp1, hp3);
 
         heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
-        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
@@ -103,7 +102,7 @@ public class GameScreen implements Screen {
 
         // Hp Potion rendering
         for (ConsumableItem i : lvlTest.getConsumables()) {
-            batch.draw(hpTexture, i.getPos().getxCoord(), i.getPos().getyCoord());
+            batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
 
         // Still hero and music stopped during pause
@@ -125,7 +124,7 @@ public class GameScreen implements Screen {
             // Attack Check
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
                 heroView.isAttacking = true;
-                heroView.getHero().getAttackSound().play();
+                heroView.getAttackSound().play();
                 heroView.attack();
             }
 
