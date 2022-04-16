@@ -13,7 +13,7 @@ public class HeroView extends CharacterView {
      * @param path of the hero movement animation
      */
     public HeroView(final Hero hero, final String path) {
-        super(hero, path);
+        super(hero, path, "audio/sounds/Hadouken.mp3");
     }
 
 }

@@ -2,6 +2,7 @@ package com.unibo.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +25,7 @@ public abstract class CharacterView {
     private Animation<TextureRegion> animationDown;
     private Animation<TextureRegion> animationAttack;
     private Direction dir = Direction.STILL;
+    private final Sound attackSound;
     /**
      * Field to check whether this Hero is attacking.
      */
@@ -32,11 +34,13 @@ public abstract class CharacterView {
     /**
      * Constructor for this class.
      * @param character
-     * @param path of the character movement animation
+     * @param texturePath path of the character movement animation
+     * @param attackSoundPath path of the attack sound
      */
-    public CharacterView(final Character character, final String path) {
+    public CharacterView(final Character character, final String texturePath, final String attackSoundPath) {
         this.character = character;
-        this.createTextures(path);
+        this.attackSound = Gdx.audio.newSound(Gdx.files.internal(attackSoundPath));
+        this.createTextures(texturePath);
     }
 
     private void createTextures(final String fileName) {
@@ -195,5 +199,12 @@ public abstract class CharacterView {
      */
     public float getWidth() {
         return still.getRegionWidth();
+    }
+
+    /**
+     * @return the attack sound
+     */
+    public Sound getAttackSound() {
+        return attackSound;
     }
 }
