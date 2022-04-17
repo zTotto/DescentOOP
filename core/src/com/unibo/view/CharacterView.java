@@ -91,34 +91,7 @@ public abstract class CharacterView {
     /**
      * Moves the character depending on the pressed key.
      */
-    public void move() {
-        dir = Direction.STILL;
-        Map map = character.getCurrentMap();
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(character, Direction.LEFT)) {
-            dir = Direction.LEFT;
-            character.setPos(character.getPos().getxCoord() - (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()),
-                    character.getPos().getyCoord());
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(character, Direction.RIGHT)) {
-            dir = Direction.RIGHT;
-            character.setPos(character.getPos().getxCoord() + (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()),
-                    character.getPos().getyCoord());
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(character, Direction.UP)) {
-            dir = Direction.UP;
-            character.setPos(character.getPos().getxCoord(),
-                    character.getPos().getyCoord() + (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()));
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(character, Direction.DOWN)) {
-            dir = Direction.DOWN;
-            character.setPos(character.getPos().getxCoord(),
-                    character.getPos().getyCoord() - (int) (character.getSpeed() * Gdx.graphics.getDeltaTime()));
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && Gdx.input.isKeyPressed(Input.Keys.UP)
-                || Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            dir = Direction.STILL;
-        }
-    }
+    public abstract void move();
 
     /**
      * @return the still character texture
@@ -163,6 +136,14 @@ public abstract class CharacterView {
      */
     public Direction getDir() {
         return dir;
+    }
+
+    /**
+     * Sets the character direction to the specified one.
+     * @param dir the direction
+     */
+    public void setDir(final Direction dir) {
+        this.dir = dir;
     }
 
     /**
