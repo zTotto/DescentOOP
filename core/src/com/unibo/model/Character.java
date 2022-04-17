@@ -3,8 +3,6 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.unibo.maps.Map;
 import com.unibo.util.Position;
 
@@ -19,19 +17,12 @@ public abstract class Character {
     private int currentHp;
     private final int maxHp;
     private int speed;
+    private int range;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
     private Weapon currentWeapon;
     private final Inventory inv;
     private Map currentMap;
-    private Sound attackSound;
-    private Sound defaultSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/Morgan che succede.mp3")); // to fix, it
-                                                                                                        // attack sound
-                                                                                                        // needs to be
-                                                                                                        // in a
-                                                                                                        // constructor
-                                                                                                        // or something
-                                                                                                        // similar
 
     /**
      * Constructor for a character.
@@ -44,6 +35,7 @@ public abstract class Character {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
         this.setSpeed(speed);
+        this.setRange(speed / 6);
         this.currentWeapon = startingWeapon;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
@@ -110,8 +102,23 @@ public abstract class Character {
         this.speed = speed;
     }
 
-    // Weapon related
+    /**
+     * @return the character range when picking up items.
+     */
+    public int getRange() {
+        return range;
+    }
 
+    /**
+     * Sets the character pickup range.
+     * 
+     * @param range
+     */
+    public void setRange(final int range) {
+        this.range = range;
+    }
+
+    // Weapon related
     /**
      * 
      * @return a list with all the weapons the character has.
@@ -221,18 +228,20 @@ public abstract class Character {
             List<Item> items = new LinkedList<>();
             items.addAll(lvl.getConsumables());
             items.addAll(lvl.getWeapons());
+            int consIndex = 0;
             for (Item item : items) {
-                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) <= this.speed
-                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) <= this.speed) {
+                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.range
+                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.range) {
                     if (item instanceof Weapon) {
                         weapons.add((Weapon) item);
                         lvl.removeWeapon((Weapon) item);
                     } else {
                         inv.addItem(item);
-                        lvl.removeConsumable((ConsumableItem) item);
+                        lvl.removeConsumableAtIndex(consIndex);
                     }
                     return true;
                 }
+                consIndex++;
             }
         }
         return false;
@@ -348,24 +357,5 @@ public abstract class Character {
      */
     public void setCurrentMap(final Map map) {
         this.currentMap = map;
-    }
-
-    /**
-     * Sets a sound as the attack sound.
-     * 
-     * @param path of the sound
-     */
-    public void setAttackSound(final String path) {
-        attackSound = Gdx.audio.newSound(Gdx.files.internal(path));
-    }
-
-    /**
-     * @return the attack sound
-     */
-    public Sound getAttackSound() {
-        if (attackSound != null) {
-            return attackSound;
-        }
-        return defaultSound;
     }
 }

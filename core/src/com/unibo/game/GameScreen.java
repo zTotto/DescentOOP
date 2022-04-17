@@ -6,13 +6,18 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
+import com.unibo.model.ConsumableItem;
+import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
+import com.unibo.model.Level;
 import com.unibo.model.Weapon;
 import com.unibo.util.Position;
+import com.unibo.view.CharacterView;
 import com.unibo.view.HeroView;
 
 /**
@@ -20,24 +25,40 @@ import com.unibo.view.HeroView;
  */
 public class GameScreen implements Screen {
     private final Descent game;
+    private final PauseMenu menu;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
-    private HeroView heroView;
+    private CharacterView heroView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
+    private final Texture hpTexture;
     private final Music soundtrack;
     private float elapsedTime;
     private float attackTime;
+    private Boolean isPaused = false;
+    private final Level lvlTest;
 
     /**
      * Main game scene.
+     * 
      * @param game
      */
     public GameScreen(final Descent game) {
         this.game = game;
-        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")));
-        heroView.getHero().setAttackSound("audio/sounds/Hadouken.mp3");
+        menu = new PauseMenu(this);
+        menu.getMenu().setVisible(true);
+        lvlTest = new Level();
+        hpTexture = new Texture("hpPotion.png");
+        HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
+        HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
+        HealthPotion hp3 = new HealthPotion("Base Health Potion", "0", 15.0);
+        hp1.setPos(new Position(100, 900));
+        hp2.setPos(new Position(200, 1016));
+        hp3.setPos(new Position(300, 1016));
+        lvlTest.addConsumables(hp2, hp1, hp3);
+
+        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
@@ -57,39 +78,83 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
-        elapsedTime += Gdx.graphics.getDeltaTime();
+
+        // Hero Coordinates
+        int heroX = heroView.getHero().getPos().getxCoord();
+        int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
+        int heroY = heroView.getHero().getPos().getyCoord();
+
+        // Camera and batch initial settings
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.input.setInputProcessor(menu.getStage());
         renderer.setView(camera);
         renderer.render();
-        camera.position.set(heroView.getHero().getPos().getxCoord(), heroView.getHero().getPos().getyCoord(), 0);
+        camera.position.set(heroX, heroY, 0);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
-            heroView.isAttacking = true;
-            heroView.getHero().getAttackSound().play();
-            heroView.attack();
+
+        // Pause Activation
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            this.isPaused = !this.isPaused;
         }
-        if (heroView.isAttacking) {
-            attackTime += Gdx.graphics.getDeltaTime();
-            batch.draw(heroView.getAttackText(elapsedTime),
-                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
-                    heroView.getHero().getPos().getyCoord());
-        } else {
-            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime),
-                    heroView.getHero().getPos().getxCoord() - (int) (heroView.getWidth() / 2),
-                    heroView.getHero().getPos().getyCoord());
+
+        // Hp Potion rendering
+        for (ConsumableItem i : lvlTest.getConsumables()) {
+            batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
-        if (heroView.isAttacking) {
-            if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
-                heroView.isAttacking = false;
-                attackTime = 0;
+
+        // Still hero and music stopped during pause
+        if (this.isPaused) {
+            this.soundtrack.pause();
+            batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+            // batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
+        }
+
+        if (!this.isPaused) {
+
+            this.soundtrack.play();
+
+            // Item pick up
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                heroView.getHero().pickUpfromLevel(lvlTest);
             }
+
+            // Attack Check
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
+                heroView.isAttacking = true;
+                heroView.getAttackSound().play();
+                heroView.attack();
+            }
+
+            if (heroView.isAttacking) {
+                // Attack timer
+                attackTime += Gdx.graphics.getDeltaTime();
+
+                batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
+
+                if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
+                    heroView.isAttacking = false;
+                    attackTime = 0;
+                }
+            } else {
+                // Animation timer
+                elapsedTime += Gdx.graphics.getDeltaTime();
+
+                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+            }
+
+            heroView.move();
         }
+
         batch.end();
 
-        heroView.move();
+        // Pause Menu
+        if (this.isPaused) {
+            menu.getStage().act();
+            menu.getStage().draw();
+        }
     }
 
     @Override
@@ -100,14 +165,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -125,5 +186,12 @@ public class GameScreen implements Screen {
      */
     public GameScreen getGameScreen() {
         return this;
+    }
+
+    /**
+     * Unpauses the game.
+     */
+    public void disablePause() {
+        this.isPaused = false;
     }
 }
