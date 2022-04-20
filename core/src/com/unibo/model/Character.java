@@ -189,6 +189,7 @@ public abstract class Character {
             for (Character e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
+                    return true;
                 }
             }
         }
