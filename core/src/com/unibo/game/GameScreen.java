@@ -24,6 +24,8 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+	private final static int MAX_SPEED=200;
+	private final static int MAX_HP=100;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -58,7 +60,7 @@ public class GameScreen implements Screen {
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
 
-        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
