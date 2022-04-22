@@ -25,25 +25,25 @@ public class HeroView extends CharacterView {
      * Moves the hero depending on the pressed key.
      */
     public void move() {
-        int heroX = getHero().getPos().getxCoord();
-        int heroY = getHero().getPos().getyCoord();
-        Map map = getHero().getCurrentMap();
+        int heroX = getCharacter().getPos().getxCoord();
+        int heroY = getCharacter().getPos().getyCoord();
+        Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(getHero(), Direction.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(getCharacter(), Direction.LEFT)) {
             setDir(Direction.LEFT);
-            getHero().setPos(heroX - (int) (getHero().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(getHero(), Direction.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(getCharacter(), Direction.RIGHT)) {
             setDir(Direction.RIGHT);
-            getHero().setPos(heroX + (int) (getHero().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(getHero(), Direction.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(getCharacter(), Direction.UP)) {
             setDir(Direction.UP);
-            getHero().setPos(heroX, heroY + (int) (getHero().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(getHero(), Direction.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(getCharacter(), Direction.DOWN)) {
             setDir(Direction.DOWN);
-            getHero().setPos(heroX, heroY - (int) (getHero().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
         }
     }
 }
