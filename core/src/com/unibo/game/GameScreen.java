@@ -15,6 +15,7 @@ import com.unibo.model.ConsumableItem;
 import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
+import com.unibo.model.Mob;
 import com.unibo.model.Weapon;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
@@ -24,12 +25,15 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+	private final static int MAX_SPEED=200;
+	private final static int MAX_HP=100;
     private final Descent game;
     private final PauseMenu menu;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private CharacterView heroView;
+    //private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
     private final Texture hpTexture;
@@ -58,13 +62,24 @@ public class GameScreen implements Screen {
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
 
-        heroView = new HeroView(new Hero("Ross", 100, 200, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
+        //mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
-        heroView.getHero().setCurrentMap(mappa);
-        heroView.getHero().setPos(heroView.getHero().getCurrentMap().getStartingPosition());
+        heroView.getCharacter().setCurrentMap(mappa);
+        heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
+        
+        /*
+        mobView.getCharacter().setCurrentMap(mappa);
+        mobView.getCharacter().setPos(new Position(
+        		mobView.getCharacter().getCurrentMap().getStartingPosition().getxCoord()+100,
+        		mobView.getCharacter().getCurrentMap().getStartingPosition().getyCoord()-30
+        		));
+        		
+       	*/
+        
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
@@ -80,9 +95,9 @@ public class GameScreen implements Screen {
     public void render(final float delta) {
 
         // Hero Coordinates
-        int heroX = heroView.getHero().getPos().getxCoord();
+        int heroX = heroView.getCharacter().getPos().getxCoord();
         int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
-        int heroY = heroView.getHero().getPos().getyCoord();
+        int heroY = heroView.getCharacter().getPos().getyCoord();
 
         // Camera and batch initial settings
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -118,7 +133,7 @@ public class GameScreen implements Screen {
 
             // Item pick up
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                heroView.getHero().pickUpfromLevel(lvlTest);
+                heroView.getCharacter().pickUpfromLevel(lvlTest);
             }
 
             // Attack Check

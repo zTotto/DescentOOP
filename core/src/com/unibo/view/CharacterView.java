@@ -17,7 +17,7 @@ public abstract class CharacterView {
 
     private final Character character;
 
-    private Texture heroTextures;
+    private Texture characterTextures;
     private TextureRegion still;
     private Animation<TextureRegion> animationLeft;
     private Animation<TextureRegion> animationRight;
@@ -44,48 +44,48 @@ public abstract class CharacterView {
     }
 
     private void createTextures(final String fileName) {
-        heroTextures = new Texture(fileName);
-        TextureRegion[][] tmp = TextureRegion.split(heroTextures, heroTextures.getWidth() / 3,
-                heroTextures.getHeight() / 4);
+        characterTextures = new Texture(fileName);
+        TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
+                characterTextures.getHeight() / 4);
 
         // Texture when still
         still = tmp[2][1];
 
         // Texture when moving right
-        TextureRegion[] heroTextureRight = new TextureRegion[3];
-        heroTextureRight[0] = tmp[1][0];
-        heroTextureRight[1] = tmp[1][1];
-        heroTextureRight[2] = tmp[1][2];
-        animationRight = new Animation<>(1f / 8f, heroTextureRight);
+        TextureRegion[] characterTextureRight = new TextureRegion[3];
+        characterTextureRight[0] = tmp[1][0];
+        characterTextureRight[1] = tmp[1][1];
+        characterTextureRight[2] = tmp[1][2];
+        animationRight = new Animation<>(1f / 8f, characterTextureRight);
 
         // Texture when moving left
-        TextureRegion[] heroTextureLeft = new TextureRegion[3];
-        heroTextureLeft[0] = tmp[3][2];
-        heroTextureLeft[1] = tmp[3][1];
-        heroTextureLeft[2] = tmp[3][0];
-        animationLeft = new Animation<>(1f / 8f, heroTextureLeft);
+        TextureRegion[] characterTextureLeft = new TextureRegion[3];
+        characterTextureLeft[0] = tmp[3][2];
+        characterTextureLeft[1] = tmp[3][1];
+        characterTextureLeft[2] = tmp[3][0];
+        animationLeft = new Animation<>(1f / 8f, characterTextureLeft);
 
         // Texture when moving up
-        TextureRegion[] heroTextureUp = new TextureRegion[3];
-        heroTextureUp[0] = tmp[0][0];
-        heroTextureUp[1] = tmp[0][1];
-        heroTextureUp[2] = tmp[0][2];
-        animationUp = new Animation<>(1f / 8f, heroTextureUp);
+        TextureRegion[] characterTextureUp = new TextureRegion[3];
+        characterTextureUp[0] = tmp[0][0];
+        characterTextureUp[1] = tmp[0][1];
+        characterTextureUp[2] = tmp[0][2];
+        animationUp = new Animation<>(1f / 8f, characterTextureUp);
 
         // Texture when moving down
-        TextureRegion[] heroTextureDown = new TextureRegion[3];
-        heroTextureDown[0] = tmp[2][0];
-        heroTextureDown[1] = tmp[2][1];
-        heroTextureDown[2] = tmp[2][2];
-        animationDown = new Animation<>(1f / 8f, heroTextureDown);
+        TextureRegion[] characterTextureDown = new TextureRegion[3];
+        characterTextureDown[0] = tmp[2][0];
+        characterTextureDown[1] = tmp[2][1];
+        characterTextureDown[2] = tmp[2][2];
+        animationDown = new Animation<>(1f / 8f, characterTextureDown);
 
         // Texture when attacking
         //TODO: CHANGE WHEN SPRITES ARE READY
-        TextureRegion[] heroTextureAttack = new TextureRegion[3];
-        heroTextureAttack[0] = tmp[1][0];
-        heroTextureAttack[1] = tmp[1][1];
-        heroTextureAttack[2] = tmp[1][2];
-        animationAttack = new Animation<>(1f / 3f, heroTextureAttack);
+        TextureRegion[] characterTextureAttack = new TextureRegion[3];
+        characterTextureAttack[0] = tmp[1][0];
+        characterTextureAttack[1] = tmp[1][1];
+        characterTextureAttack[2] = tmp[1][2];
+        animationAttack = new Animation<>(1f / 3f, characterTextureAttack);
     }
 
     /**
@@ -125,9 +125,9 @@ public abstract class CharacterView {
     }
 
     /**
-     * @return the hero model class
+     * @return the character model class
      */
-    public Character getHero() {
+    public Character getCharacter() {
         return character;
     }
 
