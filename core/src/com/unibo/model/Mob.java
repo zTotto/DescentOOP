@@ -3,19 +3,17 @@ package com.unibo.model;
 import com.unibo.util.MobsStats;
 
 /**
- * A class to model a mob
+ * A class to model a mob.
  */
 public class Mob extends Character {
 
-	private final String name;
+    private final String name;
 
     /**
      * Constructor for the mob.
      * 
-     * @param modType
-     * 			type of the created mob
-     * @param startingWeapon
-     * 			starting weapon of the created mob
+     * @param modType        type of the created mob
+     * @param startingWeapon starting weapon of the created mob
      */
     public Mob(final MobsStats modType, final Weapon startingWeapon) {
         super(modType.getHp(), modType.getSpeed(), startingWeapon);
@@ -34,7 +32,8 @@ public class Mob extends Character {
      * @return the description of this mob.
      */
     public String toString() {
-        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
+        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
+                + this.getWeapons();
         return msg;
-    }    
+    }
 }

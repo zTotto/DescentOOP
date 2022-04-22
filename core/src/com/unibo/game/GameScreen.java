@@ -25,15 +25,15 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
-	private final static int MAX_SPEED=200;
-	private final static int MAX_HP=100;
+    private final static int MAX_SPEED = 200;
+    private final static int MAX_HP = 100;
     private final Descent game;
     private final PauseMenu menu;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private CharacterView heroView;
-    //private CharacterView mobView;
+    // private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
     private final Texture hpTexture;
@@ -62,24 +62,26 @@ public class GameScreen implements Screen {
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png");
-        //mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64, "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon("Longsword", 10, 64, "0")),
+                "walkingAnim.png");
+        // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
+        // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
         heroView.getCharacter().setCurrentMap(mappa);
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
-        
+
         /*
-        mobView.getCharacter().setCurrentMap(mappa);
-        mobView.getCharacter().setPos(new Position(
-        		mobView.getCharacter().getCurrentMap().getStartingPosition().getxCoord()+100,
-        		mobView.getCharacter().getCurrentMap().getStartingPosition().getyCoord()-30
-        		));
-        		
-       	*/
-        
+         * mobView.getCharacter().setCurrentMap(mappa);
+         * mobView.getCharacter().setPos(new Position(
+         * mobView.getCharacter().getCurrentMap().getStartingPosition().getxCoord()+100,
+         * mobView.getCharacter().getCurrentMap().getStartingPosition().getyCoord()-30
+         * ));
+         * 
+         */
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
