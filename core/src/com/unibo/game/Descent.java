@@ -13,11 +13,11 @@ public class Descent extends Game {
     /**
      * Game Width.
      */
-    public static final int GAME_WIDTH = 1600;
+    public static final int GAME_WIDTH = 1300; //1600;
     /**
      * Game Height.
      */
-    public static final int GAME_HEIGHT = 900;
+    public static final int GAME_HEIGHT = 600; //900;
 
     /**
      * Constructor for this class.
@@ -25,7 +25,7 @@ public class Descent extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont(); // use libGDX's default Arial font
-        this.setScreen(new GameScreen(this));
+        this.setScreen(new MainMenu(this));
     }
 
     /**
