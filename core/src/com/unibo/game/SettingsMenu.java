@@ -13,24 +13,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-/**
- * Main Menu to star the game, open the settings or quit.
- */
-public class MainMenu implements Screen {
+public class SettingsMenu implements Screen {
 
 	private final Descent game;
+	private final Screen menu;
 	private OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
-
+	
     /**
-     * Constructor for the main menu.
+     * Constructor for the settings menu.
      * 
      * @param game
      */
-	public MainMenu(final Descent game) {
+	public SettingsMenu(final Descent game) {
 		this.game = game;
+		this.menu = new MainMenu(game);
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
 	    this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -43,41 +42,28 @@ public class MainMenu implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		table.setFillParent(true);
 		
-        final Label label = new Label("DESCENT", skin);
-        final TextButton play = new TextButton("Play", skin);
-        final TextButton settings = new TextButton("Settings", skin);
-        final TextButton exit = new TextButton("Exit", skin);
+        final Label label = new Label("SETTINGS", skin);
+        final TextButton audio = new TextButton("Audio", skin);
+        final TextButton difficulty = new TextButton("Difficulty", skin);
+        final TextButton backToMenu = new TextButton("Back to main menu", skin);
 	
-        play.addListener(new ChangeListener() {
+        backToMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-            	game.setScreen(new GameScreen(game));
-            }
-        });
-        settings.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-            	System.out.println("Options Menu");
-            	game.setScreen(new SettingsMenu(game));
-            }
-        });
-        exit.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+            	game.setScreen(menu);
             }
         });
 
         table.add(label).spaceBottom(70).row();
-        table.add(play).uniform().fill().spaceBottom(10).row();
-        table.add(settings).uniform().fill().spaceBottom(10).row();
-        table.add(exit).uniform().fill().spaceBottom(10);
+        table.add(audio).uniform().fill().spaceBottom(10).row();
+        table.add(difficulty).uniform().fill().spaceBottom(10).row();
+        table.add(backToMenu).uniform().fill().spaceBottom(10);
         
         stage.addActor(table);
 	}
 
 	@Override
-	public void render(final float delta) {
+	public void render(float delta) {
 		Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
