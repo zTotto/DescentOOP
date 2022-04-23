@@ -27,23 +27,24 @@ public class HeroView extends CharacterView {
     public void move() {
         int heroX = getCharacter().getPos().getxCoord();
         int heroY = getCharacter().getPos().getyCoord();
+        int deltaMovement = (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
         Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(getCharacter(), Direction.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(this, heroX - deltaMovement, heroY)) {
             setDir(Direction.LEFT);
-            getCharacter().setPos(heroX - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX - deltaMovement, heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(getCharacter(), Direction.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(this, heroX + deltaMovement, heroY)) {
             setDir(Direction.RIGHT);
-            getCharacter().setPos(heroX + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX + deltaMovement, heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(getCharacter(), Direction.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(this, heroX, heroY + deltaMovement)) {
             setDir(Direction.UP);
-            getCharacter().setPos(heroX, heroY + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY + deltaMovement);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(getCharacter(), Direction.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(this, heroX, heroY - deltaMovement)) {
             setDir(Direction.DOWN);
-            getCharacter().setPos(heroX, heroY - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY - deltaMovement);
         }
     }
 }

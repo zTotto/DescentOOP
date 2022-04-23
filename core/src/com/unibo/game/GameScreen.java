@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     private CharacterView heroView;
     // private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
-    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(64, 1016));
+    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
     private final Texture hpTexture;
     private final Music soundtrack;
     private float elapsedTime;
