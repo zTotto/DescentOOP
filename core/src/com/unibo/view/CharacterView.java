@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.unibo.model.Character;
 import com.unibo.util.Direction;
 
@@ -23,6 +24,7 @@ public abstract class CharacterView {
     private Animation<TextureRegion> animationDown;
     private Animation<TextureRegion> animationAttack;
     private Direction dir = Direction.STILL;
+    private final Rectangle charRect;
     private final Sound attackSound;
     /**
      * Field to check whether this Hero is attacking.
@@ -31,14 +33,17 @@ public abstract class CharacterView {
 
     /**
      * Constructor for this class.
+     * 
      * @param character
-     * @param texturePath path of the character movement animation
+     * @param texturePath     path of the character movement animation
      * @param attackSoundPath path of the attack sound
      */
     public CharacterView(final Character character, final String texturePath, final String attackSoundPath) {
         this.character = character;
         this.attackSound = Gdx.audio.newSound(Gdx.files.internal(attackSoundPath));
         this.createTextures(texturePath);
+        this.charRect = new Rectangle(this.character.getPos().getxCoord(), this.character.getPos().getyCoord(),
+                this.getWidth(), this.getHeight() / 6);
     }
 
     private void createTextures(final String fileName) {
@@ -78,7 +83,7 @@ public abstract class CharacterView {
         animationDown = new Animation<>(1f / 8f, characterTextureDown);
 
         // Texture when attacking
-        //TODO: CHANGE WHEN SPRITES ARE READY
+        // TODO: CHANGE WHEN SPRITES ARE READY
         TextureRegion[] characterTextureAttack = new TextureRegion[3];
         characterTextureAttack[0] = tmp[1][0];
         characterTextureAttack[1] = tmp[1][1];
@@ -101,7 +106,7 @@ public abstract class CharacterView {
     /**
      * 
      * @param time
-     * @return the attack animation 
+     * @return the attack animation
      */
     public TextureRegion getAttackText(final float time) {
         return animationAttack.getKeyFrame(time, true);
@@ -109,7 +114,7 @@ public abstract class CharacterView {
 
     /**
      * 
-     * @return the attack animation 
+     * @return the attack animation
      */
     public Animation<TextureRegion> getAttackAnim() {
         return animationAttack;
@@ -138,6 +143,7 @@ public abstract class CharacterView {
 
     /**
      * Sets the character direction to the specified one.
+     * 
      * @param dir the direction
      */
     public void setDir(final Direction dir) {
@@ -164,6 +170,13 @@ public abstract class CharacterView {
         default:
             return new TextureRegion(still);
         }
+    }
+
+    /**
+     * @return the character rectangle for collisions.
+     */
+    public Rectangle getCharRect() {
+        return charRect;
     }
 
     /**

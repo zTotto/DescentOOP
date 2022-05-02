@@ -27,23 +27,24 @@ public class HeroView extends CharacterView {
     public void move() {
         int heroX = getCharacter().getPos().getxCoord();
         int heroY = getCharacter().getPos().getyCoord();
+        int deltaMovement = (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
         Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(getCharacter(), Direction.LEFT)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(getCharacter(), Direction.LEFT)) {         
             setDir(Direction.LEFT);
-            getCharacter().setPos(heroX - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX - deltaMovement, heroY);
         }
         if (Gdx.input.isKeyPressed(KeyBindings.MOVE_RIGHT.getKey()) && map.validMovement(getCharacter(), Direction.RIGHT)) {
             setDir(Direction.RIGHT);
-            getCharacter().setPos(heroX + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
+            getCharacter().setPos(heroX + deltaMovement, heroY);
         }
         if (Gdx.input.isKeyPressed(KeyBindings.MOVE_UP.getKey()) && map.validMovement(getCharacter(), Direction.UP)) {
             setDir(Direction.UP);
-            getCharacter().setPos(heroX, heroY + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY + deltaMovement);
         }
         if (Gdx.input.isKeyPressed(KeyBindings.MOVE_DOWN.getKey()) && map.validMovement(getCharacter(), Direction.DOWN)) {
             setDir(Direction.DOWN);
-            getCharacter().setPos(heroX, heroY - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
+            getCharacter().setPos(heroX, heroY - deltaMovement);
         }
     }
 }

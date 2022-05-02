@@ -3,26 +3,25 @@ package com.unibo.maps;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.unibo.model.Character;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.unibo.model.Item;
-import com.unibo.util.Direction;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
+import com.unibo.view.CharacterView;
 
 /**
  * Implementation of the map interface.
  */
 public class MapImpl implements Map {
 
-    private final TiledMapTileLayer collisionLayer;
+    private final MapLayer collisionLayer;
     private final TiledMap map;
-    private final int tileSize;
-    private final int height;
-    private final int width;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<Pair<Item, Position>>();
 
@@ -30,36 +29,25 @@ public class MapImpl implements Map {
      * Constructor for a map.
      * 
      * @param path        of the map
-     * @param startingPos
+     * @param startingPos of the hero
      */
     public MapImpl(final String path, final Position startingPos) {
         super();
         this.map = new TmxMapLoader().load(path);
-        this.collisionLayer = (TiledMapTileLayer) this.map.getLayers().get("Collision"); // by convention the collision
-                                                                                         // layer is layer 0
+        this.collisionLayer = this.map.getLayers().get("objects");
         this.startingPosition = startingPos;
-        tileSize = collisionLayer.getTileHeight();
-        height = collisionLayer.getHeight();
-        width = collisionLayer.getWidth();
     }
 
     @Override
-    public boolean validMovement(final Character character, final Direction dir) {
-        final Pair<Integer, Integer> pair = projectedMovement(character, dir);
-        int convertedX = pair.getFirst();
-        int convertedY = pair.getSecond();
-        if (isOutOfBounds(pair)) {
-            return false;
-        } else {
-            return collisionLayer.getCell(convertedX / tileSize, convertedY / tileSize).getTile().getProperties()
-                    .containsKey("walkable");
+    public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+        Rectangle rect = charView.getCharRect();
+        rect.setPosition(newX - (int) (charView.getWidth() / 2), newY);
+        for (RectangleMapObject rectObj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
+            if (Intersector.overlaps(rect, rectObj.getRectangle())) {
+                return false;
+            }
         }
-    }
-
-    private boolean isOutOfBounds(final Pair<Integer, Integer> pair) {
-        int x = pair.getFirst();
-        int y = pair.getSecond();
-        return (x >= width * tileSize || x <= 0 || y >= height * tileSize || y <= 0);
+        return true;
     }
 
     @Override
@@ -78,32 +66,8 @@ public class MapImpl implements Map {
     }
 
     @Override
-    public TiledMapTileLayer getCollisionLayer() {
+    public MapLayer getCollisionLayer() {
         return collisionLayer;
-    }
-
-    private Pair<Integer, Integer> projectedMovement(final Character character, final Direction direction) {
-        Pair<Integer, Integer> pair;
-        int oldX = character.getPos().getxCoord();
-        int oldY = character.getPos().getyCoord();
-        int speed = (int) (character.getSpeed() * Gdx.graphics.getDeltaTime());
-        switch (direction) {
-        case RIGHT:
-            pair = new Pair<>(oldX + speed, oldY);
-            break;
-        case LEFT:
-            pair = new Pair<>(oldX - speed, oldY);
-            break;
-        case UP:
-            pair = new Pair<>(oldX, oldY + speed);
-            break;
-        case DOWN:
-            pair = new Pair<>(oldX, oldY - speed);
-            break;
-        default:
-            throw new RuntimeException("invalid direction");
-        }
-        return pair;
     }
 
     @Override
