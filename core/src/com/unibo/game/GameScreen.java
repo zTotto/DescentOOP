@@ -17,6 +17,7 @@ import com.unibo.model.Hero;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Weapon;
+import com.unibo.util.KeyBindings;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
 import com.unibo.view.HeroView;
@@ -122,11 +123,10 @@ public class GameScreen implements Screen {
             batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
 
-        // Still hero and music stopped during pause
+        // Last hero direction and music stopped during pause
         if (this.isPaused) {
             this.soundtrack.pause();
             batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
-            // batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
         }
 
         if (!this.isPaused) {
@@ -134,12 +134,12 @@ public class GameScreen implements Screen {
             this.soundtrack.play();
 
             // Item pick up
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (Gdx.input.isKeyJustPressed(KeyBindings.PICK_UP.getKey())) {
                 heroView.getCharacter().pickUpfromLevel(lvlTest);
             }
 
             // Attack Check
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !heroView.isAttacking) {
+            if (Gdx.input.isKeyJustPressed(KeyBindings.ATTACK.getKey()) && !heroView.isAttacking) {
                 heroView.isAttacking = true;
                 heroView.getAttackSound().play();
                 heroView.attack();
@@ -176,6 +176,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(final int width, final int height) {
+        menu.getStage().getViewport().update(width, height, true);
         camera.viewportWidth = width / 2.5f;
         camera.viewportHeight = height / 2.5f;
     }
