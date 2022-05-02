@@ -87,8 +87,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void resize(final int width, final int height) {
-        camera.viewportWidth = width / 2.5f;
-        camera.viewportHeight = height / 2.5f;
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
