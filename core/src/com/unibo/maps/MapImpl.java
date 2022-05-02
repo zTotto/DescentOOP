@@ -41,7 +41,7 @@ public class MapImpl implements Map {
     @Override
     public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
         Rectangle rect = charView.getCharRect();
-        rect.setPosition(newX - (int) (charView.getWidth() / 2), newY);
+        rect.setPosition(newX - (int) (rect.getWidth() / 2), newY);
         for (RectangleMapObject rectObj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
             if (Intersector.overlaps(rect, rectObj.getRectangle())) {
                 return false;

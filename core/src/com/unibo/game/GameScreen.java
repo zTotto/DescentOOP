@@ -122,11 +122,10 @@ public class GameScreen implements Screen {
             batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
 
-        // Still hero and music stopped during pause
+        // Last hero direction and music stopped during pause
         if (this.isPaused) {
             this.soundtrack.pause();
             batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
-            // batch.draw(heroView.getStillTexture(), heroTextureX, heroY);
         }
 
         if (!this.isPaused) {
@@ -176,6 +175,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(final int width, final int height) {
+        menu.getStage().getViewport().update(width, height, true);
         camera.viewportWidth = width / 2.5f;
         camera.viewportHeight = height / 2.5f;
     }

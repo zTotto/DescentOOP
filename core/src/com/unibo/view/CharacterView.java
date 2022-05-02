@@ -43,7 +43,7 @@ public abstract class CharacterView {
         this.attackSound = Gdx.audio.newSound(Gdx.files.internal(attackSoundPath));
         this.createTextures(texturePath);
         this.charRect = new Rectangle(this.character.getPos().getxCoord(), this.character.getPos().getyCoord(),
-                this.getWidth(), this.getHeight() / 6);
+                this.getWidth() * 0.66f, this.getHeight() / 6);
     }
 
     private void createTextures(final String fileName) {
@@ -120,6 +120,7 @@ public abstract class CharacterView {
         return animationAttack;
     }
 
+    //TODO: Implement attack mechanic.
     /**
      * Makes the character attack.
      */
