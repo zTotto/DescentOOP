@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public class MainMenu implements Screen {
 
-	private final Descent game;
-	private final OrthographicCamera camera;
+	  private final Descent game;
+	  private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
@@ -29,40 +29,40 @@ public class MainMenu implements Screen {
      * 
      * @param game
      */
-	public MainMenu(final Descent game) {
-		this.game = game;
-		this.camera = new OrthographicCamera();
-		this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
-	    this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-	    this.stage = new Stage(new ScreenViewport());
-	    this.table = new Table();
-	}
+    public MainMenu(final Descent game) {
+        this.game = game;
+        this.camera = new OrthographicCamera();
+        this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
+        this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+        this.stage = new Stage(new ScreenViewport());
+        this.table = new Table();
+    }
 
-	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
-		table.setFillParent(true);
-		
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        table.setFillParent(true);
+
         final Label label = new Label("DESCENT", skin);
         final TextButton play = new TextButton("Play", skin);
         final TextButton settings = new TextButton("Settings", skin);
         final TextButton exit = new TextButton("Exit", skin);
-	
+
         play.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-            	game.setScreen(new GameScreen(game));
+            public void changed(final ChangeEvent event, final Actor actor) {
+                game.setScreen(new GameScreen(game));
             }
         });
         settings.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-            	game.setScreen(new SettingsMenu(game));
+            public void changed(final ChangeEvent event, final Actor actor) {
+                game.setScreen(new SettingsMenu(game));
             }
         });
         exit.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.exit();
             }
         });
@@ -71,38 +71,38 @@ public class MainMenu implements Screen {
         table.add(play).uniform().fill().spaceBottom(10).row();
         table.add(settings).uniform().fill().spaceBottom(10).row();
         table.add(exit).uniform().fill().spaceBottom(10);
-        
-        stage.addActor(table);
-	}
 
-	@Override
-	public void render(final float delta) {
-		Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
+        stage.addActor(table);
+    }
+
+    @Override
+    public void render(final float delta) {
+        Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
         stage.draw();
-	}
+    }
 
-	@Override
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-	}
+    @Override
+    public void resize(final int width, final int height) {
+        stage.getViewport().update(width, height, true);
+    }
 
-	@Override
-	public void pause() {
-	}
+    @Override
+    public void pause() {
+    }
 
-	@Override
-	public void resume() {
-	}
+    @Override
+    public void resume() {
+    }
 
-	@Override
-	public void hide() {
-	}
+    @Override
+    public void hide() {
+    }
 
-	@Override
-	public void dispose() {
-	}
+    @Override
+    public void dispose() {
+    }
 
 }
