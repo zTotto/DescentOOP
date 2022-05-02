@@ -11,9 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Main Menu to star the game, open the settings or quit.
@@ -22,7 +20,6 @@ public class MainMenu implements Screen {
 
 	private final Descent game;
 	private final OrthographicCamera camera;
-    private final Viewport viewport;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
@@ -36,8 +33,6 @@ public class MainMenu implements Screen {
 		this.game = game;
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
-	    viewport = new FitViewport(Descent.GAME_WIDTH, Descent.GAME_HEIGHT, camera);
-        viewport.apply();
 	    this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 	    this.stage = new Stage(new ScreenViewport());
 	    this.table = new Table();
@@ -91,9 +86,7 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		viewport.update(width, height);
-		camera.viewportWidth = width / 2.5f;
-        camera.viewportHeight = height / 2.5f;
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
