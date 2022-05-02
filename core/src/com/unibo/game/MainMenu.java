@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public class MainMenu implements Screen {
 
-    private final Descent game;
-    private OrthographicCamera camera;
+	  private final Descent game;
+	  private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
@@ -57,7 +57,6 @@ public class MainMenu implements Screen {
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                System.out.println("Options Menu");
                 game.setScreen(new SettingsMenu(game));
             }
         });
