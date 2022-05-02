@@ -3,7 +3,7 @@ package com.unibo.util;
 import com.badlogic.gdx.Input;
 
 /**
- * Enumarator for the Key Bindings.
+ * Enumeration for the Key Bindings.
  *
  */
 public enum KeyBindings {

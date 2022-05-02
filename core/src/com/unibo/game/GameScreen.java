@@ -1,7 +1,7 @@
 package com.unibo.game;
 
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +15,6 @@ import com.unibo.model.ConsumableItem;
 import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
-import com.unibo.model.Mob;
 import com.unibo.model.Weapon;
 import com.unibo.util.KeyBindings;
 import com.unibo.util.Position;
@@ -114,7 +113,7 @@ public class GameScreen implements Screen {
         batch.begin();
 
         // Pause Activation
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(KeyBindings.PAUSE.getKey())) {
             this.isPaused = !this.isPaused;
         }
 

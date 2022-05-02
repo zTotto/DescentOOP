@@ -1,7 +1,6 @@
 package com.unibo.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.unibo.maps.Map;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
@@ -31,7 +30,7 @@ public class HeroView extends CharacterView {
         int deltaMovement = (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
         Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(this, heroX - deltaMovement, heroY)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(this, heroX - deltaMovement, heroY)) {         
             setDir(Direction.LEFT);
             getCharacter().setPos(heroX - deltaMovement, heroY);
         }
