@@ -30,19 +30,19 @@ public class HeroView extends CharacterView {
         int deltaMovement = (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
         Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(getCharacter(), Direction.LEFT)) {         
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(this, heroX - deltaMovement, heroY)) {         
             setDir(Direction.LEFT);
             getCharacter().setPos(heroX - deltaMovement, heroY);
         }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_RIGHT.getKey()) && map.validMovement(getCharacter(), Direction.RIGHT)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_RIGHT.getKey()) && map.validMovement(this, heroX + deltaMovement, heroY)) {
             setDir(Direction.RIGHT);
             getCharacter().setPos(heroX + deltaMovement, heroY);
         }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_UP.getKey()) && map.validMovement(getCharacter(), Direction.UP)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_UP.getKey()) && map.validMovement(this, heroX, heroY + deltaMovement)) {
             setDir(Direction.UP);
             getCharacter().setPos(heroX, heroY + deltaMovement);
         }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_DOWN.getKey()) && map.validMovement(getCharacter(), Direction.DOWN)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_DOWN.getKey()) && map.validMovement(this, heroX, heroY - deltaMovement)) {
             setDir(Direction.DOWN);
             getCharacter().setPos(heroX, heroY - deltaMovement);
         }
