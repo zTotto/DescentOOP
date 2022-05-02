@@ -1,21 +1,16 @@
 package com.unibo.maps;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.unibo.model.Character;
 import com.unibo.model.Item;
-import com.unibo.util.Direction;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
