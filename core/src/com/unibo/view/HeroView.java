@@ -1,10 +1,10 @@
 package com.unibo.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.unibo.maps.Map;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
+import com.unibo.util.KeyBindings;
 
 /**
  * Class for the view of the hero.
@@ -29,19 +29,19 @@ public class HeroView extends CharacterView {
         int heroY = getCharacter().getPos().getyCoord();
         Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && map.validMovement(getCharacter(), Direction.LEFT)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(getCharacter(), Direction.LEFT)) {
             setDir(Direction.LEFT);
             getCharacter().setPos(heroX - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && map.validMovement(getCharacter(), Direction.RIGHT)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_RIGHT.getKey()) && map.validMovement(getCharacter(), Direction.RIGHT)) {
             setDir(Direction.RIGHT);
             getCharacter().setPos(heroX + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()), heroY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && map.validMovement(getCharacter(), Direction.UP)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_UP.getKey()) && map.validMovement(getCharacter(), Direction.UP)) {
             setDir(Direction.UP);
             getCharacter().setPos(heroX, heroY + (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && map.validMovement(getCharacter(), Direction.DOWN)) {
+        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_DOWN.getKey()) && map.validMovement(getCharacter(), Direction.DOWN)) {
             setDir(Direction.DOWN);
             getCharacter().setPos(heroX, heroY - (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime()));
         }
