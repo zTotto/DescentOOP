@@ -3,7 +3,7 @@ package com.unibo.util;
  /**
  *	Enum used to create different types of mobs
  */
-public enum MobsStats {
+public enum MobStats {
 	ORC("Orc", 60, 130),
 	TROLL("Troll", 30, 170);
 	
@@ -21,7 +21,7 @@ public enum MobsStats {
 	 * @param speed
 	 * 			mob's movement speed
 	 */
-	private MobsStats(final String name, final int hp, final int speed) {
+	private MobStats(final String name, final int hp, final int speed) {
 		this.name = name;
 		this.hp = hp;
 		this.speed = speed;
