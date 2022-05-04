@@ -38,6 +38,16 @@ public class InputHandler {
 	}
 	
 	/**
+	 * Add a new command on the list
+	 * 
+	 * @param key the keyBinding for the new command
+	 * @param newCommand the new command we want to add
+	 */
+	public void addCommand(KeyBindings key, Command newCommand) {
+		this.commands.put(key.getName(), newCommand);
+	}
+	
+	/**
 	 * @param key the key that the user pressed (or better, the action the user want to perform)
 	 * @return an optional of the command related to the action the user want do perform
 	 */
