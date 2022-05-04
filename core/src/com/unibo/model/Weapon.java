@@ -1,5 +1,7 @@
 package com.unibo.model;
 
+import com.unibo.util.WeaponStats;
+
 /**
  * 
  * Class to model a Weapon, a sub-class of Item.
@@ -16,10 +18,10 @@ public class Weapon extends Item {
      * @param range
      * @param id the weapon Id
      */
-    public Weapon(final String name, final int damage, final int range, final String id) {
-        super(name, id);
-        this.damage = damage;
-        this.range = range;
+    public Weapon(final WeaponStats weapon, final String id) {
+        super(weapon.getName(), id);
+        this.damage = weapon.getDamage();
+        this.range = weapon.getRange();
     }
 
     /**
