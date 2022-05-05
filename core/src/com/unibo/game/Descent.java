@@ -31,6 +31,7 @@ public class Descent extends Game {
     /**
      * Render class for the application.
      */
+    @Override
     public void render() {
         super.render(); // important!
     }
@@ -38,6 +39,7 @@ public class Descent extends Game {
     /**
      * Class to dispose textures, fonts, sounds etc.
      */
+    @Override
     public void dispose() {
         batch.dispose();
         font.dispose();

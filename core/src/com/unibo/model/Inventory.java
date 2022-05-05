@@ -24,7 +24,7 @@ public class Inventory {
      * 
      * @param item to add to the inventory
      */
-    public Inventory(final Pair<Item, Integer>... item) {
+    public Inventory(final List<Pair<Item, Integer>> item) {
         for (final Pair<Item, Integer> i : item) {
             inv.add(i);
         }

@@ -1,4 +1,4 @@
-package com.unibo.keyBindings;
+package com.unibo.key_bindings;
 
 import java.util.HashMap;
 import java.util.Map;

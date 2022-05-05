@@ -1,7 +1,7 @@
 package com.unibo.view;
 
-import com.unibo.keyBindings.InputHandler;
-import com.unibo.keyBindings.KeyBindings;
+import com.unibo.key_bindings.InputHandler;
+import com.unibo.key_bindings.KeyBindings;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
 

@@ -70,7 +70,5 @@ public class Mob extends Character {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setRange(final int range) {
-		
-	}
+	public void setRange(final int range) {}
 }
