@@ -3,11 +3,10 @@ package com.unibo.maps;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.unibo.model.Character;
+import com.unibo.view.CharacterView;
 import com.unibo.model.Item;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
-import com.unibo.view.CharacterView;
 
 /**
  * Interface for a map.

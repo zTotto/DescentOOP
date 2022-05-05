@@ -1,54 +1,57 @@
-package com.unibo.util;
+package com.unibo.keyBindings;
 
 import com.badlogic.gdx.Input;
 
 /**
- * Enumarator for the Key Bindings.
+ * Enumeration for the Key Bindings.
  *
  */
 public enum KeyBindings {
     /**
      * Key to pause the game.
      */
-    PAUSE(Input.Keys.ESCAPE),
+    PAUSE(Input.Keys.ESCAPE, "Pause"),
     /**
      * Key to attack.
      */
-    ATTACK(Input.Keys.SPACE),
+    ATTACK(Input.Keys.SPACE, "Attack"),
     /**
      * Key to move up.
      */
-    MOVE_UP(Input.Keys.UP),
+    MOVE_UP(Input.Keys.UP, "MoveUp"),
     /**
      * Key to move down.
      */
-    MOVE_DOWN(Input.Keys.DOWN),
+    MOVE_DOWN(Input.Keys.DOWN, "MoveDown"),
     /**
      * Key to move right.
      */
-    MOVE_RIGHT(Input.Keys.RIGHT),
+    MOVE_RIGHT(Input.Keys.RIGHT, "MoveRight"),
     /**
      * Key to move left.
      */
-    MOVE_LEFT(Input.Keys.LEFT),
+    MOVE_LEFT(Input.Keys.LEFT, "MoveLeft"),
     /**
      * Key to pick up items.
      */
-    PICK_UP(Input.Keys.E),
+    PICK_UP(Input.Keys.E, "PickUp"),
     /**
      * Key to switch weapon.
      */
-    SWITCH_WEAPON(Input.Keys.W);
+    SWITCH_WEAPON(Input.Keys.W, "SwitchWeapon");
 
     private int key;
+    private final String name;
 
     /**
      * Constructor for the KeyBindings enum.
      * 
      * @param key key associated to the action
+     * @param name name associated to the action
      */
-    KeyBindings(final int key) {
+    KeyBindings(final int key, final String name) {
         this.key = key;
+        this.name = name;
     }
 
     /**
@@ -56,6 +59,13 @@ public enum KeyBindings {
      */
     public int getKey() {
         return this.key;
+    }
+    
+    /**
+     * @return the name of the associated action
+     */
+    public String getName() {
+    	return this.name;
     }
 
     /**

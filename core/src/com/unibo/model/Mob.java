@@ -1,6 +1,6 @@
 package com.unibo.model;
 
-import com.unibo.util.MobsStats;
+import com.unibo.util.MobStats;
 
 /**
  * A class to model a mob.
@@ -15,7 +15,7 @@ public class Mob extends Character {
      * @param modType        type of the created mob
      * @param startingWeapon starting weapon of the created mob
      */
-    public Mob(final MobsStats modType, final Weapon startingWeapon) {
+    public Mob(final MobStats modType, final Weapon startingWeapon) {
         super(modType.getHp(), modType.getSpeed(), startingWeapon);
         this.name = modType.getName();
     }
