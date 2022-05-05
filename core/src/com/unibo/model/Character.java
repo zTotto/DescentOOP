@@ -17,7 +17,6 @@ public abstract class Character {
     private int currentHp;
     private final int maxHp;
     private int speed;
-    private int range;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
     private Weapon currentWeapon;
@@ -35,7 +34,6 @@ public abstract class Character {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
         this.setSpeed(speed);
-        this.setRange(speed / 6);
         this.currentWeapon = startingWeapon;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
@@ -103,20 +101,16 @@ public abstract class Character {
     }
 
     /**
-     * @return the character range when picking up items.
+     * @return the character range when picking up items. (Mobs don't have a pickup range)
      */
-    public int getRange() {
-        return range;
-    }
+    public abstract int getRange();
 
     /**
-     * Sets the character pickup range.
+     * Sets the character pickup range. (Mobs can't have a pickup range)
      * 
      * @param range
      */
-    public void setRange(final int range) {
-        this.range = range;
-    }
+    public abstract void setRange(int range);
 
     // Weapon related
     /**
@@ -208,55 +202,27 @@ public abstract class Character {
 
     /**
      * Uses the specified item (if present in the inventory).
+     * The mob can't use an item (so this will be empty on a mob)
      * 
      * @param item
      */
-    public void useItem(final ConsumableItem item) {
-        if (this.inv.contains(item)) {
-            item.use(this);
-            this.inv.removeItem(item);
-        }
-    }
+    public abstract void useItem(ConsumableItem item);
 
     /**
-     * If in range, picks up an item from the level.
+     * If in range, picks up an item from the level. Mobs can't pick up items.
      * 
      * @param lvl
      * @return true if an item was picked up.
      */
-    public Boolean pickUpfromLevel(final Level lvl) {
-        if (!this.isDead()) {
-            final List<Item> items = new LinkedList<>();
-            items.addAll(lvl.getConsumables());
-            items.addAll(lvl.getWeapons());
-            int consIndex = 0;
-            for (final Item item : items) {
-                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.range
-                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.range) {
-                    if (item instanceof Weapon) {
-                        weapons.add((Weapon) item);
-                        lvl.removeWeapon((Weapon) item);
-                    } else {
-                        inv.addItem(item);
-                        lvl.removeConsumableAtIndex(consIndex);
-                    }
-                    return true;
-                }
-                consIndex++;
-            }
-        }
-        return false;
-    }
+    public abstract Boolean pickUpfromLevel(Level lvl);
 
     /**
-     * Checks whether an item can be picked up.
+     * Checks whether an item can be picked up. Mobs can't pick up items.
      * 
      * @param item to be checked
      * @return true if the item can be picked up
      */
-    public Boolean canPickUpItem(final Item item) {
-        return item.getPos().equals(this.getPos());
-    }
+    public abstract Boolean canPickUpItem(Item item);
 
     /**
      * Pick ups the specified item.
@@ -337,7 +303,7 @@ public abstract class Character {
     }
 
     /**
-     * @return the description of the hero.
+     * @return the description of the character.
      */
     public String toString() {
     	return "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
@@ -360,5 +326,8 @@ public abstract class Character {
         this.currentMap = map;
     }
     
+    /**
+     * @return the name of the character
+     */
     public abstract String getName();
 }

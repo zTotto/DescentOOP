@@ -22,18 +22,55 @@ public class Mob extends Character {
     }
 
     /**
-     * 
-     * @return this mob's name
+     * {@inheritDoc}
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @return the description of this mob.
+     * {@inheritDoc}
      */
     public String toString() {
         return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
                 + this.getWeapons();
     }
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void useItem(final ConsumableItem item) {}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Boolean pickUpfromLevel(final Level lvl) {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Boolean canPickUpItem(final Item item) {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getRange() {
+		return 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setRange(final int range) {
+		
+	}
 }
