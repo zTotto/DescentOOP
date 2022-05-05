@@ -115,6 +115,5 @@ Thumbs.db
 /ios/IOSLauncher.app.dSYM
 
 ## Plug-in
-/core/.eclipse-pmd
 /config/checkstyle/checkstyle.xml
 /core/.checkstyle
