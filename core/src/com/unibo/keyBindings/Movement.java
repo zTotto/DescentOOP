@@ -6,7 +6,8 @@ import com.unibo.util.Direction;
 import com.unibo.view.CharacterView;
 
 /**
- * Class that has an execute method, in order to move a character based on a direction
+ * Class that has an execute method, in order to move a character based on a
+ * direction.
  *
  */
 public class Movement implements Command {
