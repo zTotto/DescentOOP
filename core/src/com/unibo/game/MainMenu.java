@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public class MainMenu implements Screen {
 
-	  private final Descent game;
-	  private final OrthographicCamera camera;
+    private final Descent game;
+    private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;

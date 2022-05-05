@@ -28,12 +28,12 @@ public class HeroView extends CharacterView {
     public void move() {
         setDir(Direction.STILL);
         
-    	this.input.handleInput(KeyBindings.MOVE_LEFT).ifPresent(t -> t.Execute(this));
+    	this.input.handleInput(KeyBindings.MOVE_LEFT).ifPresent(t -> t.executeCommand(this));
     	
-    	this.input.handleInput(KeyBindings.MOVE_RIGHT).ifPresent(t -> t.Execute(this));
+    	this.input.handleInput(KeyBindings.MOVE_RIGHT).ifPresent(t -> t.executeCommand(this));
     	
-        this.input.handleInput(KeyBindings.MOVE_UP).ifPresent(t -> t.Execute(this));
+        this.input.handleInput(KeyBindings.MOVE_UP).ifPresent(t -> t.executeCommand(this));
         
-    	this.input.handleInput(KeyBindings.MOVE_DOWN).ifPresent(t -> t.Execute(this));
+    	this.input.handleInput(KeyBindings.MOVE_DOWN).ifPresent(t -> t.executeCommand(this));
     }
 }

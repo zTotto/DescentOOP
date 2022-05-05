@@ -46,7 +46,7 @@ public enum KeyBindings {
     /**
      * Constructor for the KeyBindings enum.
      * 
-     * @param key key associated to the action
+     * @param key  key associated to the action
      * @param name name associated to the action
      */
     KeyBindings(final int key, final String name) {
@@ -60,12 +60,12 @@ public enum KeyBindings {
     public int getKey() {
         return this.key;
     }
-    
+
     /**
      * @return the name of the associated action
      */
     public String getName() {
-    	return this.name;
+        return this.name;
     }
 
     /**
@@ -73,7 +73,7 @@ public enum KeyBindings {
      * 
      * @param key the new key associated to the action
      */
-    //TODO: write the edited key in a json file.
+    // TODO: write the edited key in a json file.
     public void changeKey(final int key) {
         this.key = key;
     }
