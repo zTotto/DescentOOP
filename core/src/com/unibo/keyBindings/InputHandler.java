@@ -1,6 +1,7 @@
 package com.unibo.keyBindings;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.badlogic.gdx.Gdx;
  *
  */
 public class InputHandler {
+
     private final Map<String, Command> commands = new HashMap<>();
 
     /**
@@ -49,15 +51,14 @@ public class InputHandler {
     }
 
     /**
+     * Return what command to use based on the pressed key.
+	   * 
      * @param key the key that the user pressed (or better, the action the user want
      *            to perform)
      * @return an optional of the command related to the action the user want do
      *         perform
      */
     public Optional<Command> handleInput(final KeyBindings key) {
-
-//        if (KeyBindings.MOVE_DOWN == key || KeyBindings.MOVE_UP == key || KeyBindings.MOVE_RIGHT == key
-//                || KeyBindings.MOVE_LEFT == key) {
         if (key.getName().contains("Move")) {
             return Gdx.input.isKeyPressed(key.getKey()) ? Optional.ofNullable(this.commands.get(key.getName()))
                     : Optional.empty();
