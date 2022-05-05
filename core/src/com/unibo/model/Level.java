@@ -28,7 +28,7 @@ public class Level {
      * @param items
      */
     public void addConsumables(final ConsumableItem... items) {
-        for (ConsumableItem i : items) {
+        for (final ConsumableItem i : items) {
             if (i.getPos() != null) {
                 consumables.add(i);
             }
@@ -41,7 +41,7 @@ public class Level {
      * @param enemies
      */
     public void addEnemies(final Character... enemies) {
-        for (Character c : enemies) {
+        for (final Character c : enemies) {
             this.enemies.add(c);
         }
     }
@@ -52,7 +52,7 @@ public class Level {
      * @param weapons
      */
     public void addWeapons(final Weapon... weapons) {
-        for (Weapon w : weapons) {
+        for (final Weapon w : weapons) {
             if (w.getPos() != null) {
                 this.weapons.add(w);
             }
@@ -124,7 +124,7 @@ public class Level {
         String msg = "\nLEVEL: \n";
         if (!enemies.isEmpty()) {
             msg += "Enemies:";
-            for (Character e : enemies) {
+            for (final Character e : enemies) {
                 msg += "\n" + ++i + ": [" + e.toString() + "]\nPosition: " + e.getPos().toString();
             }
         } else {
@@ -133,7 +133,7 @@ public class Level {
         i = 0;
         if (!consumables.isEmpty()) {
             msg += "\nItems:";
-            for (ConsumableItem item : consumables) {
+            for (final ConsumableItem item : consumables) {
                 msg += "\n" + ++i + ": [ " + item.getName() + " ], Position: " + item.getPos().toString();
             }
         } else {
@@ -142,7 +142,7 @@ public class Level {
         i = 0;
         if (!weapons.isEmpty()) {
             msg += "\nWeapons:";
-            for (Weapon w : weapons) {
+            for (final Weapon w : weapons) {
                 msg += "\n" + ++i + ": [" + w.toString() + "]" + ", Position: " + w.getPos().toString();
             }
         } else {

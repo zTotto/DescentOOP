@@ -1,4 +1,4 @@
-package com.unibo.keyBindings;
+package com.unibo.key_bindings;
 
 import com.badlogic.gdx.Gdx;
 import com.unibo.maps.Map;
@@ -28,10 +28,10 @@ public class Movement implements Command {
      */
     @Override
     public void executeCommand(final CharacterView character) {
-        int xPosition = character.getCharacter().getPos().getxCoord();
-        int yPosition = character.getCharacter().getPos().getyCoord();
-        int deltaMovement = (int) (character.getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
-        Map map = character.getCharacter().getCurrentMap();
+        final int xPosition = character.getCharacter().getPos().getxCoord();
+        final int yPosition = character.getCharacter().getPos().getyCoord();
+        final int deltaMovement = (int) (character.getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
+        final Map map = character.getCharacter().getCurrentMap();
         character.setDir(this.direction);
 
         if (this.direction == Direction.LEFT && map.validMovement(character, xPosition - deltaMovement, yPosition)) {

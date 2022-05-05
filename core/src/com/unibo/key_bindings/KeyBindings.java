@@ -1,4 +1,4 @@
-package com.unibo.keyBindings;
+package com.unibo.key_bindings;
 
 import com.badlogic.gdx.Input;
 

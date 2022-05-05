@@ -16,7 +16,6 @@ public abstract class CharacterView {
 
     private final Character character;
 
-    private Texture characterTextures;
     private TextureRegion still;
     private Animation<TextureRegion> animationLeft;
     private Animation<TextureRegion> animationRight;
@@ -47,8 +46,8 @@ public abstract class CharacterView {
     }
 
     private void createTextures(final String fileName) {
-        characterTextures = new Texture(fileName);
-        TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
+        final Texture characterTextures = new Texture(fileName);
+        final TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
                 characterTextures.getHeight() / 4);
 
         // Texture when still
