@@ -5,6 +5,7 @@ import com.unibo.util.MobStats;
 /**
  * A class to model a mob.
  */
+@SuppressWarnings("PMD.MissingSerialVersionUID")
 public class Mob extends Character {
 
     private final String name;
@@ -32,8 +33,7 @@ public class Mob extends Character {
      * @return the description of this mob.
      */
     public String toString() {
-        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
+        return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
                 + this.getWeapons();
-        return msg;
     }
 }

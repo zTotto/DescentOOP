@@ -34,7 +34,6 @@ public class Hero extends Character {
      * @return the description of the hero.
      */
     public String toString() {
-        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
-        return msg;
+        return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
     }
 }
