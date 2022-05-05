@@ -1,6 +1,5 @@
 package com.unibo.game;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -9,6 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.unibo.keyBindings.InputHandler;
+import com.unibo.keyBindings.KeyBindings;
+import com.unibo.keyBindings.Movement;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
 import com.unibo.model.ConsumableItem;
@@ -16,7 +18,7 @@ import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
 import com.unibo.model.Weapon;
-import com.unibo.util.KeyBindings;
+import com.unibo.util.Direction;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
 import com.unibo.view.CharacterView;
@@ -26,8 +28,8 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
-    private final static int MAX_SPEED = 200;
-    private final static int MAX_HP = 100;
+    private final int maxSpeed = 200;
+    private final int maxHp = 100;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -42,7 +44,16 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private float attackTime;
     private Boolean isPaused = false;
-    private final Level lvlTest;
+    private final Level lvlTest = new Level();
+
+    private final InputHandler input = new InputHandler(t -> {
+        t.isAttacking = true;
+        t.getAttackSound().play();
+        t.attack();
+    }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {
+    }, // TODO (Weapon Switch)
+            new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
+            new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused);
 
     /**
      * Main game scene.
@@ -53,7 +64,6 @@ public class GameScreen implements Screen {
         this.game = game;
         menu = new PauseMenu(this);
         menu.getMenu().setVisible(true);
-        lvlTest = new Level();
         hpTexture = new Texture("hpPotion.png");
         HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
         HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
@@ -63,8 +73,8 @@ public class GameScreen implements Screen {
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSOWRD, "0")),
-                "walkingAnim.png");
+        heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSOWRD, "0")),
+                "walkingAnim.png", this.input);
         // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
         // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
@@ -114,9 +124,7 @@ public class GameScreen implements Screen {
         batch.begin();
 
         // Pause Activation
-        if (Gdx.input.isKeyJustPressed(KeyBindings.PAUSE.getKey())) {
-            this.isPaused = !this.isPaused;
-        }
+        this.input.handleInput(KeyBindings.PAUSE).ifPresent(t -> t.executeCommand(heroView));
 
         // Hp Potion rendering
         for (ConsumableItem i : lvlTest.getConsumables()) {
@@ -134,15 +142,11 @@ public class GameScreen implements Screen {
             this.soundtrack.play();
 
             // Item pick up
-            if (Gdx.input.isKeyJustPressed(KeyBindings.PICK_UP.getKey())) {
-                heroView.getCharacter().pickUpfromLevel(lvlTest);
-            }
+            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
-            if (Gdx.input.isKeyJustPressed(KeyBindings.ATTACK.getKey()) && !heroView.isAttacking) {
-                heroView.isAttacking = true;
-                heroView.getAttackSound().play();
-                heroView.attack();
+            if (!heroView.isAttacking) {
+                this.input.handleInput(KeyBindings.ATTACK).ifPresent(t -> t.executeCommand(heroView));
             }
 
             if (heroView.isAttacking) {
@@ -211,5 +215,12 @@ public class GameScreen implements Screen {
      */
     public void disablePause() {
         this.isPaused = false;
+    }
+
+    /**
+     * @return the main game application
+     */
+    public Descent getGame() {
+        return this.game;
     }
 }

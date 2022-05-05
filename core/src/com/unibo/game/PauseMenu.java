@@ -14,7 +14,6 @@ import com.badlogic.gdx.Gdx;
  */
 public class PauseMenu {
 
-    private final GameScreen gameScreen;
     private final Table menu;
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -22,10 +21,10 @@ public class PauseMenu {
     /**
      * Constructor for the pause menu.
      * 
-     * @param gameScreen the main game screen
+     * @param game the main game screen
      */
-    public PauseMenu(final GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+    public PauseMenu(final GameScreen game) {
+        final GameScreen gameScreen = game;
         menu = new Table();
         menu.setFillParent(true);
         stage = new Stage(new ScreenViewport());
