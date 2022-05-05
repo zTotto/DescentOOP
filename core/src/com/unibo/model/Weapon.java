@@ -13,10 +13,9 @@ public class Weapon extends Item {
 
     /**
      * Constructor for a weapon.
-     * @param name
-     * @param damage
-     * @param range
-     * @param id the weapon Id
+     * 
+     * @param weapon from the enum
+     * @param id     the weapon Id
      */
     public Weapon(final WeaponStats weapon, final String id) {
         super(weapon.getName(), id);
@@ -42,6 +41,7 @@ public class Weapon extends Item {
 
     /**
      * Applies a buff/debuff to the weapon damage.
+     * 
      * @param damageMod the modifier
      */
     public void applyDamageMod(final int damageMod) {
@@ -50,6 +50,7 @@ public class Weapon extends Item {
 
     /**
      * Applies a buff/debuff to the weapon range.
+     * 
      * @param rangeMod the modifier
      */
     public void applyRangeMod(final int rangeMod) {

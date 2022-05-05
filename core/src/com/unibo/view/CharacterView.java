@@ -125,6 +125,7 @@ public abstract class CharacterView {
      */
     public void attack() {
         System.out.println("Attack!");
+        this.character.setCurrentHp((int) (0.95f * this.character.getCurrentHp()));
     }
 
     /**

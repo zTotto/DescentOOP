@@ -87,6 +87,19 @@ public class Inventory {
     }
 
     /**
+     * Returns how many potions the inventory contains.
+     * @return the quantity of potions
+     */
+    public int getPotionQuantity() {
+        for (final Pair<Item, Integer> p : inv) {
+            if (p.getFirst() instanceof HealthPotion) {
+                return p.getSecond();
+            }
+        }
+        return 0;
+    }
+
+    /**
      * If an item is present in the inventory it returns its index.
      * 
      * @param item

@@ -38,7 +38,11 @@ public enum KeyBindings {
     /**
      * Key to switch weapon.
      */
-    SWITCH_WEAPON(Input.Keys.W, "SwitchWeapon");
+    SWITCH_WEAPON(Input.Keys.W, "SwitchWeapon"),
+    /**
+     * Key to use a potion.
+     */
+    USE_POTION(Input.Keys.F, "UsePotion");
 
     private int key;
     private final String name;

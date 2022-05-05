@@ -26,9 +26,10 @@ public class InputHandler {
      * @param moveDown     command that move down a character
      * @param moveLeft     command that move left a character
      * @param pause        command that pause the game
+     * @param usePotion    command that uses a potion
      */
     public InputHandler(final Command attack, final Command pickUp, final Command switchWeapon, final Movement moveUp,
-            final Movement moveRight, final Movement moveDown, final Movement moveLeft, final Command pause) {
+            final Movement moveRight, final Movement moveDown, final Movement moveLeft, final Command pause, final Command usePotion) {
         this.commands.put(KeyBindings.ATTACK.getName(), attack);
         this.commands.put(KeyBindings.PICK_UP.getName(), pickUp);
         this.commands.put(KeyBindings.SWITCH_WEAPON.getName(), switchWeapon);
@@ -37,6 +38,7 @@ public class InputHandler {
         this.commands.put(KeyBindings.MOVE_DOWN.getName(), moveDown);
         this.commands.put(KeyBindings.MOVE_LEFT.getName(), moveLeft);
         this.commands.put(KeyBindings.PAUSE.getName(), pause);
+        this.commands.put(KeyBindings.USE_POTION.getName(), usePotion);
     }
 
     /**
