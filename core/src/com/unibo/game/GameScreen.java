@@ -1,6 +1,5 @@
 package com.unibo.game;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -29,8 +28,8 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
-    private final static int MAX_SPEED = 200;
-    private final static int MAX_HP = 100;
+    private final int maxSpeed = 200;
+    private final int maxHp = 100;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -47,20 +46,14 @@ public class GameScreen implements Screen {
     private Boolean isPaused = false;
     private final Level lvlTest = new Level();
 
-    private final InputHandler input = new InputHandler(
-    t -> {
-    	t.isAttacking = true;
-    	t.getAttackSound().play();
-    	t.attack();
-    },
-    t -> t.getCharacter().pickUpfromLevel(lvlTest),
-    t -> {}, //TODO (Weapon Switch)
-    new Movement(Direction.UP),
-    new Movement(Direction.RIGHT),
-    new Movement(Direction.DOWN),
-    new Movement(Direction.LEFT),
-    t -> this.isPaused = !this.isPaused
-    );
+    private final InputHandler input = new InputHandler(t -> {
+        t.isAttacking = true;
+        t.getAttackSound().play();
+        t.attack();
+    }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {
+    }, // TODO (Weapon Switch)
+            new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
+            new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused);
 
     /**
      * Main game scene.
@@ -80,7 +73,7 @@ public class GameScreen implements Screen {
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSOWRD, "0")),
+        heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSOWRD, "0")),
                 "walkingAnim.png", this.input);
         // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
         // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
@@ -131,7 +124,7 @@ public class GameScreen implements Screen {
         batch.begin();
 
         // Pause Activation
-        this.input.handleInput(KeyBindings.PAUSE).ifPresent(t->t.Execute(heroView));
+        this.input.handleInput(KeyBindings.PAUSE).ifPresent(t -> t.executeCommand(heroView));
 
         // Hp Potion rendering
         for (ConsumableItem i : lvlTest.getConsumables()) {
@@ -149,11 +142,11 @@ public class GameScreen implements Screen {
             this.soundtrack.play();
 
             // Item pick up
-            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t->t.Execute(heroView));
+            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
             if (!heroView.isAttacking) {
-                this.input.handleInput(KeyBindings.ATTACK).ifPresent(t->t.Execute(heroView));
+                this.input.handleInput(KeyBindings.ATTACK).ifPresent(t -> t.executeCommand(heroView));
             }
 
             if (heroView.isAttacking) {
@@ -222,5 +215,12 @@ public class GameScreen implements Screen {
      */
     public void disablePause() {
         this.isPaused = false;
+    }
+
+    /**
+     * @return the main game application
+     */
+    public Descent getGame() {
+        return this.game;
     }
 }
