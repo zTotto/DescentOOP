@@ -186,7 +186,7 @@ public abstract class Character {
      */
     public Boolean hitEnemyFromLevel(final Level lvl) {
         if (!this.isDead()) {
-            for (Character e : lvl.getEnemies()) {
+            for (final Character e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
                     return true;
@@ -226,11 +226,11 @@ public abstract class Character {
      */
     public Boolean pickUpfromLevel(final Level lvl) {
         if (!this.isDead()) {
-            List<Item> items = new LinkedList<>();
+            final List<Item> items = new LinkedList<>();
             items.addAll(lvl.getConsumables());
             items.addAll(lvl.getWeapons());
             int consIndex = 0;
-            for (Item item : items) {
+            for (final Item item : items) {
                 if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.range
                         && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.range) {
                     if (item instanceof Weapon) {
@@ -340,8 +340,8 @@ public abstract class Character {
      * @return the description of the hero.
      */
     public String toString() {
-        String msg = "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
-        return msg;
+    	return "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
+         
     }
 
     /**
@@ -359,4 +359,6 @@ public abstract class Character {
     public void setCurrentMap(final Map map) {
         this.currentMap = map;
     }
+    
+    public abstract String getName();
 }
