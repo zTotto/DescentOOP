@@ -1,7 +1,7 @@
 package com.unibo.view;
 
-import com.unibo.key_bindings.InputHandler;
-import com.unibo.key_bindings.KeyBindings;
+import com.unibo.keybindings.InputHandler;
+import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
 
@@ -16,8 +16,8 @@ public class HeroView extends CharacterView {
     /**
      * Constructor for the view.
      * 
-     * @param hero the hero model
-     * @param path of the hero movement animation
+     * @param hero  the hero model
+     * @param path  of the hero movement animation
      * @param input handler for keyboard inputs
      */
     public HeroView(final Hero hero, final String path, final InputHandler input) {
