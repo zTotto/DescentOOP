@@ -20,7 +20,7 @@ public class SettingsMenu implements Screen {
 
     private final Descent game;
     private final Screen menu;
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;

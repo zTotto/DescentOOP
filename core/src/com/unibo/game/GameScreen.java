@@ -15,6 +15,7 @@ import com.unibo.model.ConsumableItem;
 import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
+import com.unibo.model.LevelsList;
 import com.unibo.model.Weapon;
 import com.unibo.util.KeyBindings;
 import com.unibo.util.Position;
@@ -41,7 +42,8 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private float attackTime;
     private Boolean isPaused = false;
-    private final Level lvlTest;
+    private final LevelsList lvlList;
+    private Level lvlTest;
 
     /**
      * Main game scene.
@@ -52,7 +54,8 @@ public class GameScreen implements Screen {
         this.game = game;
         menu = new PauseMenu(this);
         menu.getMenu().setVisible(true);
-        lvlTest = new Level();
+        lvlList = new LevelsList();
+        lvlTest = lvlList.getCurrentLevel();
         hpTexture = new Texture("hpPotion.png");
         HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
         HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
