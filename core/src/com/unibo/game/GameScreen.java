@@ -1,6 +1,7 @@
 package com.unibo.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +9,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.unibo.keyBindings.InputHandler;
 import com.unibo.keyBindings.KeyBindings;
 import com.unibo.keyBindings.Movement;
@@ -21,7 +25,7 @@ import com.unibo.model.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
-import com.unibo.view.CharacterView;
+import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
 
 /**
@@ -35,16 +39,21 @@ public class GameScreen implements Screen {
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
-    private CharacterView heroView;
+    private HeroView heroView;
     // private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+
     private final Texture hpTexture;
+    private final Image hpPotionIcon;
+    private final Label potionQuantity;
+
     private final Music soundtrack;
     private float elapsedTime;
     private float attackTime;
     private Boolean isPaused = false;
     private final Level lvlTest = new Level();
+    private final Healthbar hpbar;
 
     private final InputHandler input = new InputHandler(t -> {
         t.isAttacking = true;
@@ -53,7 +62,9 @@ public class GameScreen implements Screen {
     }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {
     }, // TODO (Weapon Switch)
             new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
-            new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused);
+            new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused,
+            t -> t.getCharacter().useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream()
+                    .map(p -> p.getFirst()).filter(i -> i instanceof HealthPotion).findFirst().orElse(null)));
 
     /**
      * Main game scene.
@@ -62,8 +73,16 @@ public class GameScreen implements Screen {
      */
     public GameScreen(final Descent game) {
         this.game = game;
+
+        // Menu
         menu = new PauseMenu(this);
         menu.getMenu().setVisible(true);
+
+        // Health Bar
+        hpbar = new Healthbar((int) (Gdx.graphics.getWidth() / 5f), (int) (Gdx.graphics.getHeight() / 20f));
+        hpbar.setPosition(Gdx.graphics.getWidth() - hpbar.getWidth() - hpbar.getHeight(),
+                Gdx.graphics.getHeight() - 2 * hpbar.getHeight());
+
         hpTexture = new Texture("hpPotion.png");
         HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
         HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
@@ -72,6 +91,11 @@ public class GameScreen implements Screen {
         hp2.setPos(new Position(200, 1016));
         hp3.setPos(new Position(300, 1016));
         lvlTest.addConsumables(hp2, hp1, hp3);
+
+        // Hp Potion Icon
+        hpPotionIcon = new Image(hpTexture);
+        hpPotionIcon.setPosition(hpbar.getX(), hpbar.getY() - hpbar.getHeight());
+        hpbar.getStage().addActor(hpPotionIcon);
 
         heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSWORD, "0")),
                 "walkingAnim.png", this.input);
@@ -92,6 +116,14 @@ public class GameScreen implements Screen {
          * ));
          * 
          */
+
+        // Hp Potion Quantity
+        potionQuantity = new Label(": " + heroView.getHero().getInv().getPotionQuantity(),
+                new Skin(Gdx.files.internal("skin/glassy-ui.json")));
+        potionQuantity.setFontScale(0.5f);
+        potionQuantity.setPosition(hpPotionIcon.getX() + hpPotionIcon.getWidth(),
+                hpPotionIcon.getY() - hpPotionIcon.getHeight() / 2);
+        hpbar.getStage().addActor(potionQuantity);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
@@ -144,6 +176,9 @@ public class GameScreen implements Screen {
             // Item pick up
             this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
 
+            // Use potion
+            this.input.handleInput(KeyBindings.USE_POTION).ifPresent(t -> t.executeCommand(heroView));
+
             // Attack Check
             if (!heroView.isAttacking) {
                 this.input.handleInput(KeyBindings.ATTACK).ifPresent(t -> t.executeCommand(heroView));
@@ -175,6 +210,20 @@ public class GameScreen implements Screen {
         if (this.isPaused) {
             menu.getStage().act();
             menu.getStage().draw();
+        }
+
+        // Health bar and Potion Quantity
+        potionQuantity.setText(": " + heroView.getHero().getInv().getPotionQuantity());
+        hpbar.update(heroView.getHero());
+        hpbar.getStage().act();
+        hpbar.getStage().draw();
+
+        // Debug
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            System.out.println(heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
+            System.out.println(heroView.getHero().getInv().getPotionQuantity());
+            System.out.println(heroView.getHero().getInv().toString());
         }
     }
 
