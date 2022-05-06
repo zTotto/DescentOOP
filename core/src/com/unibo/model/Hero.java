@@ -111,7 +111,7 @@ public class Hero extends Character {
     }
 
     /**
-     * @return the amount of exp the hero has
+     * @return the amount of exp the hero has.
      */
     public long getExp() {
         return exp;
@@ -130,10 +130,6 @@ public class Hero extends Character {
                 this.levelUp();
             }
         }
-    }
-    
-    private boolean isExpEnough() {
-        return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
     }
 
     /**
@@ -186,5 +182,9 @@ public class Hero extends Character {
     private void resetXP() {
         this.exp = 0;
         this.setExpToLevelUp(0);        
+    }
+
+    private boolean isExpEnough() {
+        return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
     }
 }
