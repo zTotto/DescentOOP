@@ -1,7 +1,5 @@
 package com.unibo.model;
 
-import java.util.Objects;
-
 import com.unibo.util.Position;
 
 /**
@@ -58,29 +56,10 @@ public abstract class Item {
         this.pos = p;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Item other = (Item) obj;
-        return Objects.equals(id, other.id) && Objects.equals(name, other.name);
-    }
-
     /**
      * @return the item name.
      */
+    @Override
     public String toString() {
         return this.name;
     }
