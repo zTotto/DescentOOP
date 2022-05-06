@@ -27,15 +27,15 @@ public class HealthPotion extends ConsumableItem {
     public void use(final Character pg) {
         pg.setCurrentHp(pg.getCurrentHp() + (int) this.getModifier());
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.getId(), this.getName());
+        return super.hashCode();
     }
-
+    
     /**
      * {@inheritDoc}
      */

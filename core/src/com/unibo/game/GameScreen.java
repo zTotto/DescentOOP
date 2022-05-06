@@ -84,9 +84,9 @@ public class GameScreen implements Screen {
                 Gdx.graphics.getHeight() - 2 * hpbar.getHeight());
 
         hpTexture = new Texture("hpPotion.png");
-        HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
-        HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
-        HealthPotion hp3 = new HealthPotion("Base Health Potion", "0", 15.0);
+        final HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
+        final HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
+        final HealthPotion hp3 = new HealthPotion("Base Health Potion", "0", 15.0);
         hp1.setPos(new Position(100, 900));
         hp2.setPos(new Position(200, 1016));
         hp3.setPos(new Position(300, 1016));
@@ -140,9 +140,9 @@ public class GameScreen implements Screen {
     public void render(final float delta) {
 
         // Hero Coordinates
-        int heroX = heroView.getCharacter().getPos().getxCoord();
-        int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
-        int heroY = heroView.getCharacter().getPos().getyCoord();
+        final int heroX = heroView.getCharacter().getPos().getxCoord();
+        final int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
+        final int heroY = heroView.getCharacter().getPos().getyCoord();
 
         // Camera and batch initial settings
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -159,7 +159,7 @@ public class GameScreen implements Screen {
         this.input.handleInput(KeyBindings.PAUSE).ifPresent(t -> t.executeCommand(heroView));
 
         // Hp Potion rendering
-        for (ConsumableItem i : lvlTest.getConsumables()) {
+        for (final ConsumableItem i : lvlTest.getConsumables()) {
             batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
 
