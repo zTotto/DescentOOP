@@ -42,22 +42,22 @@ public class Hero extends Character {
     }
 
     /**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void useItem(final ConsumableItem item) {
+     * {@inheritDoc}
+     */
+    @Override
+    public void useItem(final ConsumableItem item) {
         if (this.getInv().contains(item)) {
             item.use(this);
             this.getInv().removeItem(item);
         }
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Boolean pickUpfromLevel(final Level lvl) {
-		if (!this.isDead()) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean pickUpfromLevel(final Level lvl) {
+        if (!this.isDead()) {
             final List<Item> items = new LinkedList<>();
             items.addAll(lvl.getConsumables());
             items.addAll(lvl.getWeapons());
@@ -78,29 +78,29 @@ public class Hero extends Character {
             }
         }
         return false;
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Boolean canPickUpItem(final Item item) {
-		return item.getPos().equals(this.getPos());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean canPickUpItem(final Item item) {
+        return item.getPos().equals(this.getPos());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getRange() {
-		return this.range;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getRange() {
+	return this.range;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setRange(final int range) {
-		this.range = range;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRange(final int range) {
+        this.range = range;
+    }
 }
