@@ -40,10 +40,10 @@ public class Healthbar extends ProgressBar {
     }
 
     private Drawable getColoredDrawable(final int width, final int height, final Color color) {
-        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
+        final Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
-        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+        final TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
         pixmap.dispose();
 
         return drawable;
