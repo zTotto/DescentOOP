@@ -15,7 +15,7 @@ import com.unibo.util.Position;
 public abstract class Character {
 
     private int currentHp;
-    private final int maxHp;
+    private int maxHp;
     private int speed;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
@@ -71,6 +71,13 @@ public abstract class Character {
      */
     public int getMaxHp() {
         return maxHp;
+    }
+    
+    /**
+     * @param maxHp new maxHp of the character
+     */
+    public void setMaxHp(final int maxHp) {
+        this.maxHp = maxHp;
     }
 
     /**

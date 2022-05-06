@@ -25,6 +25,7 @@ import com.unibo.model.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
+import com.unibo.view.Expbar;
 import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
 
@@ -54,6 +55,9 @@ public class GameScreen implements Screen {
     private Boolean isPaused = false;
     private final Level lvlTest = new Level();
     private final Healthbar hpbar;
+    private final Expbar expbar;
+    
+    private final Label levelNumber;
 
     private final InputHandler input = new InputHandler(t -> {
         t.isAttacking = true;
@@ -82,6 +86,10 @@ public class GameScreen implements Screen {
         hpbar = new Healthbar((int) (Gdx.graphics.getWidth() / 5f), (int) (Gdx.graphics.getHeight() / 20f));
         hpbar.setPosition(Gdx.graphics.getWidth() - hpbar.getWidth() - hpbar.getHeight(),
                 Gdx.graphics.getHeight() - 2 * hpbar.getHeight());
+        
+        // Exp Bar
+        expbar = new Expbar((int) (Gdx.graphics.getWidth()), (int) (Gdx.graphics.getHeight() / 40f));
+        expbar.setPosition(0,0);
 
         hpTexture = new Texture("hpPotion.png");
         final HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
@@ -125,6 +133,13 @@ public class GameScreen implements Screen {
                 hpPotionIcon.getY() - hpPotionIcon.getHeight() / 2);
         hpbar.getStage().addActor(potionQuantity);
 
+        levelNumber =  new Label("Level: " + heroView.getHero().getLevel(),
+                new Skin(Gdx.files.internal("skin/glassy-ui.json")));
+        levelNumber.setFontScale(0.5f);
+        levelNumber.setPosition(0, 0);
+        
+        expbar.getStage().addActor(this.levelNumber);
+        
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
@@ -217,10 +232,18 @@ public class GameScreen implements Screen {
         hpbar.update(heroView.getHero());
         hpbar.getStage().act();
         hpbar.getStage().draw();
-
+        
+        levelNumber.setText(": " + heroView.getHero().getLevel());
+        expbar.update(heroView.getHero());
+        expbar.getStage().act();
+        expbar.getStage().draw();
+        
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            System.out.println(heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            heroView.getHero().addExp(200);
+            System.out.println("Hp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
+            System.out.println("Level: " + heroView.getHero().getLevel());
             System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().getPotionQuantity());
             System.out.println(heroView.getHero().getInv().toString());
