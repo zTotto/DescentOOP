@@ -10,8 +10,14 @@ import java.util.List;
 @SuppressWarnings("PMD.MissingSerialVersionUID")
 public class Hero extends Character {
 
+    private static final double EXP_ALG_DIVIDER = 2.5;
+    private static final int MAX_LEVEL = 10;
+    
     private final String name;
     private int range;
+    private int level = 1;
+    private long exp;
+    private long expToLevelUp = 60;
 
     /**
      * Constructor for the Hero.
@@ -102,5 +108,83 @@ public class Hero extends Character {
     @Override
     public void setRange(final int range) {
         this.range = range;
+    }
+
+    /**
+     * @return the amount of exp the hero has
+     */
+    public long getExp() {
+        return exp;
+    }
+
+    /**
+     * Add a specific amount of exp to the hero. If the hero reach the right amount of exp,
+     * he will level up and the exp that exceeds the limit will be held by the hero.
+     * 
+     * @param exp to be added to the hero
+     */
+    public void addExp(final int exp) {
+        if (this.level < MAX_LEVEL) {
+            this.exp += exp;
+            if (this.isExpEnough()) {
+                this.levelUp();
+            }
+        }
+    }
+    
+    private boolean isExpEnough() {
+        return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
+    }
+
+    /**
+     * @return the level of the hero
+     */
+    public int getLevel() {
+        return level;
+    }
+    
+    /**
+     * @return the exp the hero needs to level up
+     */
+    public long getExpToLevelUp() {
+        return expToLevelUp;
+    }
+
+    /**
+     * Change the amount of exp the hero needs to level up
+     * 
+     * @param expToLevelUp new amount of exp needed to the hero to level up
+     */
+    public void setExpToLevelUp(final long expToLevelUp) {
+        this.expToLevelUp = expToLevelUp;
+    }
+    
+    /*
+     * Level up the hero, increases the amount of exp needed to level up again, his max hp and resets his hp.
+     * If the actual exp exceeds the amount of exp needed for the next level, level up the hero again
+     */
+    //Could become public if there will be an item that will level up the hero.
+    private void levelUp() {
+        this.exp -= this.getExpToLevelUp();
+        this.level++;
+        if (this.level < MAX_LEVEL/2) {
+            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/EXP_ALG_DIVIDER)));
+        } else {
+            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/(EXP_ALG_DIVIDER * this.level))));
+        }
+        this.setMaxHp(this.getMaxHp()+this.getMaxHp()/10);
+        this.setCurrentHp(this.getMaxHp());
+        if (this.isExpEnough()) { 
+            this.levelUp();
+        }
+        
+        if (this.level == MAX_LEVEL) {
+            this.resetXP();
+        }
+    }
+
+    private void resetXP() {
+        this.exp = 0;
+        this.setExpToLevelUp(0);        
     }
 }

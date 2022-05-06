@@ -217,10 +217,13 @@ public class GameScreen implements Screen {
         hpbar.update(heroView.getHero());
         hpbar.getStage().act();
         hpbar.getStage().draw();
-
+        
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            System.out.println(heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            heroView.getHero().addExp(200);
+            System.out.println("Hp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
+            System.out.println("Level: " + heroView.getHero().getLevel());
             System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().getPotionQuantity());
             System.out.println(heroView.getHero().getInv().toString());
