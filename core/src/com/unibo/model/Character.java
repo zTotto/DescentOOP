@@ -345,5 +345,6 @@ public abstract class Character {
      */
     public void increaseSpeed(final int speed) {
         this.setSpeed(this.getSpeed() + speed);
+        System.out.println(this.getSpeed());
     }
 }

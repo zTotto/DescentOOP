@@ -12,6 +12,7 @@ public class Hero extends Character {
 
     private static final double EXP_ALG_DIVIDER = 2.5;
     private static final int MAX_LEVEL = 10;
+    private static final int LEVEL_TO_SKILL_1 = 2;
     
     private final String name;
     private int range;
@@ -186,5 +187,11 @@ public class Hero extends Character {
 
     private boolean isExpEnough() {
         return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
+    }
+    
+    public void increaseSpeed(final int speed) {
+        if (this.getLevel() >= LEVEL_TO_SKILL_1) {
+            super.increaseSpeed(speed);
+        }
     }
 }

@@ -33,6 +33,7 @@ import com.unibo.view.HeroView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+    private static final double SPEED_MULTIPLAYER = 0.5;
     private final int maxSpeed = 200;
     private final int maxHp = 100;
     private final Descent game;
@@ -63,12 +64,20 @@ public class GameScreen implements Screen {
         t.isAttacking = true;
         t.getAttackSound().play();
         t.attack();
-    }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {
-    }, // TODO (Weapon Switch)
-            new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
-            new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused,
-            t -> t.getCharacter().useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream()
-                    .map(p -> p.getFirst()).filter(i -> i instanceof HealthPotion).findFirst().orElse(null)));
+    }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {}, // TODO (Weapon Switch)
+    new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
+    new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused,
+    t -> t.getCharacter().useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream()
+                                                    .map(p -> p.getFirst())
+                                                    .filter(i -> i instanceof HealthPotion)
+                                                    .findFirst().orElse(null)),
+    t-> {
+        final double newSpeed = maxSpeed*SPEED_MULTIPLAYER;
+        if (t.getCharacter().getSpeed() < (int)newSpeed + maxSpeed) {
+            t.getCharacter().increaseSpeed((int) newSpeed);
+        }
+    }
+    );
 
     /**
      * Main game scene.

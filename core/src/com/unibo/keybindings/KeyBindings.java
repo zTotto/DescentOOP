@@ -46,7 +46,7 @@ public enum KeyBindings {
     /**
      * Key to use skill: Increases Speed
      */
-    INCREASES_SPEED(Input.Keys.NUM_1, "IncreasesSpeed");
+    INCREASES_SPEED(Input.Keys.SHIFT_LEFT, "HoldIncreasesSpeed");
 
     private int key;
     private final String name;
