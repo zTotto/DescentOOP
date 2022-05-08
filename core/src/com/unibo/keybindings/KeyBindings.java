@@ -42,7 +42,11 @@ public enum KeyBindings {
     /**
      * Key to use a potion.
      */
-    USE_POTION(Input.Keys.F, "UsePotion");
+    USE_POTION(Input.Keys.F, "UsePotion"),
+    /**
+     * Key to use skill: Increases Speed
+     */
+    INCREASES_SPEED(Input.Keys.NUM_1, "IncreasesSpeed");
 
     private int key;
     private final String name;

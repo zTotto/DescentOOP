@@ -337,4 +337,13 @@ public abstract class Character {
      * @return the name of the character
      */
     public abstract String getName();
+    
+    /**
+     * Skill: Increases the movement speed of the character
+     * 
+     * @param speed the amount of speed added to the character
+     */
+    public void increaseSpeed(final int speed) {
+        this.setSpeed(this.getSpeed() + speed);
+    }
 }
