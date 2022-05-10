@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
     private static final double SPEED_MULTIPLAYER = 0.5;
     private final int maxSpeed = 200;
     private final int maxHp = 100;
+    private final int maxMana = 100;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -114,7 +115,7 @@ public class GameScreen implements Screen {
         hpPotionIcon.setPosition(hpbar.getX(), hpbar.getY() - hpbar.getHeight());
         hpbar.getStage().addActor(hpPotionIcon);
 
-        heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSWORD, "0")),
+        heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSWORD, "0"), maxMana),
                 "walkingAnim.png", this.input);
         // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
         // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");

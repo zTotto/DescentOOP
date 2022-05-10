@@ -28,8 +28,8 @@ public class Hero extends Character {
      * @param speed
      * @param startingWeapon
      */
-    public Hero(final String name, final int maxHp, final int speed, final Weapon startingWeapon) {
-        super(maxHp, speed, startingWeapon);
+    public Hero(final String name, final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
+        super(maxHp, speed, startingWeapon, maxMana);
         this.name = name;
         this.range = speed / 6;
     }
@@ -189,6 +189,9 @@ public class Hero extends Character {
         return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void increaseSpeed(final int speed) {
         if (this.getLevel() >= LEVEL_TO_SKILL_1) {
             super.increaseSpeed(speed);
