@@ -15,6 +15,8 @@ import com.unibo.util.Position;
 public abstract class Character {
 
     private int currentHp;
+    private int currentMana;
+    private int maxMana;
     private int maxHp;
     private int speed;
     private final Position pos = new Position(0, 0);
@@ -30,9 +32,11 @@ public abstract class Character {
      * @param speed
      * @param startingWeapon
      */
-    public Character(final int maxHp, final int speed, final Weapon startingWeapon) {
+    public Character(final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
+        this.maxMana = maxMana;
+        this.setCurrentMana(maxMana);
         this.setSpeed(speed);
         this.currentWeapon = startingWeapon;
         this.inv = new Inventory();
@@ -66,7 +70,6 @@ public abstract class Character {
     }
 
     /**
-     * 
      * @return max health points.
      */
     public int getMaxHp() {
@@ -78,6 +81,42 @@ public abstract class Character {
      */
     public void setMaxHp(final int maxHp) {
         this.maxHp = maxHp;
+    }
+    
+    /**
+     * @return current mana points
+     */
+    public int getCurrentMana() {
+        return this.currentMana;
+    }
+
+    /**
+     * Set the current mana to the specified value
+     * 
+     * @param currentMana
+     */
+    public void setCurrentMana(final int currentMana) {
+        if (currentMana < 0) {
+            this.currentMana = 0;
+        } else if (currentMana > this.maxMana) {
+            this.currentMana = this.maxMana;
+        } else {
+            this.currentMana = currentMana;
+        }
+    }
+    
+    /**
+     * @return max mana points.
+     */
+    public int getMaxMana() {
+        return this.maxMana;
+    }
+    
+    /**
+     * @param maxMana new MaxMana of the character
+     */
+    public void setMaxMana(final int maxMana) {
+        this.maxMana = maxMana;
     }
 
     /**
