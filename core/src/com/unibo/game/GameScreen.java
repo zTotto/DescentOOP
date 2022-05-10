@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.keybindings.Movement;
+import com.unibo.keybindings.SpeedUpSkill;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
 import com.unibo.model.ConsumableItem;
@@ -34,11 +35,11 @@ import com.unibo.view.Manabar;
  * Game screen class.
  */
 public class GameScreen implements Screen {
-    private static final double SPEED_MULTIPLAYER = 0.5;
     private static final int MANA_UNIT = 1;
-    private final int maxSpeed = 200;
-    private final int maxHp = 100;
-    private final int maxMana = 100;
+    private static final int MAX_SPEED = 200;
+    private static final int MAX_HP = 100;
+    private static final int MAX_MANA = 100;
+    private static final double SPEED_MULTIPLAYER = 1.2;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -75,22 +76,7 @@ public class GameScreen implements Screen {
                                                     .map(p -> p.getFirst())
                                                     .filter(i -> i instanceof HealthPotion)
                                                     .findFirst().orElse(null)),
-    t-> {
-        final double newSpeed = maxSpeed*SPEED_MULTIPLAYER;
-        final com.unibo.model.Character character = t.getCharacter();
-        boolean skillHasBeenUsed = true;
-        if (character.getSpeed() < (int)newSpeed + maxSpeed && character.getCurrentMana() >= MANA_UNIT) {
-            skillHasBeenUsed = character.increaseSpeed((int) newSpeed);
-        }
-        else {
-            character.setSpeed(maxSpeed);
-        }
-        
-        if (skillHasBeenUsed) {
-            character.decreaseCurrentMana(MANA_UNIT);
-        }
-        
-    }
+    new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER)
     );
 
     /**
@@ -133,7 +119,7 @@ public class GameScreen implements Screen {
         hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight()*1.2f);
         manabar.getStage().addActor(hpPotionIcon);
 
-        heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSWORD, "0"), maxMana),
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
                 "walkingAnim.png", this.input);
         // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
         // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");

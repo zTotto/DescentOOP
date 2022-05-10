@@ -30,7 +30,7 @@ public class InputHandler {
      */
     public InputHandler(final Command attack, final Command pickUp, final Command switchWeapon, final Movement moveUp,
             final Movement moveRight, final Movement moveDown, final Movement moveLeft, final Command pause, final Command usePotion,
-            final Command increasesSpeed) {
+            final Skill increasesSpeed) {
         this.commands.put(KeyBindings.ATTACK.getName(), attack);
         this.commands.put(KeyBindings.PICK_UP.getName(), pickUp);
         this.commands.put(KeyBindings.SWITCH_WEAPON.getName(), switchWeapon);
