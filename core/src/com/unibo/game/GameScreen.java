@@ -35,6 +35,7 @@ import com.unibo.view.Manabar;
  */
 public class GameScreen implements Screen {
     private static final double SPEED_MULTIPLAYER = 0.5;
+    private static final int MANA_UNIT = 1;
     private final int maxSpeed = 200;
     private final int maxHp = 100;
     private final int maxMana = 100;
@@ -76,9 +77,19 @@ public class GameScreen implements Screen {
                                                     .findFirst().orElse(null)),
     t-> {
         final double newSpeed = maxSpeed*SPEED_MULTIPLAYER;
-        if (t.getCharacter().getSpeed() < (int)newSpeed + maxSpeed) {
-            t.getCharacter().increaseSpeed((int) newSpeed);
+        final com.unibo.model.Character character = t.getCharacter();
+        boolean skillHasBeenUsed = true;
+        if (character.getSpeed() < (int)newSpeed + maxSpeed && character.getCurrentMana() >= MANA_UNIT) {
+            skillHasBeenUsed = character.increaseSpeed((int) newSpeed);
         }
+        else {
+            character.setSpeed(maxSpeed);
+        }
+        
+        if (skillHasBeenUsed) {
+            character.decreaseCurrentMana(MANA_UNIT);
+        }
+        
     }
     );
 

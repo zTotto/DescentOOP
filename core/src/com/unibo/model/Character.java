@@ -106,6 +106,15 @@ public abstract class Character {
     }
     
     /**
+     * Decreases the current mana of the character of the specified value
+     * 
+     * @param mana 
+     */
+    public void decreaseCurrentMana(final int mana) {
+        this.setCurrentMana(this.currentMana - mana);
+    }
+    
+    /**
      * @return max mana points.
      */
     public int getMaxMana() {
@@ -381,8 +390,10 @@ public abstract class Character {
      * Skill: Increases the movement speed of the character
      * 
      * @param speed the amount of speed added to the character
+     * @return true if the speed has been changed
      */
-    public void increaseSpeed(final int speed) {
+    public boolean increaseSpeed(final int speed) {
         this.setSpeed(this.getSpeed() + speed);
+        return true;
     }
 }
