@@ -28,6 +28,7 @@ import com.unibo.util.WeaponStats;
 import com.unibo.view.Expbar;
 import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
+import com.unibo.view.Manabar;
 
 /**
  * Game screen class.
@@ -57,6 +58,7 @@ public class GameScreen implements Screen {
     private Boolean isPaused = false;
     private final Level lvlTest = new Level();
     private final Healthbar hpbar;
+    private final Manabar manabar;
     private final Expbar expbar;
     
     private final Label levelNumber;
@@ -97,6 +99,11 @@ public class GameScreen implements Screen {
         hpbar.setPosition(Gdx.graphics.getWidth() - hpbar.getWidth() - hpbar.getHeight(),
                 Gdx.graphics.getHeight() - 2 * hpbar.getHeight());
         
+        // Mana Bar
+        manabar = new Manabar((int) (Gdx.graphics.getWidth() / 5f), (int) (Gdx.graphics.getHeight() / 20f));
+        manabar.setPosition(Gdx.graphics.getWidth() - manabar.getWidth() - manabar.getHeight(),
+                (Gdx.graphics.getHeight() - 2 * manabar.getHeight()) - hpbar.getHeight()*1.2f);
+        
         // Exp Bar
         expbar = new Expbar((int) (Gdx.graphics.getWidth()), (int) (Gdx.graphics.getHeight() / 40f));
         expbar.setPosition(0,0);
@@ -112,8 +119,8 @@ public class GameScreen implements Screen {
 
         // Hp Potion Icon
         hpPotionIcon = new Image(hpTexture);
-        hpPotionIcon.setPosition(hpbar.getX(), hpbar.getY() - hpbar.getHeight());
-        hpbar.getStage().addActor(hpPotionIcon);
+        hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight()*1.2f);
+        manabar.getStage().addActor(hpPotionIcon);
 
         heroView = new HeroView(new Hero("Ross", maxHp, maxSpeed, new Weapon(WeaponStats.LONGSWORD, "0"), maxMana),
                 "walkingAnim.png", this.input);
@@ -141,13 +148,12 @@ public class GameScreen implements Screen {
         potionQuantity.setFontScale(0.5f);
         potionQuantity.setPosition(hpPotionIcon.getX() + hpPotionIcon.getWidth(),
                 hpPotionIcon.getY() - hpPotionIcon.getHeight() / 2);
-        hpbar.getStage().addActor(potionQuantity);
+        manabar.getStage().addActor(potionQuantity);
 
         levelNumber =  new Label("Level: " + heroView.getHero().getLevel(),
                 new Skin(Gdx.files.internal("skin/glassy-ui.json")));
         levelNumber.setFontScale(0.5f);
         levelNumber.setPosition(0, 0);
-        
         expbar.getStage().addActor(this.levelNumber);
         
         camera = new OrthographicCamera();
@@ -242,6 +248,10 @@ public class GameScreen implements Screen {
         hpbar.update(heroView.getHero());
         hpbar.getStage().act();
         hpbar.getStage().draw();
+        
+        manabar.update(heroView.getHero());
+        manabar.getStage().act();
+        manabar.getStage().draw();
         
         levelNumber.setText(": " + heroView.getHero().getLevel());
         expbar.update(heroView.getHero());
