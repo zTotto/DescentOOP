@@ -195,11 +195,9 @@ public class Hero extends Character {
     /**
      * {@inheritDoc}
      */
-    public boolean increaseSpeed(final int speed) {
+    public void increaseSpeed(final int speed) {
         if (this.getLevel() >= LEVEL_TO_SKILL_1) {
             super.increaseSpeed(speed);
-            return true;
         }
-        return false;
     }
 }

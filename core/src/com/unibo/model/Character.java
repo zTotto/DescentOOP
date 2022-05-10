@@ -390,10 +390,8 @@ public abstract class Character {
      * Skill: Increases the movement speed of the character
      * 
      * @param speed the amount of speed added to the character
-     * @return true if the speed has been changed
      */
-    public boolean increaseSpeed(final int speed) {
+    public void increaseSpeed(final int speed) {
         this.setSpeed(this.getSpeed() + speed);
-        return true;
     }
 }

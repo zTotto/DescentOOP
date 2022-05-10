@@ -27,7 +27,7 @@ public class HeroView extends CharacterView {
     }
 
     /**
-     * Moves the hero depending on the pressed key.
+     * Moves the hero depending on the pressed key, and speed it up if pressed the SpeedUp skill key.
      */
     public void move() {
         setDir(Direction.STILL);

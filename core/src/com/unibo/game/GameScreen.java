@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
-    private static final double SPEED_MULTIPLAYER = 1.2;
+    private static final double SPEED_MULTIPLAYER = 1.1;
     private final Descent game;
     private final PauseMenu menu;
 

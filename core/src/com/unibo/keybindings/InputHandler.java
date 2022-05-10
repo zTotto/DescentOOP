@@ -18,15 +18,16 @@ public class InputHandler {
     /**
      * Constructor of the InputHandler.
      * 
-     * @param attack       command that execute the attack action
-     * @param pickUp       command that execute the pick up action
-     * @param switchWeapon command that execute the weapon's switch action
-     * @param moveUp       command that move up a character
-     * @param moveRight    command that move right a character
-     * @param moveDown     command that move down a character
-     * @param moveLeft     command that move left a character
-     * @param pause        command that pause the game
-     * @param usePotion    command that uses a potion
+     * @param attack         command that execute the attack action
+     * @param pickUp         command that execute the pick up action
+     * @param switchWeapon   command that execute the weapon's switch action
+     * @param moveUp         command that move up a character
+     * @param moveRight      command that move right a character
+     * @param moveDown       command that move down a character
+     * @param moveLeft       command that move left a character
+     * @param pause          command that pause the game
+     * @param usePotion      command that uses a potion
+     * @param increasesSpeed command that speed up a character
      */
     public InputHandler(final Command attack, final Command pickUp, final Command switchWeapon, final Movement moveUp,
             final Movement moveRight, final Movement moveDown, final Movement moveLeft, final Command pause, final Command usePotion,
