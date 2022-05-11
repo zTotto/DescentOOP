@@ -14,14 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
-import com.unibo.keybindings.Movement;
-import com.unibo.keybindings.SpeedUpSkill;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
 import com.unibo.model.ConsumableItem;
 import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
+import com.unibo.model.Movement;
+import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
-    private static final double SPEED_MULTIPLAYER = 1.1;
+    private static final double SPEED_MULTIPLAYER = 0.75;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -65,7 +65,7 @@ public class GameScreen implements Screen {
     
     private final Label levelNumber;
 
-    private final InputHandler input = new InputHandler(t -> {
+    /*private final InputHandler input = new InputHandler(t -> {
         t.isAttacking = true;
         t.getAttackSound().play();
         t.attack();
@@ -77,7 +77,26 @@ public class GameScreen implements Screen {
                                                     .filter(i -> i instanceof HealthPotion)
                                                     .findFirst().orElse(null)),
     new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER)
-    );
+    );*/
+    
+    private final InputHandler input = new InputHandler()
+        .addCommand(KeyBindings.ATTACK, t->{
+            t.isAttacking = true;
+            t.getAttackSound().play();
+            t.attack();
+        })
+        .addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(lvlTest))
+        .addCommand(KeyBindings.SWITCH_WEAPON, t -> {}) //TODO Weapon Switch
+        .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
+        .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
+        .addCommand(KeyBindings.MOVE_DOWN, new Movement(Direction.DOWN))
+        .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT))
+        .addCommand(KeyBindings.PAUSE, t -> this.isPaused = !this.isPaused)
+        .addCommand(KeyBindings.USE_POTION, t -> t.getCharacter().useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream()
+                                                    .map(p -> p.getFirst())
+                                                    .filter(i -> i instanceof HealthPotion)
+                                                    .findFirst().orElse(null)))
+        .addCommand(KeyBindings.INCREASES_SPEED, new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER));
 
     /**
      * Main game scene.

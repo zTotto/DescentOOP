@@ -1,7 +1,4 @@
-package com.unibo.keybindings;
-
-import com.unibo.view.CharacterView;
-import com.unibo.model.Character;
+package com.unibo.model;
 
 /**
  * SpeedUpSkill class
@@ -22,19 +19,18 @@ public class SpeedUpSkill extends Skill {
         this.initialSpeed = initialSpeed;
         this.addedSpeed = (int) addedSpeed;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void executeCommand(final CharacterView characterView) {
-        final Character character = characterView.getCharacter();
-        
-        if (character.getCurrentMana() >= this.getManaCost() && character.getSpeed() <= this.addedSpeed + this.initialSpeed) {
-            character.increaseSpeed((int) this.addedSpeed);
-            character.decreaseCurrentMana(this.getManaCost());
-        } else {
-            character.setSpeed(initialSpeed);
+    protected boolean executeSkill(final Character character) {
+        if (character.getSpeed() < this.addedSpeed + this.initialSpeed) {
+            character.increaseSpeed(this.addedSpeed);
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    protected void endSkill(final Character character) {
+        character.setSpeed(initialSpeed);
     }
 }

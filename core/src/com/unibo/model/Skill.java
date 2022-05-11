@@ -1,4 +1,4 @@
-package com.unibo.keybindings;
+package com.unibo.model;
 
 import com.unibo.view.CharacterView;
 
@@ -29,5 +29,16 @@ public abstract class Skill implements Command {
      * {@inheritDoc}
      */
     @Override
-    public abstract void executeCommand(CharacterView character);
+    public void executeCommand(final CharacterView characterView) {
+        final Character character = characterView.getCharacter();
+        
+        if (character.getCurrentMana() >= this.getManaCost() && this.executeSkill(character)) {
+            character.decreaseCurrentMana(this.getManaCost());
+        } else {
+            this.endSkill(character);
+        }
+    }
+
+    protected abstract boolean executeSkill(Character character);
+    protected abstract void endSkill(Character character);
 }
