@@ -390,8 +390,21 @@ public abstract class Character {
      * Skill: Increases the movement speed of the character
      * 
      * @param speed the amount of speed added to the character
+     * @return true if the character can use this skill
      */
-    public void increaseSpeed(final int speed) {
+    public boolean increaseSpeed(final int speed) {
         this.setSpeed(this.getSpeed() + speed);
+        return true;
+    }
+    
+    /**
+     * Skill: Heal the character
+     * 
+     * @param hp the amount of hp added to the character
+     * @return true if the character can use this skill
+     */
+    public boolean heal(final int hp) {
+        this.setCurrentHp(this.getCurrentHp() + hp);
+        return true;
     }
 }

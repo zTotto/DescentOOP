@@ -40,7 +40,7 @@ public class InputHandler {
             return Gdx.input.isKeyPressed(key.getKey()) ? Optional.ofNullable(this.commands.get(key.getName()))
                     : Optional.empty();
         }
-
+        
         return Gdx.input.isKeyJustPressed(key.getKey()) ? Optional.ofNullable(this.commands.get(key.getName()))
                 : Optional.empty();
     }

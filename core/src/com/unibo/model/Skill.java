@@ -31,14 +31,13 @@ public abstract class Skill implements Command {
     @Override
     public void executeCommand(final CharacterView characterView) {
         final Character character = characterView.getCharacter();
-        
         if (character.getCurrentMana() >= this.getManaCost() && this.executeSkill(character)) {
             character.decreaseCurrentMana(this.getManaCost());
         } else {
-            this.endSkill(character);
+            this.resetInitialState(character);
         }
     }
 
     protected abstract boolean executeSkill(Character character);
-    protected abstract void endSkill(Character character);
+    protected abstract void resetInitialState(Character character);
 }

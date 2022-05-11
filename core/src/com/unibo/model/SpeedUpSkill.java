@@ -23,14 +23,13 @@ public class SpeedUpSkill extends Skill {
     @Override
     protected boolean executeSkill(final Character character) {
         if (character.getSpeed() < this.addedSpeed + this.initialSpeed) {
-            character.increaseSpeed(this.addedSpeed);
-            return true;
+            return character.increaseSpeed(this.addedSpeed);
         }
         return false;
     }
 
     @Override
-    protected void endSkill(final Character character) {
+    protected void resetInitialState(final Character character) {
         character.setSpeed(initialSpeed);
     }
 }

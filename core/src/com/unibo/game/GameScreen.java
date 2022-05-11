@@ -17,6 +17,7 @@ import com.unibo.keybindings.KeyBindings;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
 import com.unibo.model.ConsumableItem;
+import com.unibo.model.HealSkill;
 import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
@@ -40,6 +41,7 @@ public class GameScreen implements Screen {
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
     private static final double SPEED_MULTIPLAYER = 0.75;
+    private static final double TEN_PERCENT_MULTIPLAYER = 0.1;
     private final Descent game;
     private final PauseMenu menu;
 
@@ -96,7 +98,8 @@ public class GameScreen implements Screen {
                                                     .map(p -> p.getFirst())
                                                     .filter(i -> i instanceof HealthPotion)
                                                     .findFirst().orElse(null)))
-        .addCommand(KeyBindings.INCREASES_SPEED, new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER));
+        .addCommand(KeyBindings.INCREASES_SPEED, new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER))
+        .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT*10, (int) (MAX_HP*TEN_PERCENT_MULTIPLAYER)));
 
     /**
      * Main game scene.
@@ -225,6 +228,9 @@ public class GameScreen implements Screen {
 
             // Use potion
             this.input.handleInput(KeyBindings.USE_POTION).ifPresent(t -> t.executeCommand(heroView));
+            
+            // Use skill heal
+            this.input.handleInput(KeyBindings.HEAL).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
             if (!heroView.isAttacking) {
@@ -280,6 +286,8 @@ public class GameScreen implements Screen {
             System.out.println("Hp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
             System.out.println("Level: " + heroView.getHero().getLevel());
+            
+            heroView.getHero().setCurrentHp(10);
             System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().getPotionQuantity());
             System.out.println(heroView.getHero().getInv().toString());
