@@ -13,12 +13,10 @@ public class Hero extends Character {
     private static final double HP_MANA_LEVELUP_MULTIPLAYER = 1.1;
     private static final double EXP_ALG_DIVIDER = 2.5;
     private static final int MAX_LEVEL = 10;
-    private static final int LEVEL_TO_SKILL_1 = 2;
-    private static final int LEVEL_TO_SKILL_2 = 4;
     
     private final String name;
     private int range;
-    private int level = 1;
+    
     private long exp;
     private long expToLevelUp = 60;
 
@@ -127,19 +125,12 @@ public class Hero extends Character {
      * @param exp to be added to the hero
      */
     public void addExp(final int exp) {
-        if (this.level < MAX_LEVEL) {
+        if (this.getLevel() < MAX_LEVEL) {
             this.exp += exp;
             if (this.isExpEnough()) {
                 this.levelUp();
             }
         }
-    }
-
-    /**
-     * @return the level of the hero
-     */
-    public int getLevel() {
-        return level;
     }
     
     /**
@@ -165,11 +156,11 @@ public class Hero extends Character {
     //Could become public if there will be an item that will level up the hero.
     private void levelUp() {
         this.exp -= this.getExpToLevelUp();
-        this.level++;
-        if (this.level < MAX_LEVEL/2) {
+        this.incrementLevel();
+        if (this.getLevel() < MAX_LEVEL/2) {
             this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/EXP_ALG_DIVIDER)));
         } else {
-            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/(EXP_ALG_DIVIDER * this.level))));
+            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/(EXP_ALG_DIVIDER * this.getLevel()))));
         }
         this.setMaxHp((int)(this.getMaxHp()*HP_MANA_LEVELUP_MULTIPLAYER));
         this.setMaxMana((int)(this.getMaxMana()*HP_MANA_LEVELUP_MULTIPLAYER));
@@ -179,7 +170,7 @@ public class Hero extends Character {
             this.levelUp();
         }
         
-        if (this.level == MAX_LEVEL) {
+        if (this.getLevel() == MAX_LEVEL) {
             this.resetXP();
         }
     }
@@ -190,28 +181,6 @@ public class Hero extends Character {
     }
 
     private boolean isExpEnough() {
-        return this.exp >= this.getExpToLevelUp() && this.level < MAX_LEVEL;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean increaseSpeed(final int speed) {
-        if (this.getLevel() >= LEVEL_TO_SKILL_1) {
-            super.increaseSpeed(speed);
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean heal(final int hp) {
-        if (this.getLevel() >= LEVEL_TO_SKILL_2) {
-            this.setCurrentHp(this.getCurrentHp() + hp);
-            return true;
-        }
-        return false;
+        return this.exp >= this.getExpToLevelUp() && this.getLevel() < MAX_LEVEL;
     }
 }

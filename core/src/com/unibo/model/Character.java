@@ -14,6 +14,10 @@ import com.unibo.util.Position;
  */
 public abstract class Character {
 
+    private static final int LEVEL_TO_SKILL_1 = 2;
+    private static final int LEVEL_TO_SKILL_2 = 4;
+
+    private int level = 1;
     private int currentHp;
     private int currentMana;
     private int maxMana;
@@ -393,10 +397,13 @@ public abstract class Character {
      * @return true if the character can use this skill
      */
     public boolean increaseSpeed(final int speed) {
-        this.setSpeed(this.getSpeed() + speed);
-        return true;
+        if (this.getLevel() >= this.levelToSpeedUp()) {
+            this.setSpeed(this.getSpeed() + speed);
+            return true;
+        }
+        return false;
     }
-    
+
     /**
      * Skill: Heal the character
      * 
@@ -404,7 +411,38 @@ public abstract class Character {
      * @return true if the character can use this skill
      */
     public boolean heal(final int hp) {
-        this.setCurrentHp(this.getCurrentHp() + hp);
-        return true;
+        if (this.getLevel() >= this.levelToHeal()) {
+            this.setCurrentHp(this.getCurrentHp() + hp);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return the level of the character
+     */
+    public int getLevel() {
+        return level;
+    }
+    
+    /**
+     * Increment the level of the character
+     */
+    public void incrementLevel() {
+        this.level++;
+    }
+    
+    /**
+     * @return the level needed to use the skill speed up
+     */
+    public int levelToSpeedUp() {
+        return LEVEL_TO_SKILL_1;
+    }
+    
+    /**
+     * @return the level needed to use the skill Heal
+     */
+    public int levelToHeal() {
+        return LEVEL_TO_SKILL_2;
     }
 }

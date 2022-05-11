@@ -50,7 +50,11 @@ public enum KeyBindings {
     /**
      * Key to use skill: Heal
      */
-    HEAL(Input.Keys.A, "Heal");
+    HEAL(Input.Keys.A, "Heal"),
+    /**
+     * Key to open the skill menù
+     */
+    SKILL_MENU(Input.Keys.T, "SkillMenu");
 
     private int key;
     private final String name;
