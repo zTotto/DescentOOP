@@ -1,8 +1,12 @@
 package com.unibo.view;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.Hero;
+import com.unibo.model.Weapon;
 import com.unibo.util.Direction;
 
 /**
@@ -12,6 +16,7 @@ public class HeroView extends CharacterView {
 
     private final InputHandler input;
     private final Hero hero;
+    private final List<String> weaponTexturesPath;
 
     /**
      * Constructor for the view.
@@ -24,6 +29,8 @@ public class HeroView extends CharacterView {
         super(hero, path, "audio/sounds/Hadouken.mp3");
         this.hero = hero;
         this.input = input;
+        this.weaponTexturesPath = new LinkedList<>();
+        this.weaponTexturesPath.add(path);
     }
 
     /**
@@ -46,5 +53,16 @@ public class HeroView extends CharacterView {
      */
     public Hero getHero() {
         return this.hero;
+    }
+
+    /**
+     * Updates the animation textures if a new weapon is added.
+     */
+    public void updateWeaponTextures() {
+        for (Weapon w : this.hero.getWeapons()) {
+            if (!this.weaponTexturesPath.contains(w.getName())) {
+                this.weaponTexturesPath.add(w.getName());
+            }
+        }
     }
 }
