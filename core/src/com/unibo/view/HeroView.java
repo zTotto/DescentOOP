@@ -30,16 +30,18 @@ public class HeroView extends CharacterView {
         this.hero = hero;
         this.input = input;
         this.weaponTexturesPath = new LinkedList<>();
-        this.weaponTexturesPath.add(path);
+        this.updateWeaponTextures();
     }
 
     /**
-     * Moves the hero depending on the pressed key, and speed it up if pressed the SpeedUp skill key.
+     * Moves the hero depending on the pressed key, and speed it up if pressed the
+     * SpeedUp skill key.
      */
     public void move() {
         setDir(Direction.STILL);
-        
-        this.input.handleInput(KeyBindings.INCREASES_SPEED).ifPresentOrElse(t -> t.executeCommand(this), () -> this.getHero().setSpeed(200));
+
+        this.input.handleInput(KeyBindings.INCREASES_SPEED).ifPresentOrElse(t -> t.executeCommand(this),
+                () -> this.getHero().setSpeed(200));
 
         this.input.handleInput(KeyBindings.MOVE_LEFT).ifPresent(t -> t.executeCommand(this));
 
@@ -48,7 +50,7 @@ public class HeroView extends CharacterView {
         this.input.handleInput(KeyBindings.MOVE_UP).ifPresent(t -> t.executeCommand(this));
 
         this.input.handleInput(KeyBindings.MOVE_DOWN).ifPresent(t -> t.executeCommand(this));
-        
+
     }
 
     /**
@@ -67,5 +69,12 @@ public class HeroView extends CharacterView {
                 this.weaponTexturesPath.add(w.getName());
             }
         }
+    }
+
+    /**
+     * @return all the textures' paths.
+     */
+    public List<String> getWeaponTexturesPath() {
+        return weaponTexturesPath;
     }
 }

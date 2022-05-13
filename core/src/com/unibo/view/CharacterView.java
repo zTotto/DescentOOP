@@ -47,6 +47,7 @@ public abstract class CharacterView {
 
     /**
      * Changes the character animation according to the file path.
+     * 
      * @param fileName
      */
     protected void createTextures(final String fileName) {
@@ -123,7 +124,7 @@ public abstract class CharacterView {
         return animationAttack;
     }
 
-    //TODO: Implement attack mechanic.
+    // TODO: Implement attack mechanic.
     /**
      * Makes the character attack.
      */
