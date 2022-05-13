@@ -54,14 +54,6 @@ public class Mob extends Character {
      * {@inheritDoc}
      */
     @Override
-    public Boolean canPickUpItem(final Item item) {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int getRange() {
         return 0;
     }

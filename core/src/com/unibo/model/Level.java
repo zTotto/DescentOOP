@@ -9,28 +9,26 @@ import java.util.List;
  */
 public class Level {
 
-    private final List<ConsumableItem> consumables;
-    private final List<Weapon> weapons;
+    private final List<Item> items;
     private final List<Character> enemies;
 
     /**
      * Empty constructor for a level.
      */
     public Level() {
-        consumables = new LinkedList<>();
-        weapons = new LinkedList<>();
+        items = new LinkedList<>();
         enemies = new LinkedList<>();
     }
 
     /**
-     * Adds consumables to the level.
+     * Adds items to the level.
      * 
-     * @param items
+     * @param itemsToAdd items to add to the level
      */
-    public void addConsumables(final ConsumableItem... items) {
-        for (final ConsumableItem i : items) {
+    public void addItems(final Item... itemsToAdd) {
+        for (final Item i : itemsToAdd) {
             if (i.getPos() != null) {
-                consumables.add(i);
+                items.add(i);
             }
         }
     }
@@ -47,43 +45,12 @@ public class Level {
     }
 
     /**
-     * Adds weapons to pickup to the level.
-     * 
-     * @param weapons
-     */
-    public void addWeapons(final Weapon... weapons) {
-        for (final Weapon w : weapons) {
-            if (w.getPos() != null) {
-                this.weapons.add(w);
-            }
-        }
-    }
-
-    /**
-     * Removes a consumable item from the level.
+     * Removes an item from the level.
      * 
      * @param item
      */
-    public void removeConsumable(final ConsumableItem item) {
-        consumables.remove(item);
-    }
-
-    /**
-     * Removes a consumable item at a specified index from the level.
-     * 
-     * @param index of the item
-     */
-    public void removeConsumableAtIndex(final int index) {
-        consumables.remove(index);
-    }
-
-    /**
-     * Removes a weapon from the level.
-     * 
-     * @param weapon
-     */
-    public void removeWeapon(final Weapon weapon) {
-        weapons.remove(weapon);
+    public void removeItem(final Item item) {
+        items.remove(item);
     }
 
     /**
@@ -96,17 +63,28 @@ public class Level {
     }
 
     /**
+     * @return a list containing all the items
+     */
+    public List<Item> getItems() {
+        return items;
+    }
+
+    /**
      * @return a list containing all the consumables
      */
     public List<ConsumableItem> getConsumables() {
-        return new LinkedList<>(consumables);
+        List<ConsumableItem> res = new LinkedList<>();
+        items.stream().filter(i -> i instanceof ConsumableItem).forEach(item -> res.add((ConsumableItem) item));
+        return res;
     }
 
     /**
      * @return a list containing all the weapons
      */
     public List<Weapon> getWeapons() {
-        return new LinkedList<>(weapons);
+        List<Weapon> res = new LinkedList<>();
+        items.stream().filter(i -> i instanceof Weapon).forEach(item -> res.add((Weapon) item));
+        return res;
     }
 
     /**
@@ -131,22 +109,13 @@ public class Level {
             msg += "No Enemies";
         }
         i = 0;
-        if (!consumables.isEmpty()) {
+        if (!items.isEmpty()) {
             msg += "\nItems:";
-            for (final ConsumableItem item : consumables) {
+            for (final Item item : items) {
                 msg += "\n" + ++i + ": [ " + item.getName() + " ], Position: " + item.getPos().toString();
             }
         } else {
             msg += "\nNo Items";
-        }
-        i = 0;
-        if (!weapons.isEmpty()) {
-            msg += "\nWeapons:";
-            for (final Weapon w : weapons) {
-                msg += "\n" + ++i + ": [" + w.toString() + "]" + ", Position: " + w.getPos().toString();
-            }
-        } else {
-            msg += "\nNo Weapons";
         }
         return msg;
     }

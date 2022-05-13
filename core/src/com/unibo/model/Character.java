@@ -302,29 +302,6 @@ public abstract class Character {
      */
     public abstract Boolean pickUpfromLevel(Level lvl);
 
-    /**
-     * Checks whether an item can be picked up. Mobs can't pick up items.
-     * 
-     * @param item to be checked
-     * @return true if the item can be picked up
-     */
-    public abstract Boolean canPickUpItem(Item item);
-
-    /**
-     * Pick ups the specified item.
-     * 
-     * @param item
-     */
-    public void pickUpItem(final Item item) {
-        if (this.canPickUpItem(item)) {
-            if (item instanceof Weapon) {
-                weapons.add((Weapon) item);
-            } else {
-                inv.addItem(item);
-            }
-        }
-    }
-
     // Position related
 
     /**
