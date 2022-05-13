@@ -17,11 +17,10 @@ public class HeroView extends CharacterView {
      * Constructor for the view.
      * 
      * @param hero  the hero model
-     * @param path  of the hero movement animation
      * @param input handler for keyboard inputs
      */
-    public HeroView(final Hero hero, final String path, final InputHandler input) {
-        super(hero, path, "audio/sounds/Hadouken.mp3");
+    public HeroView(final Hero hero, final InputHandler input) {
+        super(hero, "hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/Hadouken.mp3");
         this.hero = hero;
         this.input = input;
     }
@@ -51,5 +50,13 @@ public class HeroView extends CharacterView {
      */
     public Hero getHero() {
         return this.hero;
+    }
+
+    /**
+     * Switches the hero weapon and updates its texture.
+     */
+    public void switchWeapon() {
+        this.hero.switchWeapon();
+        this.createTextures("hero" + this.hero.getCurrentWeapon().getName() + ".png");
     }
 }
