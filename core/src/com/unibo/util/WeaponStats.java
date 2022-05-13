@@ -12,7 +12,11 @@ public enum WeaponStats {
     /**
      * Greataxe: Damage: 15 Range: 48.
      */
-    GREATAXE("Greataxe", 15, 48);
+    GREATAXE("Greataxe", 15, 48),
+    /**
+     * Spear: Damage: 8 Range: 96.
+     */
+    SPEAR("Spear", 8, 96);
 
     private final String name;
     private final int damage;
