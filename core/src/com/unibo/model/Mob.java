@@ -32,30 +32,22 @@ public class Mob extends Character {
      * {@inheritDoc}
      */
     public String toString() {
-        return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
-                + this.getWeapons();
+        return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void useItem(final ConsumableItem item) {}
+    public void useItem(final ConsumableItem item) {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Boolean pickUpfromLevel(final Level lvl) {
-	return false;
-    }
-
-    /**
-    * {@inheritDoc}
-    */
-    @Override
-    public Boolean canPickUpItem(final Item item) {
-	return false;
+        return false;
     }
 
     /**
@@ -63,12 +55,13 @@ public class Mob extends Character {
      */
     @Override
     public int getRange() {
-    	return 0;
+        return 0;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setRange(final int range) {}
+    public void setRange(final int range) {
+    }
 }

@@ -13,15 +13,15 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.unibo.model.Hero;
 
 /**
- * Expbar for the hero
+ * Expbar for the hero.
  *
  */
 public class Expbar extends ProgressBar {
-    
+
     private final Stage stage;
-    
+
     /**
-     * Constructor for the Expbar
+     * Constructor for the Expbar.
      * 
      * @param width
      * @param height
@@ -39,7 +39,7 @@ public class Expbar extends ProgressBar {
         this.setValue(1f);
         stage.addActor(this);
     }
-    
+
     private Drawable getColoredDrawable(final int width, final int height, final Color color) {
         final Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         pixmap.setColor(color);
@@ -49,9 +49,10 @@ public class Expbar extends ProgressBar {
 
         return drawable;
     }
-    
+
     /**
      * Updates the exp bar.
+     * 
      * @param hero
      */
     public void update(final Hero hero) {

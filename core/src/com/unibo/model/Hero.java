@@ -1,7 +1,7 @@
 package com.unibo.model;
 
-import java.util.LinkedList;
 import java.util.List;
+import com.unibo.util.Pair;
 
 /**
  * 
@@ -13,20 +13,22 @@ public class Hero extends Character {
     private static final double HP_MANA_LEVELUP_MULTIPLAYER = 1.1;
     private static final double EXP_ALG_DIVIDER = 2.5;
     private static final int MAX_LEVEL = 10;
-    
+
     private final String name;
+    private Boolean key = false;
     private int range;
-    
+
     private long exp;
     private long expToLevelUp = 60;
 
     /**
      * Constructor for the Hero.
      * 
-     * @param name
-     * @param maxHp
-     * @param speed
-     * @param startingWeapon
+     * @param name           Name of the Hero
+     * @param maxHp          Max health points of the Hero
+     * @param speed          Speed of the Hero
+     * @param startingWeapon Starting weapon of the Hero
+     * @param maxMana        Max mana of the Hero
      */
     public Hero(final String name, final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
         super(maxHp, speed, startingWeapon, maxMana);
@@ -60,39 +62,45 @@ public class Hero extends Character {
     }
 
     /**
-     * {@inheritDoc}
+     * If there's any, uses a potion.
      */
-    @Override
-    public Boolean pickUpfromLevel(final Level lvl) {
-        if (!this.isDead()) {
-            final List<Item> items = new LinkedList<>();
-            items.addAll(lvl.getConsumables());
-            items.addAll(lvl.getWeapons());
-            int consIndex = 0;
-            for (final Item item : items) {
-                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.getRange()
-                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.getRange()) {
-                    if (item instanceof Weapon) {
-                        this.getWeapons().add((Weapon) item);
-                        lvl.removeWeapon((Weapon) item);
-                    } else {
-                        this.getInv().addItem(item);
-                        lvl.removeConsumableAtIndex(consIndex);
-                    }
-                    return true;
-                }
-                consIndex++;
+    public void usePotion() {
+        HealthPotion pot = null;
+        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+            if (p.getFirst() instanceof HealthPotion) {
+                pot = (HealthPotion) p.getFirst();
+                pot.use(this);
+                break;
             }
         }
-        return false;
+        this.getInv().removeItem(pot);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Boolean canPickUpItem(final Item item) {
-        return item.getPos().equals(this.getPos());
+    public Boolean pickUpfromLevel(final Level lvl) {
+        if (!this.isDead()) {
+            List<Item> items = lvl.getItems();
+            int index = 0;
+            for (final Item item : items) {
+                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.getRange()
+                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.getRange()) {
+                    if (item instanceof Weapon) {
+                        this.getWeapons().add((Weapon) item);
+                    } else if (item instanceof ConsumableItem) {
+                        this.getInv().addItem(item);
+                    } else {
+                        this.key = true;
+                    }
+                    lvl.getItems().remove(index);
+                    return true;
+                }
+                index++;
+            }
+        }
+        return false;
     }
 
     /**
@@ -119,8 +127,9 @@ public class Hero extends Character {
     }
 
     /**
-     * Add a specific amount of exp to the hero. If the hero reach the right amount of exp,
-     * he will level up and the exp that exceeds the limit will be held by the hero.
+     * Add a specific amount of exp to the hero. If the hero reach the right amount
+     * of exp, he will level up and the exp that exceeds the limit will be held by
+     * the hero.
      * 
      * @param exp to be added to the hero
      */
@@ -132,7 +141,7 @@ public class Hero extends Character {
             }
         }
     }
-    
+
     /**
      * @return the exp the hero needs to level up
      */
@@ -141,35 +150,38 @@ public class Hero extends Character {
     }
 
     /**
-     * Change the amount of exp the hero needs to level up
+     * Change the amount of exp the hero needs to level up.
      * 
      * @param expToLevelUp new amount of exp needed to the hero to level up
      */
     public void setExpToLevelUp(final long expToLevelUp) {
         this.expToLevelUp = expToLevelUp;
     }
-    
+
     /*
-     * Level up the hero, increases the amount of exp needed to level up again, his max hp and resets his hp.
-     * If the actual exp exceeds the amount of exp needed for the next level, level up the hero again
+     * Level up the hero, increases the amount of exp needed to level up again, his
+     * max hp and resets his hp. If the actual exp exceeds the amount of exp needed
+     * for the next level, level up the hero again
      */
-    //Could become public if there will be an item that will level up the hero.
+    // Could become public if there will be an item that will level up the hero.
     private void levelUp() {
         this.exp -= this.getExpToLevelUp();
         this.incrementLevel();
-        if (this.getLevel() < MAX_LEVEL/2) {
-            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/EXP_ALG_DIVIDER)));
+        if (this.getLevel() < MAX_LEVEL / 2) {
+            this.setExpToLevelUp(
+                    Math.round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
         } else {
-            this.setExpToLevelUp(Math.round(this.getExpToLevelUp()*Math.log10(this.getExpToLevelUp()/(EXP_ALG_DIVIDER * this.getLevel()))));
+            this.setExpToLevelUp(Math.round(
+                    this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
         }
-        this.setMaxHp((int)(this.getMaxHp()*HP_MANA_LEVELUP_MULTIPLAYER));
-        this.setMaxMana((int)(this.getMaxMana()*HP_MANA_LEVELUP_MULTIPLAYER));
+        this.setMaxHp((int) (this.getMaxHp() * HP_MANA_LEVELUP_MULTIPLAYER));
+        this.setMaxMana((int) (this.getMaxMana() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setCurrentHp(this.getMaxHp());
         this.setCurrentMana(this.getMaxMana());
-        if (this.isExpEnough()) { 
+        if (this.isExpEnough()) {
             this.levelUp();
         }
-        
+
         if (this.getLevel() == MAX_LEVEL) {
             this.resetXP();
         }
@@ -177,10 +189,17 @@ public class Hero extends Character {
 
     private void resetXP() {
         this.exp = 0;
-        this.setExpToLevelUp(0);        
+        this.setExpToLevelUp(0);
     }
 
     private boolean isExpEnough() {
         return this.exp >= this.getExpToLevelUp() && this.getLevel() < MAX_LEVEL;
+    }
+
+    /**
+     * @return true if the hero has the key.
+     */
+    public Boolean hasKey() {
+        return this.key;
     }
 }
