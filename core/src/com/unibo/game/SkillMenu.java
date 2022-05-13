@@ -16,11 +16,11 @@ import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.Character;
 
 /**
- * Skill menu
+ * Skill menu.
  *
  */
 public class SkillMenu {
-    
+
     private final Table menu;
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -39,30 +39,31 @@ public class SkillMenu {
         menu = new Table();
         menu.setFillParent(true);
         stage = new Stage(new ScreenViewport());
-        
+
         final Label label = new Label("SKILLS", skin);
         label.setColor(Color.GREEN);
         label.setFontScale(1.2f);
         menu.add(label).spaceBottom(70).row();
-        
-        final TextButton speedUp = new TextButton("Speed Up: " + Input.Keys.toString(KeyBindings.INCREASES_SPEED.getKey()) 
-                                                  + " Lvl: " + character.levelToSpeedUp(), skin);
+
+        final TextButton speedUp = new TextButton("Speed Up: "
+                + Input.Keys.toString(KeyBindings.INCREASES_SPEED.getKey()) + " Lvl: " + character.levelToSpeedUp(),
+                skin);
         speedUp.setColor(Color.YELLOW);
         speedUp.setTouchable(Touchable.disabled);
         menu.add(speedUp).uniform().fill().spaceBottom(10);
         menu.row();
-        
-        final TextButton heal = new TextButton("Heal: " + Input.Keys.toString(KeyBindings.HEAL.getKey())
-                                               + " Lvl: " + character.levelToHeal(), skin);
+
+        final TextButton heal = new TextButton(
+                "Heal: " + Input.Keys.toString(KeyBindings.HEAL.getKey()) + " Lvl: " + character.levelToHeal(), skin);
         heal.setColor(Color.YELLOW);
         heal.setTouchable(Touchable.disabled);
         menu.add(heal).uniform().fill().spaceBottom(50);
         menu.row();
-        
+
         final TextButton resume = new TextButton("Resume Game", skin);
         menu.add(resume).uniform().fill();
         menu.row();
-        
+
         resume.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
