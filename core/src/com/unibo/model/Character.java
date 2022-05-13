@@ -14,8 +14,14 @@ import com.unibo.util.Position;
  */
 public abstract class Character {
 
+    private static final int LEVEL_TO_SKILL_1 = 2;
+    private static final int LEVEL_TO_SKILL_2 = 4;
+
+    private int level = 1;
     private int currentHp;
-    private final int maxHp;
+    private int currentMana;
+    private int maxMana;
+    private int maxHp;
     private int speed;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
@@ -30,9 +36,11 @@ public abstract class Character {
      * @param speed
      * @param startingWeapon
      */
-    public Character(final int maxHp, final int speed, final Weapon startingWeapon) {
+    public Character(final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
+        this.maxMana = maxMana;
+        this.setCurrentMana(maxMana);
         this.setSpeed(speed);
         this.currentWeapon = startingWeapon;
         this.inv = new Inventory();
@@ -66,11 +74,62 @@ public abstract class Character {
     }
 
     /**
-     * 
      * @return max health points.
      */
     public int getMaxHp() {
         return maxHp;
+    }
+    
+    /**
+     * @param maxHp new maxHp of the character
+     */
+    public void setMaxHp(final int maxHp) {
+        this.maxHp = maxHp;
+    }
+    
+    /**
+     * @return current mana points
+     */
+    public int getCurrentMana() {
+        return this.currentMana;
+    }
+
+    /**
+     * Set the current mana to the specified value
+     * 
+     * @param currentMana
+     */
+    public void setCurrentMana(final int currentMana) {
+        if (currentMana < 0) {
+            this.currentMana = 0;
+        } else if (currentMana > this.maxMana) {
+            this.currentMana = this.maxMana;
+        } else {
+            this.currentMana = currentMana;
+        }
+    }
+    
+    /**
+     * Decreases the current mana of the character of the specified value
+     * 
+     * @param mana 
+     */
+    public void decreaseCurrentMana(final int mana) {
+        this.setCurrentMana(this.currentMana - mana);
+    }
+    
+    /**
+     * @return max mana points.
+     */
+    public int getMaxMana() {
+        return this.maxMana;
+    }
+    
+    /**
+     * @param maxMana new MaxMana of the character
+     */
+    public void setMaxMana(final int maxMana) {
+        this.maxMana = maxMana;
     }
 
     /**
@@ -330,4 +389,60 @@ public abstract class Character {
      * @return the name of the character
      */
     public abstract String getName();
+    
+    /**
+     * Skill: Increases the movement speed of the character
+     * 
+     * @param speed the amount of speed added to the character
+     * @return true if the character can use this skill
+     */
+    public boolean increaseSpeed(final int speed) {
+        if (this.getLevel() >= this.levelToSpeedUp()) {
+            this.setSpeed(this.getSpeed() + speed);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Skill: Heal the character
+     * 
+     * @param hp the amount of hp added to the character
+     * @return true if the character can use this skill
+     */
+    public boolean heal(final int hp) {
+        if (this.getLevel() >= this.levelToHeal()) {
+            this.setCurrentHp(this.getCurrentHp() + hp);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return the level of the character
+     */
+    public int getLevel() {
+        return level;
+    }
+    
+    /**
+     * Increment the level of the character
+     */
+    public void incrementLevel() {
+        this.level++;
+    }
+    
+    /**
+     * @return the level needed to use the skill speed up
+     */
+    public int levelToSpeedUp() {
+        return LEVEL_TO_SKILL_1;
+    }
+    
+    /**
+     * @return the level needed to use the skill Heal
+     */
+    public int levelToHeal() {
+        return LEVEL_TO_SKILL_2;
+    }
 }

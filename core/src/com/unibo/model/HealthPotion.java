@@ -7,26 +7,6 @@ import java.util.Objects;
  */
 public class HealthPotion extends ConsumableItem {
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final HealthPotion other = (HealthPotion) obj;
-        return Objects.equals(this.getModifier(), other.getModifier());
-    }
-
     /**
      * Constructor for a health potion.
      * 
@@ -46,5 +26,31 @@ public class HealthPotion extends ConsumableItem {
     @Override
     public void use(final Character pg) {
         pg.setCurrentHp(pg.getCurrentHp() + (int) this.getModifier());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final HealthPotion other = (HealthPotion) obj;
+        return Objects.equals(this.getModifier(), other.getModifier());
     }
 }

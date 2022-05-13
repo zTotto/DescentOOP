@@ -42,7 +42,19 @@ public enum KeyBindings {
     /**
      * Key to use a potion.
      */
-    USE_POTION(Input.Keys.F, "UsePotion");
+    USE_POTION(Input.Keys.F, "UsePotion"),
+    /**
+     * Key to use skill: Increases Speed
+     */
+    INCREASES_SPEED(Input.Keys.SHIFT_LEFT, "HoldIncreasesSpeed"),
+    /**
+     * Key to use skill: Heal
+     */
+    HEAL(Input.Keys.A, "Heal"),
+    /**
+     * Key to open the skill menù
+     */
+    SKILL_MENU(Input.Keys.T, "SkillMenu");
 
     private int key;
     private final String name;

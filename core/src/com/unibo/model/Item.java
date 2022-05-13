@@ -57,12 +57,18 @@ public abstract class Item {
     public void setPos(final Position p) {
         this.pos = p;
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(this.id, this.name);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -81,6 +87,7 @@ public abstract class Item {
     /**
      * @return the item name.
      */
+    @Override
     public String toString() {
         return this.name;
     }
