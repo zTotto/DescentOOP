@@ -45,7 +45,11 @@ public abstract class CharacterView {
                 this.getWidth() * 0.66f, this.getHeight() / 6);
     }
 
-    private void createTextures(final String fileName) {
+    /**
+     * Changes the character animation according to the file path.
+     * @param fileName
+     */
+    protected void createTextures(final String fileName) {
         final Texture characterTextures = new Texture(fileName);
         final TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
                 characterTextures.getHeight() / 4);

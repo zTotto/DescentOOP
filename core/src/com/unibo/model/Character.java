@@ -101,7 +101,8 @@ public abstract class Character {
     }
 
     /**
-     * @return the character range when picking up items. (Mobs don't have a pickup range)
+     * @return the character range when picking up items. (Mobs don't have a pickup
+     *         range)
      */
     public abstract int getRange();
 
@@ -201,8 +202,8 @@ public abstract class Character {
     }
 
     /**
-     * Uses the specified item (if present in the inventory).
-     * The mob can't use an item (so this will be empty on a mob)
+     * Uses the specified item (if present in the inventory). The mob can't use an
+     * item (so this will be empty on a mob)
      * 
      * @param item
      */
@@ -306,8 +307,7 @@ public abstract class Character {
      * @return the description of the character.
      */
     public String toString() {
-    	return "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
-         
+        return "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
     }
 
     /**
@@ -325,7 +325,7 @@ public abstract class Character {
     public void setCurrentMap(final Map map) {
         this.currentMap = map;
     }
-    
+
     /**
      * @return the name of the character
      */

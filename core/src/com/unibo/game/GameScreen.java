@@ -59,7 +59,9 @@ public class GameScreen implements Screen {
         t.isAttacking = true;
         t.getAttackSound().play();
         t.attack();
-    }, t -> t.getCharacter().pickUpfromLevel(lvlTest), t -> {
+    }, t -> {
+        t.getCharacter().pickUpfromLevel(lvlTest);
+    }, t -> {
     }, // TODO (Weapon Switch)
             new Movement(Direction.UP), new Movement(Direction.RIGHT), new Movement(Direction.DOWN),
             new Movement(Direction.LEFT), t -> this.isPaused = !this.isPaused,
