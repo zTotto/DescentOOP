@@ -131,7 +131,7 @@ public class GameScreen implements Screen {
         manabar.getStage().addActor(hpPotionIcon);
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
-                "walkingAnim.png", this.input);
+                this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -177,7 +177,7 @@ public class GameScreen implements Screen {
             t.attack();
         }).addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(lvlTest))
                 .addCommand(KeyBindings.SWITCH_WEAPON, t -> {
-                    t.getCharacter().switchWeapon();
+                    ((HeroView) t).switchWeapon();
                 }) // TODO Weapon Switch Texture
                 .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
                 .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
