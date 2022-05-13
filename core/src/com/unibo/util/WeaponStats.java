@@ -6,9 +6,13 @@ package com.unibo.util;
  */
 public enum WeaponStats {
     /**
-     * Longsword: Range: 64 Damage: 10.
+     * Longsword: Damage: 10 Range: 64.
      */
-    LONGSWORD("Longsword", 10, 64);
+    LONGSWORD("Longsword", 10, 64),
+    /**
+     * Greataxe: Damage: 15 Range: 48.
+     */
+    GREATAXE("Greataxe", 15, 48);
 
     private final String name;
     private final int damage;

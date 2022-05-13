@@ -100,7 +100,7 @@ public class Hero extends Character {
      */
     @Override
     public int getRange() {
-	return this.range;
+        return this.range;
     }
 
     /**
