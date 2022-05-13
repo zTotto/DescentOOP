@@ -17,7 +17,7 @@ public class Mob extends Character {
      * @param startingWeapon starting weapon of the created mob
      */
     public Mob(final MobStats modType, final Weapon startingWeapon) {
-        super(modType.getHp(), modType.getSpeed(), startingWeapon);
+        super(modType.getHp(), modType.getSpeed(), startingWeapon, modType.getMana());
         this.name = modType.getName();
     }
 
