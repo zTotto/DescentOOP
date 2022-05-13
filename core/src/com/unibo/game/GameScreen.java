@@ -54,6 +54,7 @@ public class GameScreen implements Screen {
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
 
     private final Texture hpTexture;
+    private final Texture greataxeTexture;
     private final Image hpPotionIcon;
     private final Label potionQuantity;
 
@@ -66,9 +67,9 @@ public class GameScreen implements Screen {
     private final Healthbar hpbar;
     private final Manabar manabar;
     private final Expbar expbar;
-    
+
     private final Label levelNumber;
-    
+
     private final InputHandler input = new InputHandler();
 
     /**
@@ -78,7 +79,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(final Descent game) {
         this.game = game;
-        
+
         // Menu
         menu = new PauseMenu(this);
         menu.getMenu().setVisible(true);
@@ -87,16 +88,17 @@ public class GameScreen implements Screen {
         hpbar = new Healthbar((int) (Gdx.graphics.getWidth() / 5f), (int) (Gdx.graphics.getHeight() / 20f));
         hpbar.setPosition(Gdx.graphics.getWidth() - hpbar.getWidth() - hpbar.getHeight(),
                 Gdx.graphics.getHeight() - 2 * hpbar.getHeight());
-        
+
         // Mana Bar
         manabar = new Manabar((int) (Gdx.graphics.getWidth() / 5f), (int) (Gdx.graphics.getHeight() / 20f));
         manabar.setPosition(Gdx.graphics.getWidth() - manabar.getWidth() - manabar.getHeight(),
-                (Gdx.graphics.getHeight() - 2 * manabar.getHeight()) - hpbar.getHeight()*1.2f);
-        
+                (Gdx.graphics.getHeight() - 2 * manabar.getHeight()) - hpbar.getHeight() * 1.2f);
+
         // Exp Bar
         expbar = new Expbar((int) (Gdx.graphics.getWidth()), (int) (Gdx.graphics.getHeight() / 40f));
-        expbar.setPosition(0,0);
+        expbar.setPosition(0, 0);
 
+        // World Items
         hpTexture = new Texture("hpPotion.png");
         final HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
         final HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
@@ -104,20 +106,27 @@ public class GameScreen implements Screen {
         hp1.setPos(new Position(100, 900));
         hp2.setPos(new Position(200, 1016));
         hp3.setPos(new Position(300, 1016));
+
+        greataxeTexture = new Texture("Greataxe.png");
+        final Weapon greataxe = new Weapon(WeaponStats.GREATAXE, "1");
+        final Weapon spear = new Weapon(WeaponStats.SPEAR, "2");
+        greataxe.setPos(new Position(400, 1016));
+        spear.setPos(new Position(500, 1016));
+
         lvlTest = new Level();
+        lvlTest.addWeapons(greataxe, spear);
         lvlTest.addConsumables(hp2, hp1, hp3);
 
         // Hp Potion Icon
         hpPotionIcon = new Image(hpTexture);
-        hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight()*1.2f);
+        hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight() * 1.2f);
         manabar.getStage().addActor(hpPotionIcon);
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
                 "walkingAnim.png", this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
-        
-        
+
         // mobView = new MobView(new Mob(MobsStats.ORC, new Weapon("Longsword", 10, 64,
         // "0")), "walkingAnim.png", "audio/sounds/Hadouken.mp3");
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
@@ -144,43 +153,45 @@ public class GameScreen implements Screen {
                 hpPotionIcon.getY() - hpPotionIcon.getHeight() / 2);
         manabar.getStage().addActor(potionQuantity);
 
-        levelNumber =  new Label("Level: " + heroView.getHero().getLevel(),
+        levelNumber = new Label("Level: " + heroView.getHero().getLevel(),
                 new Skin(Gdx.files.internal("skin/glassy-ui.json")));
         levelNumber.setFontScale(0.5f);
         levelNumber.setPosition(0, 0);
         expbar.getStage().addActor(this.levelNumber);
-        
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
-        
-        this.input.addCommand(KeyBindings.ATTACK, t->{
-                t.isAttacking = true;
-                t.getAttackSound().play();
-                t.attack();
-            })
-            .addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(lvlTest))
-            .addCommand(KeyBindings.SWITCH_WEAPON, t -> {}) //TODO Weapon Switch
-            .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
-            .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
-            .addCommand(KeyBindings.MOVE_DOWN, new Movement(Direction.DOWN))
-            .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT))
-            .addCommand(KeyBindings.PAUSE, t -> {
-                Gdx.input.setInputProcessor(menu.getStage());
-                this.isPaused = !this.isPaused;
-                this.isSkillMenuOpen = false;
+
+        this.input.addCommand(KeyBindings.ATTACK, t -> {
+            t.isAttacking = true;
+            t.getAttackSound().play();
+            t.attack();
+        }).addCommand(KeyBindings.PICK_UP, t -> {
+            t.getCharacter().pickUpfromLevel(lvlTest);
+            ((HeroView) t).updateWeaponTextures();
+        }).addCommand(KeyBindings.SWITCH_WEAPON, t -> {
+            t.getCharacter().switchWeapon();
+        }) // TODO Weapon Switch Texture
+                .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
+                .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
+                .addCommand(KeyBindings.MOVE_DOWN, new Movement(Direction.DOWN))
+                .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT)).addCommand(KeyBindings.PAUSE, t -> {
+                    Gdx.input.setInputProcessor(menu.getStage());
+                    this.isPaused = !this.isPaused;
+                    this.isSkillMenuOpen = false;
                 })
-            .addCommand(KeyBindings.USE_POTION, t -> t.getCharacter().useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream()
-                                                        .map(p -> p.getFirst())
-                                                        .filter(i -> i instanceof HealthPotion)
-                                                        .findFirst().orElse(null)))
-            .addCommand(KeyBindings.INCREASES_SPEED, new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED*SPEED_MULTIPLAYER))
-            .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT*10, (int) (MAX_HP*TEN_PERCENT_MULTIPLAYER)))
-            .addCommand(KeyBindings.SKILL_MENU, t -> {
-                Gdx.input.setInputProcessor(skillMenu.getStage()); 
-                this.isSkillMenuOpen = !this.isSkillMenuOpen;
-                this.isPaused = false;
-            });
+                .addCommand(KeyBindings.USE_POTION, t -> t.getCharacter()
+                        .useItem((ConsumableItem) t.getCharacter().getInv().getInv().stream().map(p -> p.getFirst())
+                                .filter(i -> i instanceof HealthPotion).findFirst().orElse(null)))
+                .addCommand(KeyBindings.INCREASES_SPEED,
+                        new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLAYER))
+                .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 10, (int) (MAX_HP * TEN_PERCENT_MULTIPLAYER)))
+                .addCommand(KeyBindings.SKILL_MENU, t -> {
+                    Gdx.input.setInputProcessor(skillMenu.getStage());
+                    this.isSkillMenuOpen = !this.isSkillMenuOpen;
+                    this.isPaused = false;
+                });
     }
 
     @Override
@@ -209,13 +220,18 @@ public class GameScreen implements Screen {
 
         // Pause Activation
         this.input.handleInput(KeyBindings.PAUSE).ifPresent(t -> t.executeCommand(heroView));
-        
-     // Pause Activation
+
+        // Pause Activation
         this.input.handleInput(KeyBindings.SKILL_MENU).ifPresent(t -> t.executeCommand(heroView));
 
         // Hp Potion rendering
         for (final ConsumableItem i : lvlTest.getConsumables()) {
             batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
+        }
+
+        // Weapon rendering
+        for (final Weapon w : lvlTest.getWeapons()) {
+            batch.draw(greataxeTexture, w.getPos().getxCoord() - greataxeTexture.getWidth() / 2, w.getPos().getyCoord());
         }
 
         // Last hero direction and music stopped during any kind of pause
@@ -233,9 +249,12 @@ public class GameScreen implements Screen {
 
             // Use potion
             this.input.handleInput(KeyBindings.USE_POTION).ifPresent(t -> t.executeCommand(heroView));
-            
+
             // Use skill heal
             this.input.handleInput(KeyBindings.HEAL).ifPresent(t -> t.executeCommand(heroView));
+
+            // Switch weapon
+            this.input.handleInput(KeyBindings.SWITCH_WEAPON).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
             if (!heroView.isAttacking) {
@@ -271,34 +290,38 @@ public class GameScreen implements Screen {
         } else if (this.isSkillMenuOpen) {
             skillMenu.getStage().act();
             skillMenu.getStage().draw();
-         }
+        }
 
         // Health bar and Potion Quantity
         potionQuantity.setText(": " + heroView.getHero().getInv().getPotionQuantity());
         hpbar.update(heroView.getHero());
         hpbar.getStage().act();
         hpbar.getStage().draw();
-        
+
         manabar.update(heroView.getHero());
         manabar.getStage().act();
         manabar.getStage().draw();
-        
+
         levelNumber.setText(": " + heroView.getHero().getLevel());
         expbar.update(heroView.getHero());
         expbar.getStage().act();
         expbar.getStage().draw();
-        
+
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            heroView.getHero().addExp(200);
-            System.out.println("Hp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            //heroView.getHero().addExp(200);
+            System.out.println("\n\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
             System.out.println("Level: " + heroView.getHero().getLevel());
-            
-            heroView.getHero().setCurrentHp(10);
-            System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
-            System.out.println(heroView.getHero().getInv().getPotionQuantity());
+            System.out.println("Weapons: " + heroView.getHero().getWeapons().size());
+            System.out.println("Weapons: " + heroView.getHero().getWeapons());
+            System.out.println("Current Weapon: " + heroView.getHero().getCurrentWeaponIndex());
+            System.out.println("Current Weapon: " + heroView.getHero().getCurrentWeapon().getName());
             System.out.println(heroView.getHero().getInv().toString());
+
+//            heroView.getHero().setCurrentHp(10);
+//            System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
+//            System.out.println(heroView.getHero().getInv().getPotionQuantity());
         }
     }
 

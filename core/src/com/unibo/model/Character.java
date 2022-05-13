@@ -25,16 +25,17 @@ public abstract class Character {
     private int speed;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
-    private Weapon currentWeapon;
+    private int currentWeapon;
     private final Inventory inv;
     private Map currentMap;
 
     /**
      * Constructor for a character.
      * 
-     * @param maxHp
-     * @param speed
-     * @param startingWeapon
+     * @param maxHp          Max health points of the character
+     * @param speed          Speed of the character
+     * @param startingWeapon Starting weapon of the character
+     * @param maxMana        Max mana of the character
      */
     public Character(final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
         this.maxHp = maxHp;
@@ -42,7 +43,7 @@ public abstract class Character {
         this.maxMana = maxMana;
         this.setCurrentMana(maxMana);
         this.setSpeed(speed);
-        this.currentWeapon = startingWeapon;
+        this.currentWeapon = 0;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
         weapons.add(startingWeapon);
@@ -79,14 +80,14 @@ public abstract class Character {
     public int getMaxHp() {
         return maxHp;
     }
-    
+
     /**
      * @param maxHp new maxHp of the character
      */
     public void setMaxHp(final int maxHp) {
         this.maxHp = maxHp;
     }
-    
+
     /**
      * @return current mana points
      */
@@ -95,7 +96,7 @@ public abstract class Character {
     }
 
     /**
-     * Set the current mana to the specified value
+     * Set the current mana to the specified value.
      * 
      * @param currentMana
      */
@@ -108,23 +109,23 @@ public abstract class Character {
             this.currentMana = currentMana;
         }
     }
-    
+
     /**
-     * Decreases the current mana of the character of the specified value
+     * Decreases the current mana of the character of the specified value.
      * 
-     * @param mana 
+     * @param mana
      */
     public void decreaseCurrentMana(final int mana) {
         this.setCurrentMana(this.currentMana - mana);
     }
-    
+
     /**
      * @return max mana points.
      */
     public int getMaxMana() {
         return this.maxMana;
     }
-    
+
     /**
      * @param maxMana new MaxMana of the character
      */
@@ -195,16 +196,40 @@ public abstract class Character {
      * @return the weapon currently used by the character.
      */
     public Weapon getCurrentWeapon() {
-        return currentWeapon;
+        return this.weapons.get(currentWeapon);
     }
 
     /**
-     * Sets the specified weapon as current.
-     * 
-     * @param currentWeapon
+     * @return the current weapon index.
      */
-    public void setCurrentWeapon(final Weapon currentWeapon) {
-        this.currentWeapon = currentWeapon;
+    public int getCurrentWeaponIndex() {
+        return this.currentWeapon;
+    }
+
+    /**
+     * Sets the specified weapon index as current.
+     * 
+     * @param newWeaponIndex Index of the new current weapon
+     */
+    private void setCurrentWeapon(final int newWeaponIndex) {
+        if (newWeaponIndex >= 0 && newWeaponIndex < weapons.size()) {
+            this.currentWeapon = newWeaponIndex;
+        }
+    }
+
+    /**
+     * Switches the hero's current weapon to the next one. For example if the hero
+     * has three weapon and the current one is the second, switching sets the third
+     * weapon as current, if the third weapon is the current switching returns to
+     * the first weapon.
+     */
+    public void switchWeapon() {
+        if (this.currentWeapon < this.weapons.size() - 1) {
+            this.currentWeapon += 1;
+            this.setCurrentWeapon(this.currentWeapon);
+        } else {
+            this.setCurrentWeapon(0);
+        }
     }
 
     /**
@@ -214,8 +239,9 @@ public abstract class Character {
      * @return true if can hit.
      */
     public Boolean canHit(final Character enemy) {
-        if (Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.currentWeapon.getRange()
-                && Math.abs(enemy.getPos().getyCoord() - this.getPos().getyCoord()) <= this.currentWeapon.getRange()) {
+        if (Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.getCurrentWeapon().getRange()
+                && Math.abs(enemy.getPos().getyCoord() - this.getPos().getyCoord()) <= this.getCurrentWeapon()
+                        .getRange()) {
             return true;
         }
         return false;
@@ -389,9 +415,9 @@ public abstract class Character {
      * @return the name of the character
      */
     public abstract String getName();
-    
+
     /**
-     * Skill: Increases the movement speed of the character
+     * Skill: Increases the movement speed of the character.
      * 
      * @param speed the amount of speed added to the character
      * @return true if the character can use this skill
@@ -405,7 +431,7 @@ public abstract class Character {
     }
 
     /**
-     * Skill: Heal the character
+     * Skill: Heal the character.
      * 
      * @param hp the amount of hp added to the character
      * @return true if the character can use this skill
@@ -424,21 +450,21 @@ public abstract class Character {
     public int getLevel() {
         return level;
     }
-    
+
     /**
-     * Increment the level of the character
+     * Increment the level of the character.
      */
     public void incrementLevel() {
         this.level++;
     }
-    
+
     /**
      * @return the level needed to use the skill speed up
      */
     public int levelToSpeedUp() {
         return LEVEL_TO_SKILL_1;
     }
-    
+
     /**
      * @return the level needed to use the skill Heal
      */
