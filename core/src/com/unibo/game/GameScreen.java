@@ -23,6 +23,7 @@ import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Item;
 import com.unibo.model.Level;
+import com.unibo.model.LevelsList;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.Weapon;
@@ -66,7 +67,8 @@ public class GameScreen implements Screen {
     private float attackTime;
     private boolean isPaused;
     private boolean isSkillMenuOpen;
-    private final Level lvlTest;
+    private final LevelsList lvlList;
+    private Level lvlTest;
     private final Healthbar hpbar;
     private final Manabar manabar;
     private final Expbar expbar;
@@ -120,7 +122,9 @@ public class GameScreen implements Screen {
         final DoorKey key = new DoorKey();
         key.setPos(new Position(600, 1016));
 
-        lvlTest = new Level();
+        //Level
+        lvlList = new LevelsList();
+        lvlTest = lvlList.getCurrentLevel();
         lvlTest.addItems(greataxe, spear);
         lvlTest.addItems(hp1, hp2, hp3);
         lvlTest.addItems(key);

@@ -22,20 +22,20 @@ public final class LevelsList {
     }
 
     public Level getCurrentLevel() {
-        return levels.get(counter);
+        return this.levels.get(this.counter);
     }
 
     public boolean hasNextLevel() {
-        return levels.size() > counter;
+        return this.levels.size() > this.counter;
     }
 
     public Level getNextLevel() {
-        counter++;
-        return levels.get(counter);
+        this.counter++;
+        return this.levels.get(this.counter);
     }
 
     public boolean isGameOver() {
-        return levels.isEmpty();
+        return !this.hasNextLevel();
     }
 
 }
