@@ -1,50 +1,62 @@
 package com.unibo.view;
 
-import com.badlogic.gdx.Gdx;
-import com.unibo.maps.Map;
+import com.unibo.keybindings.InputHandler;
+import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.Hero;
 import com.unibo.util.Direction;
-import com.unibo.util.KeyBindings;
 
 /**
  * Class for the view of the hero.
  */
 public class HeroView extends CharacterView {
 
+    private final InputHandler input;
+    private final Hero hero;
+
     /**
      * Constructor for the view.
      * 
-     * @param hero the hero model
-     * @param path of the hero movement animation
+     * @param hero  the hero model
+     * @param input handler for keyboard inputs
      */
-    public HeroView(final Hero hero, final String path) {
-        super(hero, path, "audio/sounds/Hadouken.mp3");
+    public HeroView(final Hero hero, final InputHandler input) {
+        super(hero, "hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/Hadouken.mp3");
+        this.hero = hero;
+        this.input = input;
     }
 
     /**
-     * Moves the hero depending on the pressed key.
+     * Moves the hero depending on the pressed key, and speed it up if pressed the
+     * SpeedUp skill key.
      */
     public void move() {
-        int heroX = getCharacter().getPos().getxCoord();
-        int heroY = getCharacter().getPos().getyCoord();
-        int deltaMovement = (int) (getCharacter().getSpeed() * Gdx.graphics.getDeltaTime());
-        Map map = getCharacter().getCurrentMap();
         setDir(Direction.STILL);
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_LEFT.getKey()) && map.validMovement(this, heroX - deltaMovement, heroY)) {         
-            setDir(Direction.LEFT);
-            getCharacter().setPos(heroX - deltaMovement, heroY);
-        }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_RIGHT.getKey()) && map.validMovement(this, heroX + deltaMovement, heroY)) {
-            setDir(Direction.RIGHT);
-            getCharacter().setPos(heroX + deltaMovement, heroY);
-        }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_UP.getKey()) && map.validMovement(this, heroX, heroY + deltaMovement)) {
-            setDir(Direction.UP);
-            getCharacter().setPos(heroX, heroY + deltaMovement);
-        }
-        if (Gdx.input.isKeyPressed(KeyBindings.MOVE_DOWN.getKey()) && map.validMovement(this, heroX, heroY - deltaMovement)) {
-            setDir(Direction.DOWN);
-            getCharacter().setPos(heroX, heroY - deltaMovement);
-        }
+
+        this.input.handleInput(KeyBindings.INCREASES_SPEED).ifPresentOrElse(t -> t.executeCommand(this),
+                () -> this.getHero().setSpeed(200));
+
+        this.input.handleInput(KeyBindings.MOVE_LEFT).ifPresent(t -> t.executeCommand(this));
+
+        this.input.handleInput(KeyBindings.MOVE_RIGHT).ifPresent(t -> t.executeCommand(this));
+
+        this.input.handleInput(KeyBindings.MOVE_UP).ifPresent(t -> t.executeCommand(this));
+
+        this.input.handleInput(KeyBindings.MOVE_DOWN).ifPresent(t -> t.executeCommand(this));
+
+    }
+
+    /**
+     * @return The hero
+     */
+    public Hero getHero() {
+        return this.hero;
+    }
+
+    /**
+     * Switches the hero weapon and updates its texture.
+     */
+    public void switchWeapon() {
+        this.hero.switchWeapon();
+        this.createTextures("hero" + this.hero.getCurrentWeapon().getName() + ".png");
     }
 }

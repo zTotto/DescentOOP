@@ -24,7 +24,7 @@ public class Inventory {
      * 
      * @param item to add to the inventory
      */
-    public Inventory(final Pair<Item, Integer>... item) {
+    public Inventory(final List<Pair<Item, Integer>> item) {
         for (final Pair<Item, Integer> i : item) {
             inv.add(i);
         }
@@ -84,6 +84,19 @@ public class Inventory {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns how many potions the inventory contains.
+     * @return the quantity of potions
+     */
+    public int getPotionQuantity() {
+        for (final Pair<Item, Integer> p : inv) {
+            if (p.getFirst() instanceof HealthPotion) {
+                return p.getSecond();
+            }
+        }
+        return 0;
     }
 
     /**

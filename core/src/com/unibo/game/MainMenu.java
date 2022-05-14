@@ -57,7 +57,6 @@ public class MainMenu implements Screen {
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                System.out.println("Options Menu");
                 game.setScreen(new SettingsMenu(game));
             }
         });
@@ -87,8 +86,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void resize(final int width, final int height) {
-        camera.viewportWidth = width / 2.5f;
-        camera.viewportHeight = height / 2.5f;
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

@@ -14,29 +14,36 @@ import com.unibo.util.Position;
  */
 public abstract class Character {
 
+    private static final int LEVEL_TO_SKILL_1 = 2;
+    private static final int LEVEL_TO_SKILL_2 = 4;
+
+    private int level = 1;
     private int currentHp;
-    private final int maxHp;
+    private int currentMana;
+    private int maxMana;
+    private int maxHp;
     private int speed;
-    private int range;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
-    private Weapon currentWeapon;
+    private int currentWeapon;
     private final Inventory inv;
     private Map currentMap;
 
     /**
      * Constructor for a character.
      * 
-     * @param maxHp
-     * @param speed
-     * @param startingWeapon
+     * @param maxHp          Max health points of the character
+     * @param speed          Speed of the character
+     * @param startingWeapon Starting weapon of the character
+     * @param maxMana        Max mana of the character
      */
-    public Character(final int maxHp, final int speed, final Weapon startingWeapon) {
+    public Character(final int maxHp, final int speed, final Weapon startingWeapon, final int maxMana) {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
+        this.maxMana = maxMana;
+        this.setCurrentMana(maxMana);
         this.setSpeed(speed);
-        this.setRange(speed / 6);
-        this.currentWeapon = startingWeapon;
+        this.currentWeapon = 0;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
         weapons.add(startingWeapon);
@@ -68,11 +75,62 @@ public abstract class Character {
     }
 
     /**
-     * 
      * @return max health points.
      */
     public int getMaxHp() {
         return maxHp;
+    }
+
+    /**
+     * @param maxHp new maxHp of the character
+     */
+    public void setMaxHp(final int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    /**
+     * @return current mana points
+     */
+    public int getCurrentMana() {
+        return this.currentMana;
+    }
+
+    /**
+     * Set the current mana to the specified value.
+     * 
+     * @param currentMana
+     */
+    public void setCurrentMana(final int currentMana) {
+        if (currentMana < 0) {
+            this.currentMana = 0;
+        } else if (currentMana > this.maxMana) {
+            this.currentMana = this.maxMana;
+        } else {
+            this.currentMana = currentMana;
+        }
+    }
+
+    /**
+     * Decreases the current mana of the character of the specified value.
+     * 
+     * @param mana
+     */
+    public void decreaseCurrentMana(final int mana) {
+        this.setCurrentMana(this.currentMana - mana);
+    }
+
+    /**
+     * @return max mana points.
+     */
+    public int getMaxMana() {
+        return this.maxMana;
+    }
+
+    /**
+     * @param maxMana new MaxMana of the character
+     */
+    public void setMaxMana(final int maxMana) {
+        this.maxMana = maxMana;
     }
 
     /**
@@ -103,20 +161,17 @@ public abstract class Character {
     }
 
     /**
-     * @return the character range when picking up items.
+     * @return the character range when picking up items. (Mobs don't have a pickup
+     *         range)
      */
-    public int getRange() {
-        return range;
-    }
+    public abstract int getRange();
 
     /**
-     * Sets the character pickup range.
+     * Sets the character pickup range. (Mobs can't have a pickup range)
      * 
      * @param range
      */
-    public void setRange(final int range) {
-        this.range = range;
-    }
+    public abstract void setRange(int range);
 
     // Weapon related
     /**
@@ -141,16 +196,40 @@ public abstract class Character {
      * @return the weapon currently used by the character.
      */
     public Weapon getCurrentWeapon() {
-        return currentWeapon;
+        return this.weapons.get(currentWeapon);
     }
 
     /**
-     * Sets the specified weapon as current.
-     * 
-     * @param currentWeapon
+     * @return the current weapon index.
      */
-    public void setCurrentWeapon(final Weapon currentWeapon) {
-        this.currentWeapon = currentWeapon;
+    public int getCurrentWeaponIndex() {
+        return this.currentWeapon;
+    }
+
+    /**
+     * Sets the specified weapon index as current.
+     * 
+     * @param newWeaponIndex Index of the new current weapon
+     */
+    private void setCurrentWeapon(final int newWeaponIndex) {
+        if (newWeaponIndex >= 0 && newWeaponIndex < weapons.size()) {
+            this.currentWeapon = newWeaponIndex;
+        }
+    }
+
+    /**
+     * Switches the hero's current weapon to the next one. For example if the hero
+     * has three weapon and the current one is the second, switching sets the third
+     * weapon as current, if the third weapon is the current switching returns to
+     * the first weapon.
+     */
+    public void switchWeapon() {
+        if (this.currentWeapon < this.weapons.size() - 1) {
+            this.currentWeapon += 1;
+            this.setCurrentWeapon(this.currentWeapon);
+        } else {
+            this.setCurrentWeapon(0);
+        }
     }
 
     /**
@@ -160,8 +239,9 @@ public abstract class Character {
      * @return true if can hit.
      */
     public Boolean canHit(final Character enemy) {
-        if (Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.currentWeapon.getRange()
-                && Math.abs(enemy.getPos().getyCoord() - this.getPos().getyCoord()) <= this.currentWeapon.getRange()) {
+        if (Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.getCurrentWeapon().getRange()
+                && Math.abs(enemy.getPos().getyCoord() - this.getPos().getyCoord()) <= this.getCurrentWeapon()
+                        .getRange()) {
             return true;
         }
         return false;
@@ -186,7 +266,7 @@ public abstract class Character {
      */
     public Boolean hitEnemyFromLevel(final Level lvl) {
         if (!this.isDead()) {
-            for (Character e : lvl.getEnemies()) {
+            for (final Character e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
                     return true;
@@ -207,71 +287,20 @@ public abstract class Character {
     }
 
     /**
-     * Uses the specified item (if present in the inventory).
+     * Uses the specified item (if present in the inventory). The mob can't use an
+     * item (so this will be empty on a mob)
      * 
      * @param item
      */
-    public void useItem(final ConsumableItem item) {
-        if (this.inv.contains(item)) {
-            item.use(this);
-            this.inv.removeItem(item);
-        }
-    }
+    public abstract void useItem(ConsumableItem item);
 
     /**
-     * If in range, picks up an item from the level.
+     * If in range, picks up an item from the level. Mobs can't pick up items.
      * 
      * @param lvl
      * @return true if an item was picked up.
      */
-    public Boolean pickUpfromLevel(final Level lvl) {
-        if (!this.isDead()) {
-            List<Item> items = new LinkedList<>();
-            items.addAll(lvl.getConsumables());
-            items.addAll(lvl.getWeapons());
-            int consIndex = 0;
-            for (Item item : items) {
-                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.range
-                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.range) {
-                    if (item instanceof Weapon) {
-                        weapons.add((Weapon) item);
-                        lvl.removeWeapon((Weapon) item);
-                    } else {
-                        inv.addItem(item);
-                        lvl.removeConsumableAtIndex(consIndex);
-                    }
-                    return true;
-                }
-                consIndex++;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether an item can be picked up.
-     * 
-     * @param item to be checked
-     * @return true if the item can be picked up
-     */
-    public Boolean canPickUpItem(final Item item) {
-        return item.getPos().equals(this.getPos());
-    }
-
-    /**
-     * Pick ups the specified item.
-     * 
-     * @param item
-     */
-    public void pickUpItem(final Item item) {
-        if (this.canPickUpItem(item)) {
-            if (item instanceof Weapon) {
-                weapons.add((Weapon) item);
-            } else {
-                inv.addItem(item);
-            }
-        }
-    }
+    public abstract Boolean pickUpfromLevel(Level lvl);
 
     // Position related
 
@@ -337,11 +366,10 @@ public abstract class Character {
     }
 
     /**
-     * @return the description of the hero.
+     * @return the description of the character.
      */
     public String toString() {
-        String msg = "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
-        return msg;
+        return "Max HP: " + this.getMaxHp() + ", Weapon: " + this.getWeapons();
     }
 
     /**
@@ -358,5 +386,66 @@ public abstract class Character {
      */
     public void setCurrentMap(final Map map) {
         this.currentMap = map;
+    }
+
+    /**
+     * @return the name of the character
+     */
+    public abstract String getName();
+
+    /**
+     * Skill: Increases the movement speed of the character.
+     * 
+     * @param speed the amount of speed added to the character
+     * @return true if the character can use this skill
+     */
+    public boolean increaseSpeed(final int speed) {
+        if (this.getLevel() >= this.levelToSpeedUp()) {
+            this.setSpeed(this.getSpeed() + speed);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Skill: Heal the character.
+     * 
+     * @param hp the amount of hp added to the character
+     * @return true if the character can use this skill
+     */
+    public boolean heal(final int hp) {
+        if (this.getLevel() >= this.levelToHeal()) {
+            this.setCurrentHp(this.getCurrentHp() + hp);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return the level of the character
+     */
+    public int getLevel() {
+        return level;
+    }
+
+    /**
+     * Increment the level of the character.
+     */
+    public void incrementLevel() {
+        this.level++;
+    }
+
+    /**
+     * @return the level needed to use the skill speed up
+     */
+    public int levelToSpeedUp() {
+        return LEVEL_TO_SKILL_1;
+    }
+
+    /**
+     * @return the level needed to use the skill Heal
+     */
+    public int levelToHeal() {
+        return LEVEL_TO_SKILL_2;
     }
 }

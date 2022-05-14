@@ -1,5 +1,7 @@
 package com.unibo.model;
 
+import com.unibo.util.WeaponStats;
+
 /**
  * 
  * Class to model a Weapon, a sub-class of Item.
@@ -11,15 +13,14 @@ public class Weapon extends Item {
 
     /**
      * Constructor for a weapon.
-     * @param name
-     * @param damage
-     * @param range
-     * @param id the weapon Id
+     * 
+     * @param weapon from the enum
+     * @param id     the weapon Id
      */
-    public Weapon(final String name, final int damage, final int range, final String id) {
-        super(name, id);
-        this.damage = damage;
-        this.range = range;
+    public Weapon(final WeaponStats weapon, final String id) {
+        super(weapon.getName(), id);
+        this.damage = weapon.getDamage();
+        this.range = weapon.getRange();
     }
 
     /**
@@ -40,6 +41,7 @@ public class Weapon extends Item {
 
     /**
      * Applies a buff/debuff to the weapon damage.
+     * 
      * @param damageMod the modifier
      */
     public void applyDamageMod(final int damageMod) {
@@ -48,6 +50,7 @@ public class Weapon extends Item {
 
     /**
      * Applies a buff/debuff to the weapon range.
+     * 
      * @param rangeMod the modifier
      */
     public void applyRangeMod(final int rangeMod) {

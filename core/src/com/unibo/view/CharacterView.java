@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.unibo.model.Character;
 import com.unibo.util.Direction;
+import com.unibo.model.Character;
 
 /**
  * Class for the view of a generic character.
@@ -16,7 +16,6 @@ public abstract class CharacterView {
 
     private final Character character;
 
-    private Texture characterTextures;
     private TextureRegion still;
     private Animation<TextureRegion> animationLeft;
     private Animation<TextureRegion> animationRight;
@@ -43,12 +42,17 @@ public abstract class CharacterView {
         this.attackSound = Gdx.audio.newSound(Gdx.files.internal(attackSoundPath));
         this.createTextures(texturePath);
         this.charRect = new Rectangle(this.character.getPos().getxCoord(), this.character.getPos().getyCoord(),
-                this.getWidth(), this.getHeight() / 6);
+                still.getRegionWidth() * 0.66f, still.getRegionHeight() / 6);
     }
 
-    private void createTextures(final String fileName) {
-        characterTextures = new Texture(fileName);
-        TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
+    /**
+     * Changes the character animation according to the file path.
+     * 
+     * @param fileName
+     */
+    protected void createTextures(final String fileName) {
+        final Texture characterTextures = new Texture(fileName);
+        final TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
                 characterTextures.getHeight() / 4);
 
         // Texture when still
@@ -120,11 +124,13 @@ public abstract class CharacterView {
         return animationAttack;
     }
 
+    // TODO: Implement attack mechanic.
     /**
      * Makes the character attack.
      */
     public void attack() {
         System.out.println("Attack!");
+        this.character.setCurrentHp((int) (0.95f * this.character.getCurrentHp()));
     }
 
     /**

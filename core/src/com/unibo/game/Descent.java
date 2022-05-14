@@ -13,11 +13,11 @@ public class Descent extends Game {
     /**
      * Game Width.
      */
-    public static final int GAME_WIDTH = 1300; //1600;
+    public static final int GAME_WIDTH = 1300; // 1600;
     /**
      * Game Height.
      */
-    public static final int GAME_HEIGHT = 600; //900;
+    public static final int GAME_HEIGHT = 600; // 900;
 
     /**
      * Constructor for this class.
@@ -31,6 +31,7 @@ public class Descent extends Game {
     /**
      * Render class for the application.
      */
+    @Override
     public void render() {
         super.render(); // important!
     }
@@ -38,6 +39,7 @@ public class Descent extends Game {
     /**
      * Class to dispose textures, fonts, sounds etc.
      */
+    @Override
     public void dispose() {
         batch.dispose();
         font.dispose();

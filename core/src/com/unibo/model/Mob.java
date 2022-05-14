@@ -1,10 +1,11 @@
 package com.unibo.model;
 
-import com.unibo.util.MobsStats;
+import com.unibo.util.MobStats;
 
 /**
  * A class to model a mob.
  */
+@SuppressWarnings("PMD.MissingSerialVersionUID")
 public class Mob extends Character {
 
     private final String name;
@@ -15,25 +16,52 @@ public class Mob extends Character {
      * @param modType        type of the created mob
      * @param startingWeapon starting weapon of the created mob
      */
-    public Mob(final MobsStats modType, final Weapon startingWeapon) {
-        super(modType.getHp(), modType.getSpeed(), startingWeapon);
+    public Mob(final MobStats modType, final Weapon startingWeapon) {
+        super(modType.getHp(), modType.getSpeed(), startingWeapon, modType.getMana());
         this.name = modType.getName();
     }
 
     /**
-     * 
-     * @return this mob's name
+     * {@inheritDoc}
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @return the description of this mob.
+     * {@inheritDoc}
      */
     public String toString() {
-        String msg = "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: "
-                + this.getWeapons();
-        return msg;
+        return "\nName: " + this.getName() + ", Current HP: " + this.getCurrentHp() + ", Weapon: " + this.getWeapons();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void useItem(final ConsumableItem item) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean pickUpfromLevel(final Level lvl) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getRange() {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRange(final int range) {
     }
 }
