@@ -1,4 +1,6 @@
-package com.unibo.model;
+package com.unibo.model.items;
+
+import com.unibo.util.Position;
 
 /**
  * Class for the key that opens each level door.
@@ -14,5 +16,11 @@ public class DoorKey extends Item {
      */
     public DoorKey() {
         this("Magic Key", "0");
+    }
+
+    @Override
+    public DoorKey setPos(final Position p) {
+        this.pos = p;
+        return this;
     }
 }

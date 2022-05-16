@@ -1,4 +1,4 @@
-package com.unibo.model;
+package com.unibo.model.items;
 
 import java.util.Objects;
 
@@ -12,7 +12,10 @@ public abstract class Item {
 
     private final String name;
     private final String id;
-    private Position pos;
+    /**
+     * Position of the item.
+     */
+    protected Position pos;
 
     /**
      * Constructor to build an item.
@@ -46,17 +49,16 @@ public abstract class Item {
      * @return the item position.
      */
     public Position getPos() {
-        return new Position(pos.getxCoord(), pos.getyCoord());
+        return this.pos;
     }
 
     /**
      * Sets the item position to the specified position.
      * 
      * @param p
+     * @return the item
      */
-    public void setPos(final Position p) {
-        this.pos = p;
-    }
+    public abstract Item setPos(Position p);
 
     /**
      * {@inheritDoc}
