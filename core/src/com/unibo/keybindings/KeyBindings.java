@@ -52,9 +52,13 @@ public enum KeyBindings {
      */
     HEAL(Input.Keys.A, "Heal"),
     /**
-     * Key to open the skill menu.
+     * Key to open the skill menù.
      */
-    SKILL_MENU(Input.Keys.T, "SkillMenu");
+    SKILL_MENU(Input.Keys.T, "SkillMenu"),
+    /**
+     * key to use the door key to go to the next level.
+     */
+    USE_KEY(Input.Keys.K, "UseKey");
 
     private int key;
     private final String name;

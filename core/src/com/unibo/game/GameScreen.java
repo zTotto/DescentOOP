@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,6 +24,7 @@ import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
 import com.unibo.model.Item;
 import com.unibo.model.Level;
+import com.unibo.model.LevelsList;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.Weapon;
@@ -53,7 +55,7 @@ public class GameScreen implements Screen {
     private HeroView heroView;
     // private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
-    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
 
     private final Texture hpTexture;
     private final Texture keyTexture;
@@ -65,7 +67,8 @@ public class GameScreen implements Screen {
     private float attackTime;
     private boolean isPaused;
     private boolean isSkillMenuOpen;
-    private final Level lvlTest;
+    private final LevelsList lvlList;
+    private Level lvlTest;
     private final Healthbar hpbar;
     private final Manabar manabar;
     private final Expbar expbar;
@@ -73,6 +76,8 @@ public class GameScreen implements Screen {
     private final Label levelNumber;
 
     private final InputHandler input = new InputHandler();
+
+    private final Rectangle door = new Rectangle(500, 1016, 100, 100);
 
     /**
      * Main game scene.
@@ -118,8 +123,10 @@ public class GameScreen implements Screen {
         final DoorKey key = new DoorKey();
         key.setPos(new Position(600, 1016));
 
-        lvlTest = new Level();
-        lvlTest.addItems(greataxe, longsword);
+        //Level
+        lvlList = new LevelsList();
+        lvlTest = lvlList.getCurrentLevel();
+        lvlTest.addItems(greataxe, spear);
         lvlTest.addItems(hp1, hp2, hp3);
         lvlTest.addItems(key);
 
@@ -192,6 +199,26 @@ public class GameScreen implements Screen {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
                     this.isPaused = false;
+                })
+                .addCommand(KeyBindings.USE_KEY, t -> {
+                    if (((Hero) t.getCharacter()).hasKey()
+                            && this.door.contains(t.getCharacter().getPos().getxCoord(),
+                                    t.getCharacter().getPos().getyCoord())) {
+                        if (lvlList.hasNextLevel()) {
+                            System.out.println("NEXT LEVEL");
+                            this.lvlTest = this.lvlList.getNextLevel();
+
+                            Gdx.app.postRunnable(() -> { //Post runnable posts the below task in opengl thread
+                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+                                renderer.getMap().dispose();
+                                renderer.setMap(mappa.getTiledMap());
+                                //this.show();
+                            });
+                        } else {
+                            //TODO game over screen
+                            System.out.println("GAME OVER");
+                        }
+                    }
                 });
     }
 
@@ -264,6 +291,9 @@ public class GameScreen implements Screen {
 
             // Switch weapon
             this.input.handleInput(KeyBindings.SWITCH_WEAPON).ifPresent(t -> t.executeCommand(heroView));
+
+            // Use door key
+            this.input.handleInput(KeyBindings.USE_KEY).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
             if (!heroView.isAttacking) {
