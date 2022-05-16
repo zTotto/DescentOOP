@@ -1,4 +1,6 @@
-package com.unibo.model;
+package com.unibo.model.items;
+
+import com.unibo.model.Character;
 
 /**
  * 

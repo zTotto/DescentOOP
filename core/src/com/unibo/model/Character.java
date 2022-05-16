@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.unibo.maps.Map;
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.Position;
 
 /**

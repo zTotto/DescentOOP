@@ -4,7 +4,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.unibo.view.CharacterView;
-import com.unibo.model.Item;
+import com.unibo.model.items.Item;
 import com.unibo.util.Position;
 
 /**

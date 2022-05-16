@@ -1,6 +1,11 @@
 package com.unibo.model;
 
 import java.util.List;
+
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.Item;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.Pair;
 
 /**

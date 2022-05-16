@@ -3,6 +3,10 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.Item;
+import com.unibo.model.items.Weapon;
+
 /**
  * Class that models a level with a list of ConsumableItems, Weapons and
  * Enemies.
