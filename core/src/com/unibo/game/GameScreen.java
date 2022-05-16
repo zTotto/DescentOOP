@@ -17,18 +17,19 @@ import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
-import com.unibo.model.ConsumableItem;
-import com.unibo.model.DoorKey;
 import com.unibo.model.HealSkill;
-import com.unibo.model.HealthPotion;
 import com.unibo.model.Hero;
-import com.unibo.model.Item;
 import com.unibo.model.Level;
 import com.unibo.model.LevelsList;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
-import com.unibo.model.Weapon;
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.DoorKey;
+import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.Item;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
+import com.unibo.util.HealthPotionStats;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
 import com.unibo.view.Expbar;
@@ -68,7 +69,7 @@ public class GameScreen implements Screen {
     private boolean isPaused;
     private boolean isSkillMenuOpen;
     private final LevelsList lvlList;
-    private Level lvlTest;
+    private Level currentLvl;
     private final Healthbar hpbar;
     private final Manabar manabar;
     private final Expbar expbar;
@@ -102,17 +103,17 @@ public class GameScreen implements Screen {
                 (Gdx.graphics.getHeight() - 2 * manabar.getHeight()) - hpbar.getHeight() * 1.2f);
 
         // Exp Bar
-        expbar = new Expbar((int) (Gdx.graphics.getWidth()), (int) (Gdx.graphics.getHeight() / 40f));
+        expbar = new Expbar(Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() / 40f));
         expbar.setPosition(0, 0);
 
         // World Items
         hpTexture = new Texture("hpPotion.png");
-        final HealthPotion hp1 = new HealthPotion("Base Health Potion", "0", 15.0);
-        final HealthPotion hp2 = new HealthPotion("Base Health Potion", "0", 15.0);
-        final HealthPotion hp3 = new HealthPotion("Base Health Potion", "0", 15.0);
-        hp1.setPos(new Position(100, 900));
-        hp2.setPos(new Position(200, 1016));
-        hp3.setPos(new Position(300, 1016));
+        final HealthPotion hp1 = new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0")
+                .setPos(new Position(100, 900));
+        final HealthPotion hp2 = new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0")
+                .setPos(new Position(200, 1016));
+        final HealthPotion hp3 = new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0")
+                .setPos(new Position(300, 1016));
 
         final Weapon greataxe = new Weapon(WeaponStats.GREATAXE, "1");
         final Weapon longsword = new Weapon(WeaponStats.LONGSWORD, "2");
@@ -125,10 +126,10 @@ public class GameScreen implements Screen {
 
         // Level
         lvlList = new LevelsList();
-        lvlTest = lvlList.getCurrentLevel();
-        lvlTest.addItems(greataxe, longsword);
-        lvlTest.addItems(hp1, hp2, hp3);
-        lvlTest.addItems(key);
+        currentLvl = lvlList.getCurrentLevel();
+        currentLvl.addItems(greataxe, longsword);
+        currentLvl.addItems(hp1, hp2, hp3);
+        currentLvl.addItems(key);
 
         // Hp Potion Icon
         hpPotionIcon = new Image(hpTexture);
@@ -180,7 +181,7 @@ public class GameScreen implements Screen {
             t.isAttacking = true;
             t.getAttackSound().play();
             t.attack();
-        }).addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(lvlTest))
+        }).addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(currentLvl))
                 .addCommand(KeyBindings.SWITCH_WEAPON, t -> ((HeroView) t).switchWeapon())
                 .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
                 .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
@@ -202,7 +203,7 @@ public class GameScreen implements Screen {
                             t.getCharacter().getPos().getyCoord())) {
                         if (lvlList.hasNextLevel()) {
                             System.out.println("NEXT LEVEL");
-                            this.lvlTest = this.lvlList.getNextLevel();
+                            this.currentLvl = this.lvlList.getNextLevel();
 
                             Gdx.app.postRunnable(() -> { // Post runnable posts the below task in opengl thread
                                 mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
@@ -249,18 +250,18 @@ public class GameScreen implements Screen {
         this.input.handleInput(KeyBindings.SKILL_MENU).ifPresent(t -> t.executeCommand(heroView));
 
         // Hp Potion rendering
-        for (final ConsumableItem i : lvlTest.getConsumables()) {
+        for (final ConsumableItem i : currentLvl.getConsumables()) {
             batch.draw(hpTexture, i.getPos().getxCoord() - hpTexture.getWidth() / 2, i.getPos().getyCoord());
         }
 
         // Weapon rendering
-        for (final Weapon w : lvlTest.getWeapons()) {
+        for (final Weapon w : currentLvl.getWeapons()) {
             batch.draw(new Texture("weapons/" + w.getName() + ".png"), w.getPos().getxCoord() - 32f / 2,
                     w.getPos().getyCoord());
         }
 
         // Key rendering
-        for (final Item i : lvlTest.getItems()) {
+        for (final Item i : currentLvl.getItems()) {
             if (i instanceof DoorKey) {
                 batch.draw(keyTexture, i.getPos().getxCoord() - keyTexture.getWidth() / 2, i.getPos().getyCoord());
             }
@@ -337,7 +338,7 @@ public class GameScreen implements Screen {
         manabar.getStage().act();
         manabar.getStage().draw();
 
-        levelNumber.setText(": " + heroView.getHero().getLevel());
+        levelNumber.setText("Level " + heroView.getHero().getLevel());
         expbar.update(heroView.getHero());
         expbar.getStage().act();
         expbar.getStage().draw();
@@ -345,8 +346,7 @@ public class GameScreen implements Screen {
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
             heroView.getHero().addExp(200);
-            System.out
-                    .println("\n\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
+            System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
             System.out.println("Level: " + heroView.getHero().getLevel());
             System.out.println("Weapons: " + heroView.getHero().getWeapons().size());
