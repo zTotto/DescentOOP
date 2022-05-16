@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -54,7 +55,7 @@ public class GameScreen implements Screen {
     private HeroView heroView;
     // private CharacterView mobView;
     private OrthogonalTiledMapRenderer renderer;
-    private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
 
     private final Texture hpTexture;
     private final Texture greataxeTexture;
@@ -76,6 +77,8 @@ public class GameScreen implements Screen {
     private final Label levelNumber;
 
     private final InputHandler input = new InputHandler();
+
+    private final Rectangle door = new Rectangle(500, 1016, 100, 100);
 
     /**
      * Main game scene.
@@ -200,8 +203,23 @@ public class GameScreen implements Screen {
                     this.isPaused = false;
                 })
                 .addCommand(KeyBindings.USE_KEY, t -> {
-                    if (((Hero) t.getCharacter()).hasKey() && lvlList.hasNextLevel()) {
-                        this.lvlTest = this.lvlList.getNextLevel();
+                    if (((Hero) t.getCharacter()).hasKey()
+                            && this.door.contains(t.getCharacter().getPos().getxCoord(),
+                                    t.getCharacter().getPos().getyCoord())) {
+                        if (lvlList.hasNextLevel()) {
+                            System.out.println("NEXT LEVEL");
+                            this.lvlTest = this.lvlList.getNextLevel();
+
+                            Gdx.app.postRunnable(() -> { //Post runnable posts the below task in opengl thread
+                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+                                renderer.getMap().dispose();
+                                renderer.setMap(mappa.getTiledMap());
+                                //this.show();
+                            });
+                        } else {
+                            //TODO game over screen
+                            System.out.println("GAME OVER");
+                        }
                     }
                 });
     }
