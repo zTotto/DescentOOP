@@ -198,6 +198,11 @@ public class GameScreen implements Screen {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
                     this.isPaused = false;
+                })
+                .addCommand(KeyBindings.USE_KEY, t -> {
+                    if (((Hero) t.getCharacter()).hasKey() && lvlList.hasNextLevel()) {
+                        this.lvlTest = this.lvlList.getNextLevel();
+                    }
                 });
     }
 
@@ -270,6 +275,9 @@ public class GameScreen implements Screen {
 
             // Switch weapon
             this.input.handleInput(KeyBindings.SWITCH_WEAPON).ifPresent(t -> t.executeCommand(heroView));
+
+            // Use door key
+            this.input.handleInput(KeyBindings.USE_KEY).ifPresent(t -> t.executeCommand(heroView));
 
             // Attack Check
             if (!heroView.isAttacking) {
