@@ -123,10 +123,10 @@ public class GameScreen implements Screen {
         final DoorKey key = new DoorKey();
         key.setPos(new Position(600, 1016));
 
-        //Level
+        // Level
         lvlList = new LevelsList();
         lvlTest = lvlList.getCurrentLevel();
-        lvlTest.addItems(greataxe, spear);
+        lvlTest.addItems(greataxe, longsword);
         lvlTest.addItems(hp1, hp2, hp3);
         lvlTest.addItems(key);
 
@@ -181,9 +181,7 @@ public class GameScreen implements Screen {
             t.getAttackSound().play();
             t.attack();
         }).addCommand(KeyBindings.PICK_UP, t -> t.getCharacter().pickUpfromLevel(lvlTest))
-                .addCommand(KeyBindings.SWITCH_WEAPON, t -> {
-                    ((HeroView) t).switchWeapon();
-                }) // TODO Weapon Switch Texture
+                .addCommand(KeyBindings.SWITCH_WEAPON, t -> ((HeroView) t).switchWeapon())
                 .addCommand(KeyBindings.MOVE_UP, new Movement(Direction.UP))
                 .addCommand(KeyBindings.MOVE_RIGHT, new Movement(Direction.RIGHT))
                 .addCommand(KeyBindings.MOVE_DOWN, new Movement(Direction.DOWN))
@@ -199,23 +197,21 @@ public class GameScreen implements Screen {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
                     this.isPaused = false;
-                })
-                .addCommand(KeyBindings.USE_KEY, t -> {
-                    if (((Hero) t.getCharacter()).hasKey()
-                            && this.door.contains(t.getCharacter().getPos().getxCoord(),
-                                    t.getCharacter().getPos().getyCoord())) {
+                }).addCommand(KeyBindings.USE_KEY, t -> {
+                    if (((Hero) t.getCharacter()).hasKey() && this.door.contains(t.getCharacter().getPos().getxCoord(),
+                            t.getCharacter().getPos().getyCoord())) {
                         if (lvlList.hasNextLevel()) {
                             System.out.println("NEXT LEVEL");
                             this.lvlTest = this.lvlList.getNextLevel();
 
-                            Gdx.app.postRunnable(() -> { //Post runnable posts the below task in opengl thread
+                            Gdx.app.postRunnable(() -> { // Post runnable posts the below task in opengl thread
                                 mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
                                 renderer.getMap().dispose();
                                 renderer.setMap(mappa.getTiledMap());
-                                //this.show();
+                                // this.show();
                             });
                         } else {
-                            //TODO game over screen
+                            // TODO game over screen
                             System.out.println("GAME OVER");
                         }
                     }
@@ -348,7 +344,7 @@ public class GameScreen implements Screen {
 
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            // heroView.getHero().addExp(200);
+            heroView.getHero().addExp(200);
             System.out
                     .println("\n\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
