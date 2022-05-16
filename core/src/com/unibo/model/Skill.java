@@ -39,7 +39,18 @@ public abstract class Skill implements Command {
         }
     }
 
+    /**
+     * Uses the skill on the specified character.
+     * 
+     * @param character to use the skill on
+     * @return true if the skill is used succesfully
+     */
     protected abstract boolean executeSkill(Character character);
 
+    /**
+     * Undoes what the skill/spell did to a character.
+     * 
+     * @param character target of the reset
+     */
     protected abstract void resetInitialState(Character character);
 }

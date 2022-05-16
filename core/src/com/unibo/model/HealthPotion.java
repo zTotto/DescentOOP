@@ -35,7 +35,7 @@ public class HealthPotion extends ConsumableItem {
     public int hashCode() {
         return super.hashCode();
     }
-    
+
     /**
      * {@inheritDoc}
      */
