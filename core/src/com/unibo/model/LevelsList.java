@@ -15,6 +15,9 @@ public final class LevelsList {
     private final List<Level> levels = new LinkedList<>();
     private int counter;
 
+    /**
+     * Constructor that creates 3 empty levels.
+     */
     public LevelsList() {
         this.counter = 0;
         for (int i = 0; i < NUM_LEVELS; i++) {
