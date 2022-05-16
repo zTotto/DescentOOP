@@ -28,6 +28,11 @@ public class HealthPotion extends ConsumableItem {
         pg.setCurrentHp(pg.getCurrentHp() + (int) this.getModifier());
     }
 
+    @Override
+    public Boolean canUse(final Character pg) {
+        return pg.getCurrentHp() < pg.getMaxHp();
+    }
+
     /**
      * {@inheritDoc}
      */

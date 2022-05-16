@@ -55,7 +55,7 @@ public class Hero extends Character {
      */
     @Override
     public void useItem(final ConsumableItem item) {
-        if (this.getInv().contains(item)) {
+        if (this.getInv().contains(item) && item.canUse(this)) {
             item.use(this);
             this.getInv().removeItem(item);
         }
@@ -69,11 +69,13 @@ public class Hero extends Character {
         for (Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof HealthPotion) {
                 pot = (HealthPotion) p.getFirst();
-                pot.use(this);
                 break;
             }
         }
-        this.getInv().removeItem(pot);
+        if (!(pot == null) && pot.canUse(this)) {
+            pot.use(this);
+            this.getInv().removeItem(pot);
+        }
     }
 
     /**
