@@ -30,6 +30,16 @@ public class Position {
     }
 
     /**
+     * Sets the position to the specified one.
+     * 
+     * @param p new position
+     */
+    public void setPosition(final Position p) {
+        this.x = p.getxCoord();
+        this.y = p.getyCoord();
+    }
+
+    /**
      * 
      * @return the y coordinate
      */
