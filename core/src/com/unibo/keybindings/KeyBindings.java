@@ -44,15 +44,15 @@ public enum KeyBindings {
      */
     USE_POTION(Input.Keys.F, "UsePotion"),
     /**
-     * Key to use skill: Increases Speed
+     * Key to use skill: Increases Speed.
      */
     INCREASES_SPEED(Input.Keys.SHIFT_LEFT, "HoldIncreasesSpeed"),
     /**
-     * Key to use skill: Heal
+     * Key to use skill: Heal.
      */
     HEAL(Input.Keys.A, "Heal"),
     /**
-     * Key to open the skill menù
+     * Key to open the skill menu.
      */
     SKILL_MENU(Input.Keys.T, "SkillMenu");
 
