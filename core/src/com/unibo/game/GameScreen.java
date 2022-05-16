@@ -56,7 +56,6 @@ public class GameScreen implements Screen {
     private final Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
 
     private final Texture hpTexture;
-    private final Texture greataxeTexture;
     private final Texture keyTexture;
     private final Image hpPotionIcon;
     private final Label potionQuantity;
@@ -110,18 +109,17 @@ public class GameScreen implements Screen {
         hp2.setPos(new Position(200, 1016));
         hp3.setPos(new Position(300, 1016));
 
-        greataxeTexture = new Texture("Greataxe.png");
         final Weapon greataxe = new Weapon(WeaponStats.GREATAXE, "1");
-        final Weapon spear = new Weapon(WeaponStats.SPEAR, "2");
+        final Weapon longsword = new Weapon(WeaponStats.LONGSWORD, "2");
         greataxe.setPos(new Position(400, 1016));
-        spear.setPos(new Position(500, 1016));
+        longsword.setPos(new Position(500, 1016));
 
         keyTexture = new Texture("blank.png");
         final DoorKey key = new DoorKey();
         key.setPos(new Position(600, 1016));
 
         lvlTest = new Level();
-        lvlTest.addItems(greataxe, spear);
+        lvlTest.addItems(greataxe, longsword);
         lvlTest.addItems(hp1, hp2, hp3);
         lvlTest.addItems(key);
 
@@ -234,7 +232,7 @@ public class GameScreen implements Screen {
 
         // Weapon rendering
         for (final Weapon w : lvlTest.getWeapons()) {
-            batch.draw(greataxeTexture, w.getPos().getxCoord() - greataxeTexture.getWidth() / 2,
+            batch.draw(new Texture("weapons/" + w.getName() + ".png"), w.getPos().getxCoord() - 32f / 2,
                     w.getPos().getyCoord());
         }
 
