@@ -3,6 +3,8 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
 
 /**

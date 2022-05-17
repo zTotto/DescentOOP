@@ -1,5 +1,7 @@
 package com.unibo.model;
 
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.MobStats;
 
 /**

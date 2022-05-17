@@ -20,7 +20,7 @@ public class HeroView extends CharacterView {
      * @param input handler for keyboard inputs
      */
     public HeroView(final Hero hero, final InputHandler input) {
-        super(hero, "hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/Hadouken.mp3");
+        super(hero, "characters/hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/Hadouken.mp3");
         this.hero = hero;
         this.input = input;
     }
@@ -57,6 +57,6 @@ public class HeroView extends CharacterView {
      */
     public void switchWeapon() {
         this.hero.switchWeapon();
-        this.createTextures("hero" + this.hero.getCurrentWeapon().getName() + ".png");
+        this.createTextures("characters/hero" + this.hero.getCurrentWeapon().getName() + ".png");
     }
 }

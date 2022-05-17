@@ -1,5 +1,6 @@
-package com.unibo.model;
+package com.unibo.model.items;
 
+import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
 
 /**
@@ -64,5 +65,14 @@ public class Weapon extends Item {
         String msg = "";
         msg += this.getName() + ", Damage: " + this.getDamage() + ", Range: " + this.getRange();
         return msg;
+    }
+
+    @Override
+    public Weapon setPos(final Position p) {
+        if (this.isPosNull()) {
+            this.resetPos();
+        }
+        this.getPos().setPosition(p);
+        return this;
     }
 }

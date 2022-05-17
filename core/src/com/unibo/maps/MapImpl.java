@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.unibo.model.Item;
+import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
