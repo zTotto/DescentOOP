@@ -6,6 +6,7 @@ import java.util.List;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
+import com.unibo.util.Position;
 
 /**
  * Class that models a level with a list of ConsumableItems, Weapons and
@@ -15,6 +16,7 @@ public class Level {
 
     private final List<Item> items;
     private final List<Mob> enemies;
+    private Position doorPosition = new Position(0, 0);
 
     /**
      * Empty constructor for a level.
@@ -100,6 +102,22 @@ public class Level {
      */
     public List<Mob> getEnemies() {
         return new LinkedList<>(enemies);
+    }
+
+    /**
+     * @return the ending level door position
+     */
+    public Position getDoorPosition() {
+        return doorPosition;
+    }
+
+    /**
+     * Sets the position of the door to the specified one.
+     * 
+     * @param doorPosition new position of the door
+     */
+    public void setDoorPosition(final Position doorPosition) {
+        this.doorPosition = doorPosition;
     }
 
     /**
