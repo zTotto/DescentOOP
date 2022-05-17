@@ -10,12 +10,10 @@ public class MobView extends CharacterView {
     /**
      * Constructor for the Mob view.
      * 
-     * @param mob             the mob model
-     * @param path            path of the mob animation
-     * @param attackSoundPath path of the mob attack sound
+     * @param mob the mob model
      */
-    public MobView(final Mob mob, final String path, final String attackSoundPath) {
-        super(mob, path, attackSoundPath);
+    public MobView(final Mob mob) {
+        super(mob, "characters/" + mob.getName() + ".png", "audio/sounds/Hadouken.mp3"); // TODO add sounds for mobs
     }
 
     /**
