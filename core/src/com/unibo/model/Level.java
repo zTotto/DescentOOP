@@ -14,7 +14,7 @@ import com.unibo.model.items.Weapon;
 public class Level {
 
     private final List<Item> items;
-    private final List<Character> enemies;
+    private final List<Mob> enemies;
 
     /**
      * Empty constructor for a level.
@@ -28,24 +28,28 @@ public class Level {
      * Adds items to the level.
      * 
      * @param itemsToAdd items to add to the level
+     * @return this level in order to chain calls
      */
-    public void addItems(final Item... itemsToAdd) {
+    public Level addItems(final Item... itemsToAdd) {
         for (final Item i : itemsToAdd) {
-            if (i.getPos() != null) {
+            if (!i.isPosNull()) {
                 items.add(i);
             }
         }
+        return this;
     }
 
     /**
      * Adds enemies to the level.
      * 
      * @param enemies
+     * @return this level in order to chain calls
      */
-    public void addEnemies(final Character... enemies) {
-        for (final Character c : enemies) {
-            this.enemies.add(c);
+    public Level addEnemies(final Mob... enemies) {
+        for (final Mob mob : enemies) {
+            this.enemies.add(mob);
         }
+        return this;
     }
 
     /**
@@ -62,7 +66,7 @@ public class Level {
      * 
      * @param enemy
      */
-    public void removeCharacter(final Character enemy) {
+    public void removeMob(final Mob enemy) {
         enemies.remove(enemy);
     }
 
@@ -94,7 +98,7 @@ public class Level {
     /**
      * @return a list containing all the enemies
      */
-    public List<Character> getEnemies() {
+    public List<Mob> getEnemies() {
         return new LinkedList<>(enemies);
     }
 
@@ -106,7 +110,7 @@ public class Level {
         String msg = "\nLEVEL: \n";
         if (!enemies.isEmpty()) {
             msg += "Enemies:";
-            for (final Character e : enemies) {
+            for (final Mob e : enemies) {
                 msg += "\n" + ++i + ": [" + e.toString() + "]\nPosition: " + e.getPos().toString();
             }
         } else {
