@@ -1,5 +1,7 @@
 package com.unibo.util;
 
+import java.util.Objects;
+
 /**
  * Simple pair utility class.
  *
@@ -67,6 +69,7 @@ public class Pair<X, Y> {
 
     /**
      * A function that checks whether the item is contained in the Pair.
+     * 
      * @param obj
      * @return true if it's contained.
      */
@@ -75,5 +78,25 @@ public class Pair<X, Y> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Pair<X, Y> other = (Pair<X, Y>) obj;
+        return Objects.equals(first, other.first) && Objects.equals(second, other.second);
     }
 }
