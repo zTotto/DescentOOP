@@ -122,6 +122,15 @@ public abstract class Character {
     }
 
     /**
+     * Increases the current mana of the character of the specified value.
+     * 
+     * @param mana
+     */
+    public void increaseCurrentMana(final int mana) {
+        this.setCurrentMana(this.currentMana + mana);
+    }
+
+    /**
      * @return max mana points.
      */
     public int getMaxMana() {

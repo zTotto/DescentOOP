@@ -65,6 +65,8 @@ public class GameScreen implements Screen {
     private final Music soundtrack;
     private float elapsedTime;
     private float attackTime;
+    private float gameTime;
+    private int startingGameTime;
     private boolean isPaused;
     private boolean isSkillMenuOpen;
     private final LevelsList lvlList;
@@ -107,14 +109,14 @@ public class GameScreen implements Screen {
         expbar.setPosition(0, 0);
 
         // World Items
-        hpTexture = new Texture("items/HealthPotion/hpPotion.png");
+        hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
 
         // Level
         lvlList = new LevelsList();
         currentLvl = lvlList.getCurrentLevel();
         currentLvl.addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
                 new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
-                new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(100, 900)),
+                new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
                 new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
                 new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
                 new DoorKey().setPos(new Position(600, 1016)));
@@ -138,7 +140,7 @@ public class GameScreen implements Screen {
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
         // Hp Potion Quantity
-        potionQuantity = new Label(": " + heroView.getHero().getInv().getPotionQuantity(),
+        potionQuantity = new Label(": " + heroView.getHero().getInv().getHealthPotionQuantity(),
                 new Skin(Gdx.files.internal("skin/glassy-ui.json")));
         potionQuantity.setFontScale(0.5f);
         potionQuantity.setPosition(hpPotionIcon.getX() + hpPotionIcon.getWidth(),
@@ -173,7 +175,7 @@ public class GameScreen implements Screen {
                 }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
                         new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLAYER))
-                .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 10, (int) (MAX_HP * TEN_PERCENT_MULTIPLAYER)))
+                .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPLAYER)))
                 .addCommand(KeyBindings.SKILL_MENU, t -> {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
@@ -244,6 +246,11 @@ public class GameScreen implements Screen {
         if (!this.isPaused && !this.isSkillMenuOpen) {
 
             this.soundtrack.play();
+            gameTime += Gdx.graphics.getDeltaTime();
+            if ((int) gameTime == startingGameTime + 1) {
+                startingGameTime++;
+                heroView.getHero().increaseCurrentMana(10);
+            }
 
             // Item pick up
             this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
@@ -297,7 +304,7 @@ public class GameScreen implements Screen {
         }
 
         // Health bar and Potion Quantity
-        potionQuantity.setText(": " + heroView.getHero().getInv().getPotionQuantity());
+        potionQuantity.setText(": " + heroView.getHero().getInv().getHealthPotionQuantity());
         hpbar.update(heroView.getHero());
         hpbar.getStage().act();
         hpbar.getStage().draw();
@@ -313,7 +320,7 @@ public class GameScreen implements Screen {
 
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            // heroView.getHero().addExp(200);
+            heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
             System.out.println("Level: " + heroView.getHero().getLevel());
@@ -323,12 +330,6 @@ public class GameScreen implements Screen {
             System.out.println("Current Weapon: " + heroView.getHero().getCurrentWeapon().getName());
             System.out.println(heroView.getHero().getInv().toString());
             System.out.println("Does the Hero have the key? " + heroView.getHero().hasKey());
-            System.out
-                    .println("Weapon class name: " + heroView.getHero().getCurrentWeapon().getClass().getSimpleName());
-
-//            heroView.getHero().setCurrentHp(10);
-//            System.out.println((float) heroView.getHero().getCurrentHp() / (float) heroView.getHero().getMaxHp());
-//            System.out.println(heroView.getHero().getInv().getPotionQuantity());
         }
     }
 
