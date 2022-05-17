@@ -210,15 +210,14 @@ public class GameScreen implements Screen {
                             System.out.println("NEXT LEVEL");
                             this.lvlTest = this.lvlList.getNextLevel();
 
-                            Gdx.app.postRunnable(() -> { //Post runnable posts the below task in opengl thread
+                            Gdx.app.postRunnable(() -> {
                                 mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
                                 renderer.getMap().dispose();
                                 renderer.setMap(mappa.getTiledMap());
                                 //this.show();
                             });
                         } else {
-                            //TODO game over screen
-                            System.out.println("GAME OVER");
+                            game.setScreen(new GameOverMenu(game));
                         }
                     }
                 });
