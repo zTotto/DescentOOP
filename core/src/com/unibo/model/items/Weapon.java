@@ -69,7 +69,10 @@ public class Weapon extends Item {
 
     @Override
     public Weapon setPos(final Position p) {
-        this.pos = p;
+        if (this.isPosNull()) {
+            this.resetPos();
+        }
+        this.getPos().setPosition(p);
         return this;
     }
 }

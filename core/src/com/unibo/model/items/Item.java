@@ -12,10 +12,7 @@ public abstract class Item {
 
     private final String name;
     private final String id;
-    /**
-     * Position of the item.
-     */
-    protected Position pos;
+    private Position pos;
 
     /**
      * Constructor to build an item.
@@ -59,6 +56,22 @@ public abstract class Item {
      * @return the item
      */
     public abstract Item setPos(Position p);
+
+    /**
+     * Checks whether the item position is null.
+     * 
+     * @return true if the position is null
+     */
+    public Boolean isPosNull() {
+        return this.pos == null;
+    }
+
+    /**
+     * Resets the item position to [0, 0].
+     */
+    public void resetPos() {
+        this.pos = new Position(0, 0);
+    }
 
     /**
      * {@inheritDoc}

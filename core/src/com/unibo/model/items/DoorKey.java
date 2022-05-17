@@ -20,7 +20,10 @@ public class DoorKey extends Item {
 
     @Override
     public DoorKey setPos(final Position p) {
-        this.pos = p;
+        if (this.isPosNull()) {
+            this.resetPos();
+        }
+        this.getPos().setPosition(p);
         return this;
     }
 }
