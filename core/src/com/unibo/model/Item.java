@@ -57,7 +57,7 @@ public abstract class Item {
     public void setPos(final Position p) {
         this.pos = p;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -65,7 +65,7 @@ public abstract class Item {
     public int hashCode() {
         return Objects.hash(this.id, this.name);
     }
-    
+
     /**
      * {@inheritDoc}
      */

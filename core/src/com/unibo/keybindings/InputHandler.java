@@ -15,12 +15,13 @@ import com.unibo.model.Command;
 public class InputHandler {
 
     private final Map<String, Command> commands = new HashMap<>();
-    
+
     /**
      * Add a new command on the list.
      * 
      * @param key        the keyBinding for the new command
      * @param newCommand the new command we want to add
+     * @return the input handler, allowing the method to be reused
      */
     public InputHandler addCommand(final KeyBindings key, final Command newCommand) {
         this.commands.put(key.getName(), newCommand);
@@ -40,7 +41,7 @@ public class InputHandler {
             return Gdx.input.isKeyPressed(key.getKey()) ? Optional.ofNullable(this.commands.get(key.getName()))
                     : Optional.empty();
         }
-        
+
         return Gdx.input.isKeyJustPressed(key.getKey()) ? Optional.ofNullable(this.commands.get(key.getName()))
                 : Optional.empty();
     }
