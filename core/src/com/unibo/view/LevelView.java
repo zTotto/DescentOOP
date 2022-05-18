@@ -78,9 +78,6 @@ public class LevelView {
     private void loadMobHpBars() {
         for (MobView m : this.mobTextures) {
             Healthbar mobBar = new Healthbar((int) m.getWidth(), (int) (m.getHeight() / 10f));
-            //mobBar.setPosition(m.getCharacter().getPos().getxCoord(),
-            //        m.getCharacter().getPos().getxCoord() + m.getHeight());
-            //mobBar.update(m.getCharacter());
             this.hpBars.add(mobBar);
         }
     }

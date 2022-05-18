@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -244,9 +243,16 @@ public class GameScreen implements Screen {
                     p.getFirst().getPos().getyCoord());
         }
         // Mob Rendering
+        int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
             batch.draw(m.getAttackText(elapsedTime), m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                     m.getCharacter().getPos().getyCoord());
+            Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
+            mobBar.update(m.getCharacter());
+            mobBar.setPosition(m.getCharacter().getPos().getxCoord() - m.getWidth() / 2f,
+                    m.getCharacter().getPos().getyCoord() + m.getHeight() * 1.1f);
+            mobBar.draw(batch, 1);
+            barIndex++;
         }
 
         // Last hero direction and music stopped during any kind of pause
@@ -330,23 +336,12 @@ public class GameScreen implements Screen {
         expbar.getStage().act();
         expbar.getStage().draw();
 
-        for (Healthbar bar : lvlView.getMobHpBars()) {
-            Vector2 v = new Vector2(lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord(),
-                    lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord()
-                            + lvlView.getMobTextures().get(0).getHeight());
-            bar.getStage().getViewport().unproject(v);
-            bar.setPosition(v.x, bar.getStage().getViewport().getWorldHeight() - v.y);
-            bar.getStage().getViewport().apply();
-            bar.getStage().act();
-            bar.getStage().draw();
-        }
-
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(currentLvl.getItems());
+            System.out.println(currentLvl.getEnemies().get(0).setPos(200, 900));
         }
     }
 
