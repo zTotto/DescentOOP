@@ -49,6 +49,7 @@ public class GameOverMenu implements Screen {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 game.setScreen(new MainMenu(game));
+                stage.dispose();
             }
         });
         quit.addListener(new ChangeListener() {
@@ -81,26 +82,19 @@ public class GameOverMenu implements Screen {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        stage.dispose();
     }
 
 }
