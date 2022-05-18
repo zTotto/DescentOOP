@@ -28,7 +28,7 @@ public class HealthPotion extends ConsumableItem {
      */
     @Override
     public void use(final Character pg) {
-        pg.setCurrentHp(pg.getCurrentHp() + (int) this.getModifier());
+        pg.setCurrentHp(pg.getCurrentHp() + (int) (this.getModifier() * pg.getMaxHp()));
     }
 
     @Override

@@ -125,14 +125,12 @@ public abstract class CharacterView {
     /**
      * Makes the character attack.
      */
-    public void attack() {
-        System.out.println("Attack!");
-        this.character.setCurrentHp((int) (0.95f * this.character.getCurrentHp()));
-    }
+    public abstract void attack();
 
     /**
      * Method to check whether the character is currently attacking.
-     * @return true if the character is attacking 
+     * 
+     * @return true if the character is attacking
      */
     public Boolean getIsAttacking() {
         return isAttacking;
@@ -140,6 +138,7 @@ public abstract class CharacterView {
 
     /**
      * Method to set the attacking status.
+     * 
      * @param isAttacking
      */
     public void setIsAttacking(final Boolean isAttacking) {

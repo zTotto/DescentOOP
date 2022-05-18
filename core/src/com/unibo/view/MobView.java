@@ -23,4 +23,9 @@ public class MobView extends CharacterView {
     public void move() {
     }
 
+    @Override
+    public void attack() {
+        // TODO Auto-generated method stub
+    }
+
 }
