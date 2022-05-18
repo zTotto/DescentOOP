@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.maps.Map;
@@ -58,7 +57,6 @@ public class GameScreen implements Screen {
     private final SkillMenu skillMenu;
 
     private OrthographicCamera camera;
-    private final ExtendViewport extViewport;
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
@@ -208,8 +206,6 @@ public class GameScreen implements Screen {
                         }
                     }
                 });
-
-        extViewport = new ExtendViewport(Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
     }
 
     @Override
@@ -338,8 +334,8 @@ public class GameScreen implements Screen {
             Vector2 v = new Vector2(lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord(),
                     lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord()
                             + lvlView.getMobTextures().get(0).getHeight());
-            bar.getStage().getViewport().project(v);
-            bar.setPosition(v.x, v.y);
+            bar.getStage().getViewport().unproject(v);
+            bar.setPosition(v.x, bar.getStage().getViewport().getWorldHeight() - v.y);
             bar.getStage().getViewport().apply();
             bar.getStage().act();
             bar.getStage().draw();
