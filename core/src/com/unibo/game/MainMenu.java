@@ -51,8 +51,8 @@ public class MainMenu implements Screen {
         play.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new GameScreen(game));
-                stage.dispose();
             }
         });
         settings.addListener(new ChangeListener() {

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public final class LevelsList {
 
-    private static final int NUM_LEVELS = 3;
+    private static final int NUM_LEVELS = 1;
     private final List<Level> levels = new LinkedList<>();
     private int counter;
 

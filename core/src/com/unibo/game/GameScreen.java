@@ -3,7 +3,6 @@ package com.unibo.game;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -136,7 +134,8 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
                         new DoorKey().setPos(new Position(600, 1016)))
                 .addEnemies(
-                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(100, 800)));
+                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(200, 900)))
+                .setDoorPosition(new Position(700, 1016));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -223,6 +222,8 @@ public class GameScreen implements Screen {
                                 // this.show();
                             });
                         } else {
+                            this.soundtrack.pause();
+                            this.soundtrack.dispose();
                             game.setScreen(new GameOverMenu(game));
                         }
                     }
@@ -313,20 +314,21 @@ public class GameScreen implements Screen {
             }
 
             if (heroView.getIsAttacking()) {
-                // Attack timer
-                attackTime += Gdx.graphics.getDeltaTime();
 
                 batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
+
+                // Attack timer
+                attackTime += Gdx.graphics.getDeltaTime();
 
                 if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
                     heroView.setIsAttacking(false);
                     attackTime = 0;
                 }
             } else {
+                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+
                 // Animation timer
                 elapsedTime += Gdx.graphics.getDeltaTime();
-
-                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
             }
 
             // Blood animation on dead mob
@@ -337,7 +339,9 @@ public class GameScreen implements Screen {
                         p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
                         p.getFirst().getyCoord());
 
+                // Timer
                 p.setSecond(p.getSecond() + Gdx.graphics.getDeltaTime());
+
                 if (anim.isAnimationFinished(p.getSecond())) {
                     lastDeadEnemies.remove(p);
                 }
@@ -405,7 +409,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        this.dispose();
     }
 
     /**

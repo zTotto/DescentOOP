@@ -11,9 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * Game over screen.
+ */
 public class GameOverMenu implements Screen {
 
     private final Descent game;
@@ -48,13 +50,14 @@ public class GameOverMenu implements Screen {
         mainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new MainMenu(game));
-                stage.dispose();
             }
         });
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
                 Gdx.app.exit();
             }
         });
