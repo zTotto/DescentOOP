@@ -62,7 +62,7 @@ public class Weapon extends Item {
      * @return the weapon description
      */
     public String toString() {
-        String msg = "";
+        String msg = "\n";
         msg += this.getName() + ", Damage: " + this.getDamage() + ", Range: " + this.getRange();
         return msg;
     }

@@ -8,15 +8,15 @@ public enum HealthPotionStats {
     /**
      * Basic Health Potion: Heals 15 hp.
      */
-    BASIC_HEALTH_POTION("Basic Health Potion", 15),
+    BASIC_HEALTH_POTION("Basic Health Potion", 0.15),
     /**
      * Basic Health Potion: Heals 15 hp.
      */
-    MEDIUM_HEALTH_POTION("Medium Health Potion", 25),
+    MEDIUM_HEALTH_POTION("Medium Health Potion", 0.25),
     /**
      * Basic Health Potion: Heals 15 hp.
      */
-    LARGE_HEALTH_POTION("Large Health Potion", 50);
+    LARGE_HEALTH_POTION("Large Health Potion", 0.50);
 
     private final String name;
     private final double modifier;
