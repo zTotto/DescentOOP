@@ -93,8 +93,7 @@ public class Hero extends Character {
             List<Item> items = lvl.getItems();
             int index = 0;
             for (final Item item : items) {
-                if (Math.abs(item.getPos().getxCoord() - this.getPos().getxCoord()) < this.getRange()
-                        && Math.abs(item.getPos().getyCoord() - this.getPos().getyCoord()) < this.getRange()) {
+                if (this.isInRange(item.getPos())) {
                     if (item instanceof Weapon) {
                         this.getWeapons().add((Weapon) item);
                     } else if (item instanceof ConsumableItem) {
@@ -209,6 +208,25 @@ public class Hero extends Character {
      */
     public Boolean hasKey() {
         return this.key;
+    }
+
+    /**
+     * 
+     * @param door 
+     * @return true if the Hero has the key and is near the door
+     */
+    public Boolean canOpenDoor(final Position door) {
+        return this.hasKey() && isInRange(door.getPosition());
+    }
+
+    /**
+     * 
+     * @param position
+     * @return true if the Hero is near the position
+     */
+    private boolean isInRange(final Position position) {
+        return Math.abs(position.getxCoord() - this.getPos().getxCoord()) < this.getRange()
+                && Math.abs(position.getyCoord() - this.getPos().getyCoord()) < this.getRange();
     }
 
     @Override

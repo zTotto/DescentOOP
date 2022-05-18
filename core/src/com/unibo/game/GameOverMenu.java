@@ -11,12 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-/**
- * Main Menu to star the game, open the settings or quit.
- */
-public class MainMenu implements Screen {
+public class GameOverMenu implements Screen {
 
     private final Descent game;
     private final OrthographicCamera camera;
@@ -25,11 +23,11 @@ public class MainMenu implements Screen {
     private final Table table;
 
     /**
-     * Constructor for the main menu.
+     * Constructor for the game over menu.
      * 
      * @param game
      */
-    public MainMenu(final Descent game) {
+    public GameOverMenu(final Descent game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
@@ -43,22 +41,15 @@ public class MainMenu implements Screen {
         Gdx.input.setInputProcessor(stage);
         table.setFillParent(true);
 
-        final Label label = new Label("DESCENT", skin);
-        final TextButton play = new TextButton("Play", skin);
-        final TextButton settings = new TextButton("Settings", skin);
+        final Label label = new Label("GAME OVER", skin);
+        final TextButton mainMenu = new TextButton("Back to main menu", skin);
         final TextButton quit = new TextButton("Quit", skin);
 
-        play.addListener(new ChangeListener() {
+        mainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new MainMenu(game));
                 stage.dispose();
-            }
-        });
-        settings.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new SettingsMenu(game));
             }
         });
         quit.addListener(new ChangeListener() {
@@ -69,16 +60,15 @@ public class MainMenu implements Screen {
         });
 
         table.add(label).spaceBottom(70).row();
-        table.add(play).uniform().fill().spaceBottom(10).row();
-        table.add(settings).uniform().fill().spaceBottom(10).row();
-        table.add(quit).uniform().fill().spaceBottom(10);
+        table.add(mainMenu).uniform().fill().spaceBottom(10).row();
+        table.add(quit).uniform().fill();
 
         stage.addActor(table);
     }
 
     @Override
     public void render(final float delta) {
-        Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
