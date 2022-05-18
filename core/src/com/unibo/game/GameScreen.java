@@ -1,5 +1,9 @@
 package com.unibo.game;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -7,7 +11,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -63,21 +69,28 @@ public class GameScreen implements Screen {
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
+    private final TextureRegion[] bloodAnim;
     private final Label potionQuantity;
 
     private final Music soundtrack;
+
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
     private int startingGameTime;
+
     private boolean isPaused;
     private boolean isSkillMenuOpen;
+
     private final LevelsList lvlList;
     private Level currentLvl;
     private final LevelView lvlView;
+
     private final Healthbar hpbar;
     private final Manabar manabar;
     private final Expbar expbar;
+
+    private List<Pair<Position, Float>> lastDeadEnemies = new LinkedList<>();
 
     private final Label levelNumber;
 
@@ -122,14 +135,18 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
                         new DoorKey().setPos(new Position(600, 1016)))
-                .addEnemies(new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2"))
-                        .setPos(new Position(100, 1016)));
+                .addEnemies(
+                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(100, 800)));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
         hpPotionIcon = new Image(hpTexture);
         hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight() * 1.2f);
         manabar.getStage().addActor(hpPotionIcon);
+
+        // Blood Animation
+        Texture bloodTexture = new Texture("characters/bloodMob.png");
+        bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
                 this.input);
@@ -164,7 +181,14 @@ public class GameScreen implements Screen {
         this.input.addCommand(KeyBindings.ATTACK, t -> {
             t.setIsAttacking(true);
             t.getAttackSound().play();
-            t.attack();
+            // t.selfAttack();
+            var last = t.getCharacter().hitEnemyFromLevel(currentLvl);
+            if (last.isPresent()) {
+                this.lastDeadEnemies.add(new Pair<>(last.get(), 0f));
+            }
+            last = Optional.empty();
+            currentLvl.removeDeadMobs();
+            lvlView.updateMobs(currentLvl);
         }).addCommand(KeyBindings.PICK_UP, t -> {
             t.getCharacter().pickUpfromLevel(currentLvl);
             lvlView.updateItems(currentLvl);
@@ -175,6 +199,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT)).addCommand(KeyBindings.PAUSE, t -> {
                     Gdx.input.setInputProcessor(menu.getStage());
                     this.isPaused = !this.isPaused;
+                    this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
                 }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
@@ -183,6 +208,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.SKILL_MENU, t -> {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
+                    this.skillMenu.getMenu().setVisible(isSkillMenuOpen);
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
                     if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
@@ -239,9 +265,16 @@ public class GameScreen implements Screen {
                     p.getFirst().getPos().getyCoord());
         }
         // Mob Rendering
+        int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
             batch.draw(m.getAttackText(elapsedTime), m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                     m.getCharacter().getPos().getyCoord());
+            Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
+            mobBar.update(m.getCharacter());
+            mobBar.setPosition(m.getCharacter().getPos().getxCoord() - m.getWidth() / 2f,
+                    m.getCharacter().getPos().getyCoord() + m.getHeight() * 1.1f);
+            mobBar.draw(batch, 1);
+            barIndex++;
         }
 
         // Last hero direction and music stopped during any kind of pause
@@ -296,6 +329,20 @@ public class GameScreen implements Screen {
                 batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
             }
 
+            // Blood animation on dead mob
+            var temp = new LinkedList<>(lastDeadEnemies);
+            for (Pair<Position, Float> p : temp) {
+                var anim = new Animation<>(1f / 12f, bloodAnim);
+                batch.draw(anim.getKeyFrame(p.getSecond(), false),
+                        p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
+                        p.getFirst().getyCoord());
+
+                p.setSecond(p.getSecond() + Gdx.graphics.getDeltaTime());
+                if (anim.isAnimationFinished(p.getSecond())) {
+                    lastDeadEnemies.remove(p);
+                }
+            }
+
             heroView.move();
         }
 
@@ -330,7 +377,7 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(currentLvl.getItems());
+            System.out.println(lastDeadEnemies);
         }
     }
 
@@ -358,6 +405,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        this.dispose();
     }
 
     /**
