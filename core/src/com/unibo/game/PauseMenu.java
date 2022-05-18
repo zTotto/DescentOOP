@@ -45,6 +45,12 @@ public class PauseMenu {
         menu.add(settings).uniform().fill().spaceBottom(10);
         menu.row();
         TextButton quit = new TextButton("Quit Game", skin);
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.exit();
+            }
+        });
         menu.add(quit).uniform().fill();
 
         stage.addActor(menu);

@@ -320,16 +320,11 @@ public class GameScreen implements Screen {
 
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            heroView.getHero().addExp(200);
+            // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
-            System.out.println("Exp: " + heroView.getHero().getExp() + " of " + heroView.getHero().getExpToLevelUp());
-            System.out.println("Level: " + heroView.getHero().getLevel());
-            System.out.println("Weapons: " + heroView.getHero().getWeapons().size());
-            System.out.println("Weapons: " + heroView.getHero().getWeapons());
-            System.out.println("Current Weapon: " + heroView.getHero().getCurrentWeaponIndex());
-            System.out.println("Current Weapon: " + heroView.getHero().getCurrentWeapon().getName());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println("Does the Hero have the key? " + heroView.getHero().hasKey());
+            System.out.println(currentLvl.getItems());
+            currentLvl.getItems().get(0).setPos(new Position(100, 1016));
         }
     }
 

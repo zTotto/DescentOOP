@@ -104,6 +104,6 @@ public abstract class Item {
      */
     @Override
     public String toString() {
-        return this.name;
+        return "\n" + this.name + " [" + this.pos + "]";
     }
 }
