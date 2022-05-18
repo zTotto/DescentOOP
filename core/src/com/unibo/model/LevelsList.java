@@ -46,7 +46,7 @@ public final class LevelsList {
      * @return true if there is at least another level
      */
     public boolean hasNextLevel() {
-        return this.levels.size() > this.counter;
+        return this.levels.size() - 1 > this.counter;
     }
 
     /**
@@ -54,8 +54,8 @@ public final class LevelsList {
      * @return the next level
      */
     public Level getNextLevel() {
-        this.counter++;
-        return this.levels.get(this.counter);
+            this.counter++;
+            return this.levels.get(this.counter);
     }
 
     /**

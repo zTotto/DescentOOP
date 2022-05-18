@@ -83,8 +83,6 @@ public class GameScreen implements Screen {
 
     private final InputHandler input = new InputHandler();
 
-    private final Rectangle door = new Rectangle(500, 1016, 100, 100);
-
     /**
      * Main game scene.
      * 
@@ -187,11 +185,10 @@ public class GameScreen implements Screen {
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
-                    if (((Hero) t.getCharacter()).hasKey() && this.door.contains(t.getCharacter().getPos().getxCoord(),
-                            t.getCharacter().getPos().getyCoord())) {
-                        if (lvlList.hasNextLevel()) {
-                            System.out.println("NEXT LEVEL");
+                    if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
+                        if (this.lvlList.hasNextLevel()) {
                             this.currentLvl = this.lvlList.getNextLevel();
+                            System.out.println("NEXT LEVEL");
 
                             Gdx.app.postRunnable(() -> {
                                 mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));

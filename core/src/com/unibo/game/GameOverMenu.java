@@ -43,6 +43,7 @@ public class GameOverMenu implements Screen {
 
         final Label label = new Label("GAME OVER", skin);
         final TextButton mainMenu = new TextButton("Back to main menu", skin);
+        final TextButton quit = new TextButton("Quit", skin);
 
         mainMenu.addListener(new ChangeListener() {
             @Override
@@ -50,9 +51,16 @@ public class GameOverMenu implements Screen {
                 game.setScreen(new MainMenu(game));
             }
         });
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.exit();
+            }
+        });
 
-        table.add(label).spaceBottom(100).row();
-        table.add(mainMenu).uniform().fill().row();
+        table.add(label).spaceBottom(70).row();
+        table.add(mainMenu).uniform().fill().spaceBottom(10).row();
+        table.add(quit).uniform().fill();
 
         stage.addActor(table);
     }

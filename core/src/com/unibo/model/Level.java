@@ -16,7 +16,7 @@ public class Level {
 
     private final List<Item> items;
     private final List<Mob> enemies;
-    private Position doorPosition = new Position(0, 0);
+    private Position doorPosition = new Position(700, 1016);
 
     /**
      * Empty constructor for a level.

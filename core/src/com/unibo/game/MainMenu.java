@@ -46,7 +46,7 @@ public class MainMenu implements Screen {
         final Label label = new Label("DESCENT", skin);
         final TextButton play = new TextButton("Play", skin);
         final TextButton settings = new TextButton("Settings", skin);
-        final TextButton exit = new TextButton("Exit", skin);
+        final TextButton quit = new TextButton("Quit", skin);
 
         play.addListener(new ChangeListener() {
             @Override
@@ -60,7 +60,7 @@ public class MainMenu implements Screen {
                 game.setScreen(new SettingsMenu(game));
             }
         });
-        exit.addListener(new ChangeListener() {
+        quit.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.exit();
@@ -70,7 +70,7 @@ public class MainMenu implements Screen {
         table.add(label).spaceBottom(70).row();
         table.add(play).uniform().fill().spaceBottom(10).row();
         table.add(settings).uniform().fill().spaceBottom(10).row();
-        table.add(exit).uniform().fill().spaceBottom(10);
+        table.add(quit).uniform().fill().spaceBottom(10);
 
         stage.addActor(table);
     }
