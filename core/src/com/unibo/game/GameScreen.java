@@ -124,8 +124,8 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
                         new DoorKey().setPos(new Position(600, 1016)))
-                .addEnemies(new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2"))
-                        .setPos(new Position(100, 1016)));
+                .addEnemies(
+                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(100, 800)));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -177,6 +177,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT)).addCommand(KeyBindings.PAUSE, t -> {
                     Gdx.input.setInputProcessor(menu.getStage());
                     this.isPaused = !this.isPaused;
+                    this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
                 }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
@@ -185,6 +186,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.SKILL_MENU, t -> {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
+                    this.skillMenu.getMenu().setVisible(isSkillMenuOpen);
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
                     if (((Hero) t.getCharacter()).hasKey() && this.door.contains(t.getCharacter().getPos().getxCoord(),
@@ -243,9 +245,16 @@ public class GameScreen implements Screen {
                     p.getFirst().getPos().getyCoord());
         }
         // Mob Rendering
+        int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
             batch.draw(m.getAttackText(elapsedTime), m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                     m.getCharacter().getPos().getyCoord());
+            Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
+            mobBar.update(m.getCharacter());
+            mobBar.setPosition(m.getCharacter().getPos().getxCoord() - m.getWidth() / 2f,
+                    m.getCharacter().getPos().getyCoord() + m.getHeight() * 1.1f);
+            mobBar.draw(batch, 1);
+            barIndex++;
         }
 
         // Last hero direction and music stopped during any kind of pause
@@ -334,7 +343,7 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(currentLvl.getItems());
+            System.out.println(currentLvl.getEnemies().get(0).setPos(200, 900));
         }
     }
 
@@ -362,6 +371,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        this.dispose();
     }
 
     /**
