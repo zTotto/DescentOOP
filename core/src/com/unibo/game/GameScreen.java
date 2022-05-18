@@ -10,9 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.maps.Map;
@@ -56,6 +58,7 @@ public class GameScreen implements Screen {
     private final SkillMenu skillMenu;
 
     private OrthographicCamera camera;
+    private final ExtendViewport extViewport;
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
@@ -124,8 +127,8 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
                         new DoorKey().setPos(new Position(600, 1016)))
-                .addEnemies(new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2"))
-                        .setPos(new Position(100, 1016)));
+                .addEnemies(
+                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(100, 800)));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -205,6 +208,8 @@ public class GameScreen implements Screen {
                         }
                     }
                 });
+
+        extViewport = new ExtendViewport(Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
     }
 
     @Override
@@ -328,6 +333,17 @@ public class GameScreen implements Screen {
         expbar.update(heroView.getHero());
         expbar.getStage().act();
         expbar.getStage().draw();
+
+        for (Healthbar bar : lvlView.getMobHpBars()) {
+            Vector2 v = new Vector2(lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord(),
+                    lvlView.getMobTextures().get(0).getCharacter().getPos().getxCoord()
+                            + lvlView.getMobTextures().get(0).getHeight());
+            bar.getStage().getViewport().project(v);
+            bar.setPosition(v.x, v.y);
+            bar.getStage().getViewport().apply();
+            bar.getStage().act();
+            bar.getStage().draw();
+        }
 
         // Debug
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {

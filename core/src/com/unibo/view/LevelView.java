@@ -16,6 +16,7 @@ public class LevelView {
 
     private final List<Pair<Item, Texture>> itemTextures;
     private final List<MobView> mobTextures;
+    private final List<Healthbar> hpBars;
 
     /**
      * @param level Level from where to get the items and characters
@@ -23,8 +24,10 @@ public class LevelView {
     public LevelView(final Level level) {
         this.itemTextures = new LinkedList<>();
         this.mobTextures = new LinkedList<>();
+        this.hpBars = new LinkedList<>();
         this.loadItemTextures(level);
         this.loadMobTextures(level);
+        this.loadMobHpBars();
     }
 
     /**
@@ -72,6 +75,16 @@ public class LevelView {
         }
     }
 
+    private void loadMobHpBars() {
+        for (MobView m : this.mobTextures) {
+            Healthbar mobBar = new Healthbar((int) m.getWidth(), (int) (m.getHeight() / 10f));
+            //mobBar.setPosition(m.getCharacter().getPos().getxCoord(),
+            //        m.getCharacter().getPos().getxCoord() + m.getHeight());
+            //mobBar.update(m.getCharacter());
+            this.hpBars.add(mobBar);
+        }
+    }
+
     /**
      * @return a list of pairs containing an item and its texture
      */
@@ -84,5 +97,12 @@ public class LevelView {
      */
     public List<MobView> getMobTextures() {
         return this.mobTextures;
+    }
+
+    /**
+     * @return a list containing the hp bar for each mob in the level
+     */
+    public List<Healthbar> getMobHpBars() {
+        return this.hpBars;
     }
 }
