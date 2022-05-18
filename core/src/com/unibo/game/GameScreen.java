@@ -177,6 +177,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.MOVE_LEFT, new Movement(Direction.LEFT)).addCommand(KeyBindings.PAUSE, t -> {
                     Gdx.input.setInputProcessor(menu.getStage());
                     this.isPaused = !this.isPaused;
+                    this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
                 }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
@@ -185,6 +186,7 @@ public class GameScreen implements Screen {
                 .addCommand(KeyBindings.SKILL_MENU, t -> {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
+                    this.skillMenu.getMenu().setVisible(isSkillMenuOpen);
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
                     if (((Hero) t.getCharacter()).hasKey() && this.door.contains(t.getCharacter().getPos().getxCoord(),
@@ -369,6 +371,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        this.dispose();
     }
 
     /**

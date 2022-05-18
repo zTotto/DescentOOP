@@ -52,6 +52,7 @@ public class MainMenu implements Screen {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 game.setScreen(new GameScreen(game));
+                stage.dispose();
             }
         });
         settings.addListener(new ChangeListener() {
@@ -103,6 +104,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
     }
 
 }
