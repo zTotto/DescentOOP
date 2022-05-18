@@ -2,6 +2,7 @@ package com.unibo.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import com.unibo.maps.Map;
 import com.unibo.model.items.ConsumableItem;
@@ -250,12 +251,9 @@ public abstract class Character {
      * @return true if can hit.
      */
     public Boolean canHit(final Character enemy) {
-        if (Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.getCurrentWeapon().getRange()
+        return Math.abs(enemy.getPos().getxCoord() - this.getPos().getxCoord()) <= this.getCurrentWeapon().getRange()
                 && Math.abs(enemy.getPos().getyCoord() - this.getPos().getyCoord()) <= this.getCurrentWeapon()
-                        .getRange()) {
-            return true;
-        }
-        return false;
+                        .getRange();
     }
 
     /**
@@ -273,18 +271,18 @@ public abstract class Character {
      * If in range, hits an enemy on the level.
      * 
      * @param lvl
-     * @return true if an enemy was hit
+     * @return the position of the dead enemy
      */
-    public Boolean hitEnemyFromLevel(final Level lvl) {
+    public Optional<Position> hitEnemyFromLevel(final Level lvl) {
         if (!this.isDead()) {
-            for (final Character e : lvl.getEnemies()) {
+            for (final Mob e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
-                    return true;
+                    return e.isDead() ? Optional.of(e.getPos()) : Optional.empty();
                 }
             }
         }
-        return false;
+        return Optional.empty();
     }
 
     // Inventory and Item related

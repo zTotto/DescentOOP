@@ -24,7 +24,7 @@ public class MobView extends CharacterView {
     }
 
     @Override
-    public void attack() {
+    public void selfAttack() {
         // TODO Auto-generated method stub
     }
 
