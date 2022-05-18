@@ -17,6 +17,7 @@ public class Level {
     private final List<Item> items;
     private final List<Mob> enemies;
     private Position doorPosition = new Position(0, 0);
+    private final List<Position> deadMobPositions;
 
     /**
      * Empty constructor for a level.
@@ -24,6 +25,7 @@ public class Level {
     public Level() {
         items = new LinkedList<>();
         enemies = new LinkedList<>();
+        deadMobPositions = new LinkedList<>();
     }
 
     /**
@@ -73,6 +75,14 @@ public class Level {
     }
 
     /**
+     * Removes dead mobs from the level and saves their position.
+     */
+    public void removeDeadMobs() {
+        enemies.stream().filter(m -> m.isDead()).forEach(m -> this.deadMobPositions.add(m.getPos()));
+        enemies.removeIf(m -> m.isDead());
+    }
+
+    /**
      * @return a list containing all the items
      */
     public List<Item> getItems() {
@@ -102,6 +112,13 @@ public class Level {
      */
     public List<Mob> getEnemies() {
         return new LinkedList<>(enemies);
+    }
+
+    /**
+     * @return a list containing the position of dead enemies
+     */
+    public List<Position> getDeadMobPositions() {
+        return deadMobPositions;
     }
 
     /**
