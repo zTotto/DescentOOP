@@ -21,6 +21,7 @@ import com.unibo.model.HealSkill;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
 import com.unibo.model.LevelsList;
+import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.items.DoorKey;
@@ -29,6 +30,7 @@ import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.HealthPotionStats;
+import com.unibo.util.MobStats;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
@@ -37,6 +39,7 @@ import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
 import com.unibo.view.LevelView;
 import com.unibo.view.Manabar;
+import com.unibo.view.MobView;
 
 /**
  * Game screen class.
@@ -114,12 +117,15 @@ public class GameScreen implements Screen {
         // Level
         lvlList = new LevelsList();
         currentLvl = lvlList.getCurrentLevel();
-        currentLvl.addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
-                new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
-                new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
-                new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
-                new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
-                new DoorKey().setPos(new Position(600, 1016)));
+        currentLvl
+                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
+                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
+                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
+                        new DoorKey().setPos(new Position(600, 1016)))
+                .addEnemies(new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2"))
+                        .setPos(new Position(100, 1016)));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -236,6 +242,11 @@ public class GameScreen implements Screen {
             batch.draw(p.getSecond(), p.getFirst().getPos().getxCoord() - p.getSecond().getWidth() / 2,
                     p.getFirst().getPos().getyCoord());
         }
+        // Mob Rendering
+        for (final MobView m : lvlView.getMobTextures()) {
+            batch.draw(m.getAttackText(elapsedTime), m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
+                    m.getCharacter().getPos().getyCoord());
+        }
 
         // Last hero direction and music stopped during any kind of pause
         if (this.isPaused || this.isSkillMenuOpen) {
@@ -324,7 +335,6 @@ public class GameScreen implements Screen {
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
             System.out.println(currentLvl.getItems());
-            currentLvl.getItems().get(0).setPos(new Position(100, 1016));
         }
     }
 

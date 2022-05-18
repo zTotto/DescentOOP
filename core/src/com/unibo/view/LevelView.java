@@ -49,6 +49,16 @@ public class LevelView {
         loadItemTextures(lvl);
     }
 
+    /**
+     * Updates the textures of the mobs in the current level.
+     * 
+     * @param lvl
+     */
+    public void updateMobs(final Level lvl) {
+        mobTextures.clear();
+        loadMobTextures(lvl);
+    }
+
     private void loadItemTextures(final Level lvl) {
         for (Item i : lvl.getItems()) {
             itemTextures.add(
