@@ -7,6 +7,7 @@ import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.Pair;
+import com.unibo.util.Position;
 
 /**
  * 
@@ -208,5 +209,19 @@ public class Hero extends Character {
      */
     public Boolean hasKey() {
         return this.key;
+    }
+
+    @Override
+    public Hero setPos(final Position p) {
+        if (!isDead()) {
+            getPos().setxCoord(p.getxCoord());
+            getPos().setyCoord(p.getyCoord());
+        }
+        return this;
+    }
+
+    @Override
+    public Hero setPos(final int xCoord, final int yCoord) {
+        return this.setPos(new Position(xCoord, yCoord));
     }
 }

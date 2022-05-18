@@ -3,6 +3,7 @@ package com.unibo.model;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.MobStats;
+import com.unibo.util.Position;
 
 /**
  * A class to model a mob.
@@ -65,5 +66,19 @@ public class Mob extends Character {
      */
     @Override
     public void setRange(final int range) {
+    }
+
+    @Override
+    public Mob setPos(final Position p) {
+        if (!isDead()) {
+            getPos().setxCoord(p.getxCoord());
+            getPos().setyCoord(p.getyCoord());
+        }
+        return this;
+    }
+
+    @Override
+    public Mob setPos(final int xCoord, final int yCoord) {
+        return this.setPos(new Position(xCoord, yCoord));
     }
 }
