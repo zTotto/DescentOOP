@@ -1,7 +1,7 @@
 package com.unibo.util;
 
 /**
- * Enum used to create different types of mobs.
+ * Enumeration used to create different types of mobs.
  */
 public enum MobStats {
     /**

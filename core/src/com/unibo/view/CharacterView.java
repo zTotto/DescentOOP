@@ -25,10 +25,7 @@ public abstract class CharacterView {
     private Direction dir = Direction.STILL;
     private final Rectangle charRect;
     private final Sound attackSound;
-    /**
-     * Field to check whether this Hero is attacking.
-     */
-    public Boolean isAttacking = false;
+    private Boolean isAttacking = false;
 
     /**
      * Constructor for this class.
@@ -128,9 +125,24 @@ public abstract class CharacterView {
     /**
      * Makes the character attack.
      */
-    public void attack() {
-        System.out.println("Attack!");
-        this.character.setCurrentHp((int) (0.95f * this.character.getCurrentHp()));
+    public abstract void attack();
+
+    /**
+     * Method to check whether the character is currently attacking.
+     * 
+     * @return true if the character is attacking
+     */
+    public Boolean getIsAttacking() {
+        return isAttacking;
+    }
+
+    /**
+     * Method to set the attacking status.
+     * 
+     * @param isAttacking
+     */
+    public void setIsAttacking(final Boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
     /**

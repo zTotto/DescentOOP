@@ -35,11 +35,13 @@ public class Movement implements Command {
         final Map map = character.getCurrentMap();
         characterView.setDir(this.direction);
 
-        if (this.direction == Direction.LEFT && map.validMovement(characterView, xPosition - deltaMovement, yPosition)) {
+        if (this.direction == Direction.LEFT
+                && map.validMovement(characterView, xPosition - deltaMovement, yPosition)) {
             character.setPos(xPosition - deltaMovement, yPosition);
         }
 
-        if (this.direction == Direction.RIGHT && map.validMovement(characterView, xPosition + deltaMovement, yPosition)) {
+        if (this.direction == Direction.RIGHT
+                && map.validMovement(characterView, xPosition + deltaMovement, yPosition)) {
             character.setPos(xPosition + deltaMovement, yPosition);
         }
 
@@ -47,7 +49,8 @@ public class Movement implements Command {
             character.setPos(xPosition, yPosition + deltaMovement);
         }
 
-        if (this.direction == Direction.DOWN && map.validMovement(characterView, xPosition, yPosition - deltaMovement)) {
+        if (this.direction == Direction.DOWN
+                && map.validMovement(characterView, xPosition, yPosition - deltaMovement)) {
             character.setPos(xPosition, yPosition - deltaMovement);
         }
     }

@@ -1,7 +1,7 @@
 package com.unibo.util;
 
 /**
- * Enumerator for the weapon types.
+ * Enumeration for the weapon types.
  *
  */
 public enum WeaponStats {
@@ -23,7 +23,7 @@ public enum WeaponStats {
     private final int range;
 
     /**
-     * Constructor for the enumerator WeaponStats.
+     * Constructor for the enumeration WeaponStats.
      * 
      * @param name   of the weapon
      * @param damage of the weapon

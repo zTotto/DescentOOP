@@ -1,7 +1,13 @@
 package com.unibo.model;
 
 import java.util.List;
+
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.Item;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.Pair;
+import com.unibo.util.Position;
 
 /**
  * 
@@ -55,7 +61,7 @@ public class Hero extends Character {
      */
     @Override
     public void useItem(final ConsumableItem item) {
-        if (this.getInv().contains(item)) {
+        if (this.getInv().contains(item) && item.canUse(this)) {
             item.use(this);
             this.getInv().removeItem(item);
         }
@@ -69,11 +75,13 @@ public class Hero extends Character {
         for (Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof HealthPotion) {
                 pot = (HealthPotion) p.getFirst();
-                pot.use(this);
                 break;
             }
         }
-        this.getInv().removeItem(pot);
+        if (!(pot == null) && pot.canUse(this)) {
+            pot.use(this);
+            this.getInv().removeItem(pot);
+        }
     }
 
     /**
@@ -201,5 +209,19 @@ public class Hero extends Character {
      */
     public Boolean hasKey() {
         return this.key;
+    }
+
+    @Override
+    public Hero setPos(final Position p) {
+        if (!isDead()) {
+            getPos().setxCoord(p.getxCoord());
+            getPos().setyCoord(p.getyCoord());
+        }
+        return this;
+    }
+
+    @Override
+    public Hero setPos(final int xCoord, final int yCoord) {
+        return this.setPos(new Position(xCoord, yCoord));
     }
 }

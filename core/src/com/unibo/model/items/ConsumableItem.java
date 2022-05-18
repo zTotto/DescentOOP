@@ -1,4 +1,6 @@
-package com.unibo.model;
+package com.unibo.model.items;
+
+import com.unibo.model.Character;
 
 /**
  * 
@@ -10,9 +12,10 @@ public abstract class ConsumableItem extends Item {
 
     /**
      * Constructor for a consumable item.
+     * 
      * @param name of the item
-     * @param id of the item
-     * @param mod to apply to the user of the item
+     * @param id   of the item
+     * @param mod  to apply to the user of the item
      */
     public ConsumableItem(final String name, final String id, final double mod) {
         super(name, id);
@@ -29,7 +32,16 @@ public abstract class ConsumableItem extends Item {
 
     /**
      * Uses the consumable on the selected pg.
+     * 
      * @param pg the character that gets the buff.
      */
     public abstract void use(Character pg);
+
+    /**
+     * Checks whether a character can use the consumable.
+     * 
+     * @param pg the character
+     * @return true if the character is able to use it
+     */
+    public abstract Boolean canUse(Character pg);
 }

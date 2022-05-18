@@ -1,6 +1,10 @@
-package com.unibo.model;
+package com.unibo.model.items;
 
 import java.util.Objects;
+
+import com.unibo.model.Character;
+import com.unibo.util.HealthPotionStats;
+import com.unibo.util.Position;
 
 /**
  * Consumable Item that replenishes health points.
@@ -10,12 +14,11 @@ public class HealthPotion extends ConsumableItem {
     /**
      * Constructor for a health potion.
      * 
-     * @param name     of the potion
-     * @param id       of the item
-     * @param modifier of the potion (hp)
+     * @param potion from the enum
+     * @param id     of the item
      */
-    public HealthPotion(final String name, final String id, final double modifier) {
-        super(name, id, modifier);
+    public HealthPotion(final HealthPotionStats potion, final String id) {
+        super(potion.getName(), id, potion.getModifier());
     }
 
     /**
@@ -25,7 +28,12 @@ public class HealthPotion extends ConsumableItem {
      */
     @Override
     public void use(final Character pg) {
-        pg.setCurrentHp(pg.getCurrentHp() + (int) this.getModifier());
+        pg.setCurrentHp(pg.getCurrentHp() + (int) (this.getModifier() * pg.getMaxHp()));
+    }
+
+    @Override
+    public Boolean canUse(final Character pg) {
+        return pg.getCurrentHp() < pg.getMaxHp();
     }
 
     /**
@@ -52,5 +60,14 @@ public class HealthPotion extends ConsumableItem {
         }
         final HealthPotion other = (HealthPotion) obj;
         return Objects.equals(this.getModifier(), other.getModifier());
+    }
+
+    @Override
+    public HealthPotion setPos(final Position p) {
+        if (this.isPosNull()) {
+            this.resetPos();
+        }
+        this.getPos().setPosition(p);
+        return this;
     }
 }

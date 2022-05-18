@@ -3,6 +3,8 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
 
 /**
@@ -90,13 +92,14 @@ public class Inventory {
      * Returns how many potions the inventory contains.
      * @return the quantity of potions
      */
-    public int getPotionQuantity() {
+    public int getHealthPotionQuantity() {
+        int count = 0;
         for (final Pair<Item, Integer> p : inv) {
             if (p.getFirst() instanceof HealthPotion) {
-                return p.getSecond();
+                count += p.getSecond();
             }
         }
-        return 0;
+        return count;
     }
 
     /**

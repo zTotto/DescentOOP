@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.unibo.maps.Map;
+import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.Weapon;
 import com.unibo.util.Position;
 
 /**
@@ -117,6 +119,15 @@ public abstract class Character {
      */
     public void decreaseCurrentMana(final int mana) {
         this.setCurrentMana(this.currentMana - mana);
+    }
+
+    /**
+     * Increases the current mana of the character of the specified value.
+     * 
+     * @param mana
+     */
+    public void increaseCurrentMana(final int mana) {
+        this.setCurrentMana(this.currentMana + mana);
     }
 
     /**
@@ -316,26 +327,18 @@ public abstract class Character {
      * Sets the character to the specified position.
      * 
      * @param p the position
+     * @return the character
      */
-    public void setPos(final Position p) {
-        if (!isDead()) {
-            this.pos.setxCoord(p.getxCoord());
-            this.pos.setyCoord(p.getyCoord());
-        }
-    }
+    public abstract Character setPos(Position p);
 
     /**
      * Sets the character to the specified coordinates.
      * 
      * @param xCoord
      * @param yCoord
+     * @return the character
      */
-    public void setPos(final int xCoord, final int yCoord) {
-        if (!isDead()) {
-            this.pos.setxCoord(xCoord);
-            this.pos.setyCoord(yCoord);
-        }
-    }
+    public abstract Character setPos(int xCoord, int yCoord);
 
     /**
      * Moves the character up (movement is speed-based).
