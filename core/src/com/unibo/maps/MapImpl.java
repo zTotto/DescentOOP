@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -44,15 +43,15 @@ public class MapImpl implements Map {
     public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
         final Rectangle rect = charView.getCharRect();
         rect.setPosition(newX - (int) (rect.getWidth() / 2), newY);
-        for (final RectangleMapObject rectObj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
-            if (Intersector.overlaps(rect, rectObj.getRectangle())) {
-                return false;
-            }
-        }
         Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
                 rect.y + rect.height, rect.x, rect.y + rect.height });
-        for (final PolygonMapObject polyObj : collisionLayer.getObjects().getByType(PolygonMapObject.class)) {
-            if (Intersector.overlapConvexPolygons(poly, polyObj.getPolygon())) {
+        for (final PolygonMapObject polyMapObj : collisionLayer.getObjects().getByType(PolygonMapObject.class)) {
+            Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
+            var verts = polyObj.getTransformedVertices();
+            for (int i = 0; i < verts.length; i++) {
+                verts[i] /= 6;
+            }
+            if (Intersector.overlapConvexPolygons(poly, new Polygon(verts))) {
                 return false;
             }
         }

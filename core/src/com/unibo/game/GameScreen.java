@@ -49,6 +49,7 @@ import com.unibo.view.MobView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+
     private static final int MANA_UNIT = 1;
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
@@ -64,7 +65,7 @@ public class GameScreen implements Screen {
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
     // private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
-    private Map mappa = new MapImpl("testMap/Cave.tmx", new Position(930, 1262));
+    private Map mappa = new MapImpl("testMap/Outside.tmx", new Position(502, 36));
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -128,14 +129,14 @@ public class GameScreen implements Screen {
         lvlList = new LevelsList();
         currentLvl = lvlList.getCurrentLevel();
         currentLvl
-                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
-                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
-                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
+                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(1502, 288)),
+                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(1560, 288)),
+                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(1539, 346)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1660, 334)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1676, 366)),
                         new DoorKey().setPos(new Position(600, 1016)))
                 .addEnemies(
-                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(200, 900)))
+                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(1783, 321)))
                 .setDoorPosition(new Position(700, 1016));
         lvlView = new LevelView(currentLvl);
 
@@ -233,7 +234,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap(), 1 / 4f);
+        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap(), 1 / 6f);
     }
 
     @Override
@@ -346,7 +347,6 @@ public class GameScreen implements Screen {
                     lastDeadEnemies.remove(p);
                 }
             }
-
             heroView.move();
         }
 
