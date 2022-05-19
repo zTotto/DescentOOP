@@ -51,7 +51,7 @@ import com.unibo.view.MobView;
 public class GameScreen implements Screen {
 
     private static final int MANA_UNIT = 1;
-    private static final int MAX_SPEED = 200;
+    private static final int MAX_SPEED = 800;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
     private static final double SPEED_MULTIPLAYER = 0.75;
@@ -134,10 +134,10 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(1539, 346)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1660, 334)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1676, 366)),
-                        new DoorKey().setPos(new Position(600, 1016)))
+                        new DoorKey().setPos(new Position(1923, 1470)))
                 .addEnemies(
                         new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(1783, 321)))
-                .setDoorPosition(new Position(700, 1016));
+                .setDoorPosition(new Position(1116, 2274));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
