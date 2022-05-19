@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
@@ -44,6 +46,13 @@ public class MapImpl implements Map {
         rect.setPosition(newX - (int) (rect.getWidth() / 2), newY);
         for (final RectangleMapObject rectObj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
             if (Intersector.overlaps(rect, rectObj.getRectangle())) {
+                return false;
+            }
+        }
+        Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
+                rect.y + rect.height, rect.x, rect.y + rect.height });
+        for (final PolygonMapObject polyObj : collisionLayer.getObjects().getByType(PolygonMapObject.class)) {
+            if (Intersector.overlapConvexPolygons(poly, polyObj.getPolygon())) {
                 return false;
             }
         }

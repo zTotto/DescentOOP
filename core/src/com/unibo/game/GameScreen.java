@@ -63,7 +63,8 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    // private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    private Map mappa = new MapImpl("testMap/Cave.tmx", new Position(930, 1262));
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -147,8 +148,7 @@ public class GameScreen implements Screen {
         Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA),
-                this.input);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -233,7 +233,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap());
+        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap(), 1 / 4f);
     }
 
     @Override
@@ -382,8 +382,7 @@ public class GameScreen implements Screen {
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
             System.out.println(heroView.getHero().getCurrentWeapon());
-            lastDeadEnemies.forEach(p -> System.out.println(p.getFirst()));
-            System.out.println(currentLvl.getDeadMobPositions());
+            System.out.println(heroView.getHero().getPos());
         }
     }
 
