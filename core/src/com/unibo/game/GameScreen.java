@@ -147,7 +147,7 @@ public class GameScreen implements Screen {
         Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA),
                 this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
@@ -381,7 +381,9 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(lastDeadEnemies);
+            System.out.println(heroView.getHero().getCurrentWeapon());
+            lastDeadEnemies.forEach(p -> System.out.println(p.getFirst()));
+            System.out.println(currentLvl.getDeadMobPositions());
         }
     }
 
