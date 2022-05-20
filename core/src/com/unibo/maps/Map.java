@@ -19,7 +19,9 @@ public interface Map {
      * @return true if the movement is valid.
      */
     //boolean validMovement(Character character, Direction dir);
-    boolean validMovement(CharacterView charView, int newX, int newY);
+    Boolean validMovement(CharacterView charView, int newX, int newY);
+    
+    Boolean checkTeleport(final CharacterView charView);
 
     void addItem(Item item, Position pos); // come segnalare posizione invalida?
 
