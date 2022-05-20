@@ -2,7 +2,6 @@ package com.unibo.maps;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -43,21 +42,41 @@ public class MapImpl implements Map {
 
     @Override
     public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+        return polyScanner(charView, new Position(newX, newY), collisionLayer, false);
+    }
+
+    /**
+     * Checks if a character is on a teleport tile.
+     * 
+     * @param charView
+     * @return true if a player is teleported
+     */
+    public Boolean checkTeleport(final CharacterView charView) {
+        return polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
+                charView.getCharacter().getPos().getyCoord()), teleportLayer, true);
+    }
+
+    private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
+            final Boolean teleportCharacter) {
         final Rectangle rect = charView.getCharRect();
-        rect.setPosition(newX - (int) (rect.getWidth() / 2), newY);
+        rect.setPosition(pos.getxCoord() - (int) (rect.getWidth() / 2), pos.getyCoord());
         Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
                 rect.y + rect.height, rect.x, rect.y + rect.height });
-        for (final PolygonMapObject polyMapObj : collisionLayer.getObjects().getByType(PolygonMapObject.class)) {
+        for (final PolygonMapObject polyMapObj : layer.getObjects().getByType(PolygonMapObject.class)) {
             Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
             var verts = polyObj.getTransformedVertices();
             for (int i = 0; i < verts.length; i++) {
                 verts[i] /= 6;
             }
             if (Intersector.overlapConvexPolygons(poly, polyObj)) {
-                return false;
+                if (teleportCharacter) {
+                    charView.getCharacter().setPos((int) polyMapObj.getProperties().get("X"),
+                            (int) polyMapObj.getProperties().get("Y"));
+                }
+                return teleportCharacter;
             }
         }
-        return true;
+        return !teleportCharacter;
     }
 
     @Override
