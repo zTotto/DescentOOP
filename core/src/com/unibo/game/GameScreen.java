@@ -34,6 +34,7 @@ import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.HealthPotionStats;
+import com.unibo.util.LevelFileReader;
 import com.unibo.util.MobStats;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
@@ -49,8 +50,9 @@ import com.unibo.view.MobView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+
     private static final int MANA_UNIT = 1;
-    private static final int MAX_SPEED = 200;
+    private static final int MAX_SPEED = 800;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
     private static final double SPEED_MULTIPLAYER = 0.75;
@@ -63,7 +65,8 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    // private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    private Map mappa = new MapImpl("testMap/Outside.tmx", new Position(502, 36));
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -127,15 +130,14 @@ public class GameScreen implements Screen {
         lvlList = new LevelsList();
         currentLvl = lvlList.getCurrentLevel();
         currentLvl
-                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
-                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
-                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
-                        new DoorKey().setPos(new Position(600, 1016)))
-                .addEnemies(
-                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(200, 900)))
-                .setDoorPosition(new Position(700, 1016));
+                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(1502, 288)),
+                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(1560, 288)),
+                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(1539, 346)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1660, 334)),
+                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1676, 366)),
+                        new DoorKey().setPos(new Position(1923, 1470)))
+                .addEnemies(new Mob(MobStats.TROLL, 4).setPos(new Position(1783, 321)))
+                .setDoorPosition(new Position(1116, 2274));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -147,8 +149,7 @@ public class GameScreen implements Screen {
         Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
-                this.input);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -233,7 +234,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap());
+        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap(), 1 / 6f);
     }
 
     @Override
@@ -337,7 +338,7 @@ public class GameScreen implements Screen {
                 var anim = new Animation<>(1f / 12f, bloodAnim);
                 batch.draw(anim.getKeyFrame(p.getSecond(), false),
                         p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
-                        p.getFirst().getyCoord());
+                        p.getFirst().getyCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionWidth() / 4f);
 
                 // Timer
                 p.setSecond(p.getSecond() + Gdx.graphics.getDeltaTime());
@@ -346,8 +347,8 @@ public class GameScreen implements Screen {
                     lastDeadEnemies.remove(p);
                 }
             }
-
             heroView.move();
+            mappa.checkTeleport(heroView);
         }
 
         batch.end();
@@ -381,7 +382,20 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(lastDeadEnemies);
+            System.out.println(heroView.getHero().getCurrentWeapon());
+            System.out.println(heroView.getHero().getPos());
+            try {
+                LevelFileReader reader = new LevelFileReader("levelData/itemTest.txt");
+                reader.getHealthPotions().forEach(p -> currentLvl.addItems(p));
+                reader.getKeys().forEach(k -> currentLvl.addItems(k));
+                reader.getMobs().forEach(m -> currentLvl.addEnemies(m));
+                reader.getWeapons().forEach(w -> currentLvl.addItems(w));
+            } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+                System.out.println("Wrong Item Formatting");
+            }
+            lvlView.updateItems(currentLvl);
+            lvlView.updateMobs(currentLvl);
+            lvlView.updateMobHpBars();
         }
     }
 

@@ -36,4 +36,6 @@ public interface Map {
     MapLayer getCollisionLayer();
 
     TiledMap getTiledMap();
+
+    Boolean checkTeleport(final CharacterView charView);
 }

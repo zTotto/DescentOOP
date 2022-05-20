@@ -37,15 +37,22 @@ public class PauseMenu {
                 menu.setVisible(false);
             }
         });
+        TextButton mainMenu = new TextButton("Main Menu", skin);
+        mainMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                game.getGame().setScreen(new MainMenu(game.getGame()));
+            }
+        });
+        TextButton save = new TextButton("Save Game", skin);
+        TextButton quit = new TextButton("Quit Game", skin);
+
         menu.add(resume).uniform().fill().spaceBottom(10);
         menu.row();
-        TextButton save = new TextButton("Save Game", skin);
         menu.add(save).uniform().fill().spaceBottom(10);
         menu.row();
-        TextButton settings = new TextButton("Settings", skin);
-        menu.add(settings).uniform().fill().spaceBottom(10);
+        menu.add(mainMenu).uniform().fill().spaceBottom(10);
         menu.row();
-        TextButton quit = new TextButton("Quit Game", skin);
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
