@@ -34,6 +34,7 @@ import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
 import com.unibo.util.HealthPotionStats;
+import com.unibo.util.LevelFileReader;
 import com.unibo.util.MobStats;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
@@ -135,8 +136,7 @@ public class GameScreen implements Screen {
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1660, 334)),
                         new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1676, 366)),
                         new DoorKey().setPos(new Position(1923, 1470)))
-                .addEnemies(
-                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(1783, 321)))
+                .addEnemies(new Mob(MobStats.TROLL, 4).setPos(new Position(1783, 321)))
                 .setDoorPosition(new Position(1116, 2274));
         lvlView = new LevelView(currentLvl);
 
@@ -338,7 +338,7 @@ public class GameScreen implements Screen {
                 var anim = new Animation<>(1f / 12f, bloodAnim);
                 batch.draw(anim.getKeyFrame(p.getSecond(), false),
                         p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
-                        p.getFirst().getyCoord());
+                        p.getFirst().getyCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionWidth() / 4f);
 
                 // Timer
                 p.setSecond(p.getSecond() + Gdx.graphics.getDeltaTime());
@@ -348,6 +348,7 @@ public class GameScreen implements Screen {
                 }
             }
             heroView.move();
+            mappa.checkTeleport(heroView);
         }
 
         batch.end();
@@ -383,6 +384,18 @@ public class GameScreen implements Screen {
             System.out.println(heroView.getHero().getInv().toString());
             System.out.println(heroView.getHero().getCurrentWeapon());
             System.out.println(heroView.getHero().getPos());
+            try {
+                LevelFileReader reader = new LevelFileReader("levelData/itemTest.txt");
+                reader.getHealthPotions().forEach(p -> currentLvl.addItems(p));
+                reader.getKeys().forEach(k -> currentLvl.addItems(k));
+                reader.getMobs().forEach(m -> currentLvl.addEnemies(m));
+                reader.getWeapons().forEach(w -> currentLvl.addItems(w));
+            } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+                System.out.println("Wrong Item Formatting");
+            }
+            lvlView.updateItems(currentLvl);
+            lvlView.updateMobs(currentLvl);
+            lvlView.updateMobHpBars();
         }
     }
 
