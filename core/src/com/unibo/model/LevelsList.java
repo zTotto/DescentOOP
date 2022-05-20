@@ -1,7 +1,6 @@
 package com.unibo.model;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -11,18 +10,17 @@ import java.util.List;
  */
 public final class LevelsList {
 
-    private static final int NUM_LEVELS = 1;
-    private final List<Level> levels = new LinkedList<>();
+    private final List<Level> levels;
     private int counter;
 
     /**
-     * Constructor that creates 3 empty levels.
+     * Constructor for a level list.
+     * 
+     * @param levelsToAdd
      */
-    public LevelsList() {
+    public LevelsList(final List<Level> levelsToAdd) {
         this.counter = 0;
-        for (int i = 0; i < NUM_LEVELS; i++) {
-            this.levels.add(new Level());
-        }
+        levels = levelsToAdd;
     }
 
     /**
@@ -46,7 +44,7 @@ public final class LevelsList {
      * @return true if there is at least another level
      */
     public boolean hasNextLevel() {
-        return this.levels.size() - 1 > this.counter;
+        return counter < levels.size() - 1;
     }
 
     /**
@@ -54,8 +52,8 @@ public final class LevelsList {
      * @return the next level
      */
     public Level getNextLevel() {
-            this.counter++;
-            return this.levels.get(this.counter);
+        this.counter++;
+        return this.levels.get(this.counter);
     }
 
     /**

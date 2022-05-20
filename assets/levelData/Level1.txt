@@ -1,0 +1,13 @@
+//Format:
+//EnumName ITEM_NAME xCoordinate,yCoordinate
+//MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
+
+MapImpl testMap/Outside.tmx 502,36 0.166
+HealthPotionStats BASIC_HEALTH_POTION 1539,346
+HealthPotionStats BASIC_HEALTH_POTION 1660,334
+HealthPotionStats MEDIUM_HEALTH_POTION 1676,366
+DoorKey 502,36
+DoorPosition 502,36
+MobStats TROLL 5 1783,321
+WeaponStats LONGSWORD 1560,288
+WeaponStats GREATAXE 1502,288

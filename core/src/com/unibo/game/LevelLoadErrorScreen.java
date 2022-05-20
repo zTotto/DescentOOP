@@ -17,28 +17,34 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.unibo.util.LevelListReader;
 
 /**
- * Main Menu to star the game, open the settings or quit.
+ * Game over screen.
  */
-public class MainMenu implements Screen {
+public class LevelLoadErrorScreen implements Screen {
 
     private final Descent game;
     private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
+    private final List<String> msg;
+    private final LevelListReader lvlReader;
 
     /**
-     * Constructor for the main menu.
+     * Constructor for the game over menu.
      * 
      * @param game
+     * @param errorMsg Message error
+     * @param reader   LevelListReader for the game
      */
-    public MainMenu(final Descent game) {
+    public LevelLoadErrorScreen(final Descent game, final List<String> errorMsg, final LevelListReader reader) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
         this.stage = new Stage(new ScreenViewport());
         this.table = new Table();
+        this.msg = errorMsg;
+        lvlReader = reader;
     }
 
     @Override
@@ -46,50 +52,46 @@ public class MainMenu implements Screen {
         Gdx.input.setInputProcessor(stage);
         table.setFillParent(true);
 
-        final Label label = new Label("DESCENT", skin);
-        final TextButton play = new TextButton("Play", skin);
-        final TextButton settings = new TextButton("Settings", skin);
+        final Label label = new Label(msg.toString(), skin);
+        final TextButton mainMenu = new TextButton("Back to main menu", skin);
         final TextButton quit = new TextButton("Quit", skin);
+        final TextButton loadGame = new TextButton("Continue", skin);
 
-        play.addListener(new ChangeListener() {
+        mainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.postRunnable(() -> dispose());
-
-                LevelListReader reader = new LevelListReader("testMap/LevelList.txt");
-                if (reader.getLevels().size() == 0) {
-                    game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
-                } else if (!reader.getErrorList().isEmpty()) {
-                    game.setScreen(new LevelLoadErrorScreen(game, reader.getErrorList(), reader));
-                } else {
-                    game.setScreen(new GameScreen(game, reader));
-                }
-            }
-        });
-        settings.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new SettingsMenu(game));
+                game.setScreen(new MainMenu(game));
             }
         });
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
                 Gdx.app.exit();
+            }
+        });
+        loadGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
+                game.setScreen(new GameScreen(game, lvlReader));
             }
         });
 
         table.add(label).spaceBottom(70).row();
-        table.add(play).uniform().fill().spaceBottom(10).row();
-        table.add(settings).uniform().fill().spaceBottom(10).row();
-        table.add(quit).uniform().fill().spaceBottom(10);
+        if (!msg.get(0).equals("NO VALID LEVELS!")) {
+            table.add(loadGame).uniform().fill().spaceBottom(10).row();
+        }
+        table.add(mainMenu).uniform().fill().spaceBottom(10).row();
+        table.add(quit).uniform().fill();
 
         stage.addActor(table);
     }
 
     @Override
     public void render(final float delta) {
-        Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
@@ -116,13 +118,6 @@ public class MainMenu implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-    }
-
-    /**
-     * @return an already instanced main menu
-     */
-    public MainMenu getMainMenu() {
-        return this;
     }
 
 }
