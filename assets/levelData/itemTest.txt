@@ -1,0 +1,7 @@
+//Format:
+//EnumName ItemName xCoordinate,yCoordinate
+HealthPotionStats BASIC_HEALTH_POTION 502,36
+HealthPotionStats MEDIUM_HEALTH_POTION 502,80
+DoorKey 502,110
+MobStats TROLL 5 502,36
+WeaponStats LONGSWORD 502,150
