@@ -41,10 +41,10 @@ public class MapImpl implements Map {
     }
 
     @Override
-    public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+    public Boolean validMovement(final CharacterView charView, final int newX, final int newY) {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, false);
     }
-
+    
     /**
      * Checks if a character is on a teleport tile.
      * 
