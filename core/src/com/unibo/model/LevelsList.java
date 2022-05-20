@@ -20,9 +20,9 @@ public final class LevelsList {
      */
     public LevelsList() {
         this.counter = 0;
-        for (int i = 0; i < NUM_LEVELS; i++) {
-            this.levels.add(new Level());
-        }
+//        for (int i = 0; i < NUM_LEVELS; i++) {
+//            this.levels.add(new Level());
+//        }
     }
 
     /**

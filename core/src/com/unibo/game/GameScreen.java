@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.maps.Map;
@@ -65,8 +66,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    // private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
-    private Map mappa = new MapImpl("testMap/Outside.tmx", new Position(502, 36));
+    private LevelFileReader reader;
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -103,7 +103,14 @@ public class GameScreen implements Screen {
      * @param game
      */
     public GameScreen(final Descent game) {
+
         this.game = game;
+
+        try {
+            reader = new LevelFileReader("levelData/itemTest.txt");
+        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException | GdxRuntimeException e) {
+            System.out.println(e instanceof GdxRuntimeException ? "Couldn't load file" : "Wrong Item Formatting");
+        }
 
         // Menu
         menu = new PauseMenu(this);
@@ -128,16 +135,8 @@ public class GameScreen implements Screen {
 
         // Level
         lvlList = new LevelsList();
-        currentLvl = lvlList.getCurrentLevel();
-        currentLvl
-                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(1502, 288)),
-                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(1560, 288)),
-                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(1539, 346)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1660, 334)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(1676, 366)),
-                        new DoorKey().setPos(new Position(1923, 1470)))
-                .addEnemies(new Mob(MobStats.TROLL, 4).setPos(new Position(1783, 321)))
-                .setDoorPosition(new Position(1116, 2274));
+        currentLvl = reader.getLevel();
+        //currentLvl.setDoorPosition(new Position(1116, 2274));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -157,7 +156,7 @@ public class GameScreen implements Screen {
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
-        heroView.getCharacter().setCurrentMap(mappa);
+        heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
         // Hp Potion Quantity
@@ -211,30 +210,31 @@ public class GameScreen implements Screen {
                     this.skillMenu.getMenu().setVisible(isSkillMenuOpen);
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
-                    if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
-                        if (this.lvlList.hasNextLevel()) {
-                            this.currentLvl = this.lvlList.getNextLevel();
-                            System.out.println("NEXT LEVEL");
-
-                            Gdx.app.postRunnable(() -> {
-                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
-                                renderer.getMap().dispose();
-                                renderer.setMap(mappa.getTiledMap());
-                                // this.show();
-                            });
-                        } else {
-                            this.soundtrack.pause();
-                            this.soundtrack.dispose();
-                            game.setScreen(new GameOverMenu(game));
-                        }
-                    }
+//                    if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
+//                        if (this.lvlList.hasNextLevel()) {
+//                            this.currentLvl = this.lvlList.getNextLevel();
+//                            System.out.println("NEXT LEVEL");
+//
+//                            Gdx.app.postRunnable(() -> {
+//                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+//                                renderer.getMap().dispose();
+//                                renderer.setMap(mappa.getTiledMap());
+//                                // this.show();
+//                            });
+//                        } else {
+//                            this.soundtrack.pause();
+//                            this.soundtrack.dispose();
+//                            game.setScreen(new GameOverMenu(game));
+//                        }
+//                    }
                 });
     }
 
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap(), 1 / 6f);
+        renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
+                currentLvl.getMap().getSecond());
     }
 
     @Override
@@ -348,7 +348,7 @@ public class GameScreen implements Screen {
                 }
             }
             heroView.move();
-            mappa.checkTeleport(heroView);
+            currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
 
         batch.end();
@@ -384,18 +384,7 @@ public class GameScreen implements Screen {
             System.out.println(heroView.getHero().getInv().toString());
             System.out.println(heroView.getHero().getCurrentWeapon());
             System.out.println(heroView.getHero().getPos());
-            try {
-                LevelFileReader reader = new LevelFileReader("levelData/itemTest.txt");
-                reader.getHealthPotions().forEach(p -> currentLvl.addItems(p));
-                reader.getKeys().forEach(k -> currentLvl.addItems(k));
-                reader.getMobs().forEach(m -> currentLvl.addEnemies(m));
-                reader.getWeapons().forEach(w -> currentLvl.addItems(w));
-            } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
-                System.out.println("Wrong Item Formatting");
-            }
-            lvlView.updateItems(currentLvl);
-            lvlView.updateMobs(currentLvl);
-            lvlView.updateMobHpBars();
+            System.out.println(currentLvl.getDoorPosition());
         }
     }
 

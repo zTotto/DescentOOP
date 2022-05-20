@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.unibo.maps.Map;
+import com.unibo.maps.MapImpl;
+import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.DoorKey;
 import com.unibo.model.items.HealthPotion;
@@ -18,55 +22,73 @@ import com.unibo.model.items.Weapon;
 public class LevelFileReader {
 
     private final List<HealthPotion> potions;
-    private final List<DoorKey> keys;
+    private final DoorKey key;
     private final List<Mob> mobs;
     private final List<Weapon> weapons;
+    private final Pair<Map, Float> map;
+    private final Position doorPosition;
 
     /**
      * Reads a file.
      * 
      * @param levelFilePath
      */
-    public LevelFileReader(final String levelFilePath) throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+    public LevelFileReader(final String levelFilePath)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
         FileHandle handle = Gdx.files.internal(levelFilePath);
         List<String> linesList = Arrays.asList(handle.readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
-        System.out.println(linesList);
         potions = new LinkedList<>();
-        keys = new LinkedList<>();
+        key = new DoorKey();
         mobs = new LinkedList<>();
         weapons = new LinkedList<>();
+        map = new Pair<>();
+        doorPosition = new Position();
+        readMap(linesList.stream().filter(s -> s.contains("MapImpl")).limit(1).collect(Collectors.joining()));
         readPotions(linesList.stream().filter(s -> s.contains("HealthPotionStats")).collect(Collectors.toList()));
-        readKey(linesList.stream().filter(s -> s.contains("DoorKey")).collect(Collectors.toList()));
+        readKey(linesList.stream().filter(s -> s.contains("DoorKey")).limit(1).collect(Collectors.joining()));
         readMobs(linesList.stream().filter(s -> s.contains("MobStats")).collect(Collectors.toList()));
         readWeapons(linesList.stream().filter(s -> s.contains("WeaponStats")).collect(Collectors.toList()));
+        readDoorPosition(
+                linesList.stream().filter(s -> s.contains("DoorPosition")).limit(1).collect(Collectors.joining()));
     }
 
-    private void readPotions(final List<String> itemLines) {
-        itemLines.stream()
+    private void readPotions(final List<String> potionLines) {
+        potionLines.stream()
                 .forEach(l -> potions.add(new HealthPotion(HealthPotionStats.valueOf(l.split(" ")[1]), "0")
                         .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                                 Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
 
-    private void readKey(final List<String> itemLines) {
-        itemLines.stream().forEach(
-                l -> keys.add(new DoorKey().setPos(new Position(Integer.parseInt(l.split(" ")[1].split(",")[0]),
-                        Integer.parseInt(l.split(" ")[1].split(",")[1])))));
+    private void readKey(final String keyLine) {
+        key.setPos(new Position(Integer.parseInt(keyLine.split(" ")[1].split(",")[0]),
+                Integer.parseInt(keyLine.split(" ")[1].split(",")[1])));
     }
 
-    private void readMobs(final List<String> itemLines) {
-        itemLines.stream()
+    private void readMobs(final List<String> mobLines) {
+        mobLines.stream()
                 .forEach(l -> mobs.add(new Mob(MobStats.valueOf(l.split(" ")[1]), Integer.parseInt(l.split(" ")[2]))
                         .setPos(new Position(Integer.parseInt(l.split(" ")[3].split(",")[0]),
                                 Integer.parseInt(l.split(" ")[3].split(",")[1])))));
     }
 
-    private void readWeapons(final List<String> itemLines) {
-        itemLines.stream()
+    private void readWeapons(final List<String> weaponLines) {
+        weaponLines.stream()
                 .forEach(l -> weapons.add(new Weapon(WeaponStats.valueOf(l.split(" ")[1]), "0")
                         .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                                 Integer.parseInt(l.split(" ")[2].split(",")[1])))));
+    }
+
+    private void readMap(final String mapLine) {
+        map.setFirst(
+                new MapImpl(mapLine.split(" ")[1], new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
+                        Integer.parseInt(mapLine.split(" ")[2].split(",")[1]))));
+        map.setSecond(Float.parseFloat(mapLine.split(" ")[3]));
+    }
+
+    private void readDoorPosition(final String doorPosLine) {
+        doorPosition.setPosition(new Position(Integer.parseInt(doorPosLine.split(" ")[1].split(",")[0]),
+                Integer.parseInt(doorPosLine.split(" ")[1].split(",")[1])));
     }
 
     /**
@@ -83,8 +105,8 @@ public class LevelFileReader {
      * 
      * @return a list containing all the keys of the file
      */
-    public List<DoorKey> getKeys() {
-        return keys;
+    public DoorKey getKey() {
+        return key;
     }
 
     /**
@@ -103,5 +125,29 @@ public class LevelFileReader {
      */
     public List<Weapon> getWeapons() {
         return weapons;
+    }
+
+    /**
+     * Gets the map from the file.
+     * 
+     * @return a pair containing a map and its unitScale
+     */
+    public Pair<Map, Float> getMap() {
+        return map;
+    }
+
+    /**
+     * Builds a level with the provided properties.
+     * 
+     * @return the level
+     */
+    public Level getLevel() {
+        Level lvl = new Level(map);
+        mobs.forEach(m -> lvl.addEnemies(m));
+        potions.forEach(p -> lvl.addItems(p));
+        weapons.forEach(w -> lvl.addItems(w));
+        lvl.addItems(key);
+        lvl.setDoorPosition(doorPosition);
+        return lvl;
     }
 }
