@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
@@ -35,8 +34,7 @@ public class LevelFileReader {
      */
     public LevelFileReader(final String levelFilePath)
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
-        FileHandle handle = Gdx.files.internal(levelFilePath);
-        List<String> linesList = Arrays.asList(handle.readString().split("\\r?\\n")).stream()
+        List<String> linesList = Arrays.asList(Gdx.files.internal(levelFilePath).readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         potions = new LinkedList<>();
         key = new DoorKey();

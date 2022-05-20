@@ -31,10 +31,10 @@ public class Hero extends Character {
     /**
      * Constructor for the Hero.
      * 
-     * @param name           Name of the Hero
-     * @param maxHp          Max health points of the Hero
-     * @param speed          Speed of the Hero
-     * @param maxMana        Max mana of the Hero
+     * @param name    Name of the Hero
+     * @param maxHp   Max health points of the Hero
+     * @param speed   Speed of the Hero
+     * @param maxMana Max mana of the Hero
      */
     public Hero(final String name, final int maxHp, final int speed, final int maxMana) {
         super(maxHp, speed, new Weapon(WeaponStats.FISTS, "0"), maxMana);
@@ -211,8 +211,15 @@ public class Hero extends Character {
     }
 
     /**
+     * Destroys the key.
+     */
+    public void resetKey() {
+        this.key = false;
+    }
+
+    /**
      * 
-     * @param door 
+     * @param door
      * @return true if the Hero has the key and is near the door
      */
     public Boolean canOpenDoor(final Position door) {
