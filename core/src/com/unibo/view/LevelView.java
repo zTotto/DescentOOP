@@ -38,8 +38,10 @@ public class LevelView {
     public void updateLevel(final Level level) {
         mobTextures.clear();
         itemTextures.clear();
+        hpBars.clear();
         loadItemTextures(level);
         loadMobTextures(level);
+        loadMobHpBars();
     }
 
     /**
@@ -60,6 +62,14 @@ public class LevelView {
     public void updateMobs(final Level lvl) {
         mobTextures.clear();
         loadMobTextures(lvl);
+    }
+
+    /**
+     * Updates health bars for this level mobs.
+     */
+    public void updateMobHpBars() {
+        hpBars.clear();
+        loadMobHpBars();
     }
 
     private void loadItemTextures(final Level lvl) {
