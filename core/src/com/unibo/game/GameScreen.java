@@ -17,29 +17,19 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
-import com.unibo.maps.Map;
-import com.unibo.maps.MapImpl;
 import com.unibo.model.HealSkill;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
 import com.unibo.model.LevelsList;
-import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
-import com.unibo.model.items.DoorKey;
-import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
-import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
-import com.unibo.util.HealthPotionStats;
-import com.unibo.util.LevelFileReader;
-import com.unibo.util.MobStats;
+import com.unibo.util.LevelListReader;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
-import com.unibo.util.WeaponStats;
 import com.unibo.view.Expbar;
 import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
@@ -66,7 +56,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    private LevelFileReader reader;
+    private LevelListReader reader;
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -100,17 +90,14 @@ public class GameScreen implements Screen {
     /**
      * Main game scene.
      * 
-     * @param game
+     * @param game       Application
+     * @param listReader File reader used to load levels
      */
-    public GameScreen(final Descent game) {
+    public GameScreen(final Descent game, final LevelListReader listReader) {
 
         this.game = game;
 
-        try {
-            reader = new LevelFileReader("levelData/itemTest.txt");
-        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException | GdxRuntimeException e) {
-            System.out.println(e instanceof GdxRuntimeException ? "Couldn't load file" : "Wrong Item Formatting");
-        }
+        reader = listReader;
 
         // Menu
         menu = new PauseMenu(this);
@@ -130,13 +117,12 @@ public class GameScreen implements Screen {
         expbar = new Expbar(Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() / 40f));
         expbar.setPosition(0, 0);
 
-        // World Items
+        // World Texture
         hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
 
         // Level
-        lvlList = new LevelsList();
-        currentLvl = reader.getLevel();
-        //currentLvl.setDoorPosition(new Position(1116, 2274));
+        lvlList = new LevelsList(reader.getLevels());
+        currentLvl = lvlList.getCurrentLevel();
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -180,7 +166,6 @@ public class GameScreen implements Screen {
         this.input.addCommand(KeyBindings.ATTACK, t -> {
             t.setIsAttacking(true);
             t.getAttackSound().play();
-            // t.selfAttack();
             var last = t.getCharacter().hitEnemyFromLevel(currentLvl);
             if (last.isPresent()) {
                 this.lastDeadEnemies.add(new Pair<>(last.get(), 0f));
@@ -210,23 +195,24 @@ public class GameScreen implements Screen {
                     this.skillMenu.getMenu().setVisible(isSkillMenuOpen);
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
-//                    if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
-//                        if (this.lvlList.hasNextLevel()) {
-//                            this.currentLvl = this.lvlList.getNextLevel();
-//                            System.out.println("NEXT LEVEL");
-//
-//                            Gdx.app.postRunnable(() -> {
-//                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
-//                                renderer.getMap().dispose();
-//                                renderer.setMap(mappa.getTiledMap());
-//                                // this.show();
-//                            });
-//                        } else {
-//                            this.soundtrack.pause();
-//                            this.soundtrack.dispose();
-//                            game.setScreen(new GameOverMenu(game));
-//                        }
-//                    }
+                    if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
+                        if (this.lvlList.hasNextLevel()) {
+                            this.currentLvl = this.lvlList.getNextLevel();
+
+                            Gdx.app.postRunnable(() -> {
+                                lvlView.updateLevel(currentLvl);
+                                renderer.getMap().dispose();
+                                renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
+                                        currentLvl.getMap().getSecond());
+                                heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
+                                heroView.getHero().resetKey();
+                            });
+                        } else {
+                            this.soundtrack.pause();
+                            this.soundtrack.dispose();
+                            game.setScreen(new GameOverMenu(game));
+                        }
+                    }
                 });
     }
 
@@ -381,10 +367,8 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
-            System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(heroView.getHero().getCurrentWeapon());
             System.out.println(heroView.getHero().getPos());
-            System.out.println(currentLvl.getDoorPosition());
+            System.out.println(heroView.getHero().hasKey());
         }
     }
 
