@@ -22,6 +22,7 @@ import com.unibo.view.CharacterView;
 public class MapImpl implements Map {
 
     private final MapLayer collisionLayer;
+    private final MapLayer teleportLayer;
     private final TiledMap map;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<>();
@@ -36,6 +37,7 @@ public class MapImpl implements Map {
         super();
         this.map = new TmxMapLoader().load(path);
         this.collisionLayer = this.map.getLayers().get("objects");
+        this.teleportLayer = this.map.getLayers().get("teleports");
         this.startingPosition = startingPos;
     }
 
@@ -51,7 +53,7 @@ public class MapImpl implements Map {
             for (int i = 0; i < verts.length; i++) {
                 verts[i] /= 6;
             }
-            if (Intersector.overlapConvexPolygons(poly, new Polygon(verts))) {
+            if (Intersector.overlapConvexPolygons(poly, polyObj)) {
                 return false;
             }
         }
