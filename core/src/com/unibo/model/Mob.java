@@ -13,6 +13,7 @@ import com.unibo.util.WeaponStats;
 public class Mob extends Character {
 
     private final String name;
+    private final int expGiven;
 
     /**
      * Constructor for the mob.
@@ -25,6 +26,7 @@ public class Mob extends Character {
         super(mobType.getHp(), mobType.getSpeed(), new Weapon(WeaponStats.FISTS, "0"), mobType.getMana());
         this.getCurrentWeapon().applyDamageMod(weaponDamage);
         this.name = mobType.getName();
+        this.expGiven = mobType.getExpGiven();
     }
 
     /**
@@ -71,6 +73,9 @@ public class Mob extends Character {
     public void setRange(final int range) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mob setPos(final Position p) {
         if (!isDead()) {
@@ -80,8 +85,18 @@ public class Mob extends Character {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mob setPos(final int xCoord, final int yCoord) {
         return this.setPos(new Position(xCoord, yCoord));
+    }
+
+    /**
+     * @return the exp given from the monster
+     */
+    public int getExpGiven() {
+        return expGiven;
     }
 }
