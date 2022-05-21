@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="left-down" width="45" height="45" tilewidth="200" tileheight="200" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="left-down" width="45" height="45" tilewidth="200" tileheight="200" infinite="0" nextlayerid="5" nextobjectid="1">
  <imagelayer id="2" name="Background">
   <image source="cave.jpg" width="9000" height="9000"/>
  </imagelayer>
+ <objectgroup id="4" name="teleports"/>
  <objectgroup id="3" name="objects"/>
 </map>
