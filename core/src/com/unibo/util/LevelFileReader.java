@@ -78,9 +78,10 @@ public class LevelFileReader {
     }
 
     private void readMap(final String mapLine) {
-        map.setFirst(
-                new MapImpl(mapLine.split(" ")[1], new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
-                        Integer.parseInt(mapLine.split(" ")[2].split(",")[1]))));
+        map.setFirst(new MapImpl(mapLine.split(" ")[1],
+                new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
+                        Integer.parseInt(mapLine.split(" ")[2].split(",")[1])),
+                Float.parseFloat(mapLine.split(" ")[3])));
         map.setSecond(Float.parseFloat(mapLine.split(" ")[3]));
     }
 
