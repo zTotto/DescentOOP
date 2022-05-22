@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.unibo.game.Descent;
 import com.unibo.model.Level;
 
 /**
@@ -17,6 +16,7 @@ public class LevelListReader {
 
     private final List<Level> lvlList;
     private final List<String> errorList;
+    private final FileHandle file;
 
     /**
      * Constructor for the reader, requires the path of the file with all the
@@ -28,7 +28,8 @@ public class LevelListReader {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
         lvlList = new LinkedList<>();
         errorList = new LinkedList<>();
-        List<String> levelLines = Arrays.asList(file.readString().split("\\r?\\n")).stream()
+        this.file = file;
+        List<String> levelLines = Arrays.asList(file.child("LevelList.txt").readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         for (final String s : levelLines) {
             try {
@@ -46,7 +47,8 @@ public class LevelListReader {
     }
 
     private void loadLevel(final String levelPropertiesPath) {
-        lvlList.add(new LevelFileReader(new FileHandle(Descent.CUSTOM_LEVELS_PATH + "levelData/" + levelPropertiesPath + ".txt")).getLevel());
+        lvlList.add(
+                new LevelFileReader(file.child(levelPropertiesPath + "/" + levelPropertiesPath + ".txt")).getLevel());
     }
 
     /**

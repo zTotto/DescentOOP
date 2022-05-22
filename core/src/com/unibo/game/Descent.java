@@ -22,7 +22,7 @@ public class Descent extends Game {
     /**
      * Path for custom game files.
      */
-    public static final String CUSTOM_LEVELS_PATH = System.getenv("USERPROFILE") + "/Desktop/Descent/";
+    public static final String CUSTOM_LEVELS_PATH = System.getenv("APPDATA") + "/Descent/";
 
     /**
      * Constructor for this class.

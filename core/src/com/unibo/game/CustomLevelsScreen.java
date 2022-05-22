@@ -60,7 +60,7 @@ public class CustomLevelsScreen implements Screen {
                 Gdx.app.postRunnable(() -> dispose());
 
                 try {
-                    reader = new LevelListReader(new FileHandle(Descent.CUSTOM_LEVELS_PATH + "LevelList.txt"));
+                    reader = new LevelListReader(new FileHandle(Descent.CUSTOM_LEVELS_PATH + "levels/"));
                 } catch (GdxRuntimeException e) {
                     game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
                 }

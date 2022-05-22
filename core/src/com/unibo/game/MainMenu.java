@@ -57,7 +57,7 @@ public class MainMenu implements Screen {
             public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.postRunnable(() -> dispose());
 
-                LevelListReader reader = new LevelListReader(Gdx.files.internal("testMap/LevelList.txt"));
+                LevelListReader reader = new LevelListReader(Gdx.files.internal("levels/"));
                 if (reader.getLevels().size() == 0) {
                     game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
                 } else if (!reader.getErrorList().isEmpty()) {
