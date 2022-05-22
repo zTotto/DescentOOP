@@ -168,7 +168,8 @@ public class GameScreen implements Screen {
             t.getAttackSound().play();
             var last = t.getCharacter().hitEnemyFromLevel(currentLvl);
             if (last.isPresent()) {
-                this.lastDeadEnemies.add(new Pair<>(last.get(), 0f));
+                this.lastDeadEnemies.add(new Pair<>(last.get().getFirst(), 0f));
+                this.heroView.getHero().addExp(last.get().getSecond());
             }
             last = Optional.empty();
             currentLvl.removeDeadMobs();
@@ -205,6 +206,8 @@ public class GameScreen implements Screen {
                                 renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
                                         currentLvl.getMap().getSecond());
                                 heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
+                                heroView.getCharacter()
+                                        .setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
                                 heroView.getHero().resetKey();
                             });
                         } else {
@@ -368,7 +371,6 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getPos());
-            System.out.println(heroView.getHero().hasKey());
         }
     }
 

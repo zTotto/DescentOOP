@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,26 +14,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.unibo.util.LevelListReader;
 
 /**
  * Main Menu to star the game, open the settings or quit.
  */
-public class MainMenu implements Screen {
+public class CustomLevelsScreen implements Screen {
 
     private final Descent game;
     private final OrthographicCamera camera;
     private final Skin skin;
     private final Stage stage;
     private final Table table;
+    private LevelListReader reader;
 
     /**
      * Constructor for the main menu.
      * 
      * @param game
      */
-    public MainMenu(final Descent game) {
+    public CustomLevelsScreen(final Descent game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
@@ -48,8 +51,7 @@ public class MainMenu implements Screen {
 
         final Label label = new Label("DESCENT", skin);
         final TextButton play = new TextButton("Play", skin);
-        final TextButton customLevels = new TextButton("Custom Levels", skin);
-        final TextButton settings = new TextButton("Settings", skin);
+        final TextButton mainMenu = new TextButton("Back to Main Menu", skin);
         final TextButton quit = new TextButton("Quit", skin);
 
         play.addListener(new ChangeListener() {
@@ -57,26 +59,26 @@ public class MainMenu implements Screen {
             public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.postRunnable(() -> dispose());
 
-                LevelListReader reader = new LevelListReader(Gdx.files.internal("levels/"));
-                if (reader.getLevels().size() == 0) {
+                try {
+                    reader = new LevelListReader(new FileHandle(Descent.CUSTOM_LEVELS_PATH + "levels/"));
+                } catch (GdxRuntimeException e) {
                     game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
-                } else if (!reader.getErrorList().isEmpty()) {
-                    game.setScreen(new LevelLoadErrorScreen(game, reader.getErrorList(), reader));
-                } else {
-                    game.setScreen(new GameScreen(game, reader));
+                }
+                if (reader != null) {
+                    if (reader.getLevels().size() == 0) {
+                        game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
+                    } else if (!reader.getErrorList().isEmpty()) {
+                        game.setScreen(new LevelLoadErrorScreen(game, reader.getErrorList(), reader));
+                    } else {
+                        game.setScreen(new GameScreen(game, reader));
+                    }
                 }
             }
         });
-        customLevels.addListener(new ChangeListener() {
+        mainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new CustomLevelsScreen(game));
-            }
-        });
-        settings.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new SettingsMenu(game));
+                game.setScreen(new MainMenu(game));
             }
         });
         quit.addListener(new ChangeListener() {
@@ -88,8 +90,7 @@ public class MainMenu implements Screen {
 
         table.add(label).spaceBottom(70).row();
         table.add(play).uniform().fill().spaceBottom(10).row();
-        table.add(customLevels).uniform().fill().spaceBottom(10).row();
-        table.add(settings).uniform().fill().spaceBottom(10).row();
+        table.add(mainMenu).uniform().fill().spaceBottom(10).row();
         table.add(quit).uniform().fill().spaceBottom(10);
 
         stage.addActor(table);
@@ -125,12 +126,4 @@ public class MainMenu implements Screen {
     public void dispose() {
         stage.dispose();
     }
-
-    /**
-     * @return an already instanced main menu
-     */
-    public MainMenu getMainMenu() {
-        return this;
-    }
-
 }

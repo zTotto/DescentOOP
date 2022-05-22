@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.unibo.maps.Map;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Weapon;
+import com.unibo.util.Pair;
 import com.unibo.util.Position;
 
 /**
@@ -273,12 +274,12 @@ public abstract class Character {
      * @param lvl
      * @return the position of the dead enemy
      */
-    public Optional<Position> hitEnemyFromLevel(final Level lvl) {
+    public Optional<Pair<Position, Integer>> hitEnemyFromLevel(final Level lvl) {
         if (!this.isDead()) {
             for (final Mob e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
-                    return e.isDead() ? Optional.of(e.getPos()) : Optional.empty();
+                    return e.isDead() ? Optional.of(new Pair<>(e.getPos(), e.getExpGiven())) : Optional.empty();
                 }
             }
         }

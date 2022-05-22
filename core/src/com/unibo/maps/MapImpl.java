@@ -25,16 +25,18 @@ public class MapImpl implements Map {
     private final TiledMap map;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<>();
+    private final float unitScale;
 
     /**
      * Constructor for a map.
      * 
      * @param path        of the map
      * @param startingPos of the hero
+     * @param unitScale float value to transform world units to pixel
      */
-    public MapImpl(final String path, final Position startingPos) {
-        super();
+    public MapImpl(final String path, final Position startingPos, final float unitScale) {
         this.map = new TmxMapLoader().load(path);
+        this.unitScale = unitScale;
         this.collisionLayer = this.map.getLayers().get("objects");
         this.teleportLayer = this.map.getLayers().get("teleports");
         this.startingPosition = startingPos;
@@ -44,7 +46,7 @@ public class MapImpl implements Map {
     public Boolean validMovement(final CharacterView charView, final int newX, final int newY) {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, false);
     }
-    
+
     /**
      * Checks if a character is on a teleport tile.
      * 
@@ -66,7 +68,7 @@ public class MapImpl implements Map {
             Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
             var verts = polyObj.getTransformedVertices();
             for (int i = 0; i < verts.length; i++) {
-                verts[i] /= 6;
+                verts[i] *= unitScale;
             }
             if (Intersector.overlapConvexPolygons(poly, polyObj)) {
                 if (teleportCharacter) {
