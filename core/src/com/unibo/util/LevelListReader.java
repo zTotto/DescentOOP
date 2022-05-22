@@ -22,9 +22,10 @@ public class LevelListReader {
      * Constructor for the reader, requires the path of the file with all the
      * levels.
      * 
-     * @param file File where to read levels
+     * @param file      File where to read levels
+     * @param isFileExt true if the file is external
      */
-    public LevelListReader(final FileHandle file)
+    public LevelListReader(final FileHandle file, final Boolean isFileExt)
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
         lvlList = new LinkedList<>();
         errorList = new LinkedList<>();
@@ -33,7 +34,7 @@ public class LevelListReader {
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         for (final String s : levelLines) {
             try {
-                loadLevel(s);
+                loadLevel(s, isFileExt);
             } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException | GdxRuntimeException e) {
                 if (e instanceof IllegalArgumentException) {
                     errorList.add("Wrong Item Formatting in file " + s);
@@ -46,9 +47,9 @@ public class LevelListReader {
         }
     }
 
-    private void loadLevel(final String levelPropertiesPath) {
-        lvlList.add(
-                new LevelFileReader(file.child(levelPropertiesPath + "/" + levelPropertiesPath + ".txt")).getLevel());
+    private void loadLevel(final String levelPropertiesPath, final Boolean isFileExt) {
+        lvlList.add(new LevelFileReader(file.child(levelPropertiesPath + "/" + levelPropertiesPath + ".txt"), isFileExt)
+                .getLevel());
     }
 
     /**
