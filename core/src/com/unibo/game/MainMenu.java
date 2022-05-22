@@ -48,6 +48,7 @@ public class MainMenu implements Screen {
 
         final Label label = new Label("DESCENT", skin);
         final TextButton play = new TextButton("Play", skin);
+        final TextButton customLevels = new TextButton("Custom Levels", skin);
         final TextButton settings = new TextButton("Settings", skin);
         final TextButton quit = new TextButton("Quit", skin);
 
@@ -56,7 +57,7 @@ public class MainMenu implements Screen {
             public void changed(final ChangeEvent event, final Actor actor) {
                 Gdx.app.postRunnable(() -> dispose());
 
-                LevelListReader reader = new LevelListReader("testMap/LevelList.txt");
+                LevelListReader reader = new LevelListReader(Gdx.files.internal("testMap/LevelList.txt"));
                 if (reader.getLevels().size() == 0) {
                     game.setScreen(new LevelLoadErrorScreen(game, List.of("NO VALID LEVELS!"), reader));
                 } else if (!reader.getErrorList().isEmpty()) {
@@ -64,6 +65,12 @@ public class MainMenu implements Screen {
                 } else {
                     game.setScreen(new GameScreen(game, reader));
                 }
+            }
+        });
+        customLevels.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                game.setScreen(new CustomLevelsScreen(game));
             }
         });
         settings.addListener(new ChangeListener() {
@@ -81,6 +88,7 @@ public class MainMenu implements Screen {
 
         table.add(label).spaceBottom(70).row();
         table.add(play).uniform().fill().spaceBottom(10).row();
+        table.add(customLevels).uniform().fill().spaceBottom(10).row();
         table.add(settings).uniform().fill().spaceBottom(10).row();
         table.add(quit).uniform().fill().spaceBottom(10);
 
