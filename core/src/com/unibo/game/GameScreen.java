@@ -206,7 +206,8 @@ public class GameScreen implements Screen {
                                 renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
                                         currentLvl.getMap().getSecond());
                                 heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
-                                heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
+                                heroView.getCharacter()
+                                        .setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
                                 heroView.getHero().resetKey();
                             });
                         } else {
@@ -370,7 +371,6 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getPos());
-            System.out.println(heroView.getHero().hasKey());
         }
     }
 
