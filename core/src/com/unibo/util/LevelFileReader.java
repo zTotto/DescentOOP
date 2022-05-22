@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.unibo.maps.Map;
 import com.unibo.maps.MapImpl;
@@ -30,11 +30,11 @@ public class LevelFileReader {
     /**
      * Reads a file.
      * 
-     * @param levelFilePath
+     * @param file File where to read level properties
      */
-    public LevelFileReader(final String levelFilePath)
+    public LevelFileReader(final FileHandle file)
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
-        List<String> linesList = Arrays.asList(Gdx.files.internal(levelFilePath).readString().split("\\r?\\n")).stream()
+        List<String> linesList = Arrays.asList(file.readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         potions = new LinkedList<>();
         key = new DoorKey();
