@@ -2,6 +2,8 @@ package com.unibo.maps;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.unibo.game.Descent;
 import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
@@ -32,10 +35,15 @@ public class MapImpl implements Map {
      * 
      * @param path        of the map
      * @param startingPos of the hero
-     * @param unitScale float value to transform world units to pixel
+     * @param unitScale   float value to transform world units to pixel
+     * @param isFileExt   true if the file is external
      */
-    public MapImpl(final String path, final Position startingPos, final float unitScale) {
-        this.map = new TmxMapLoader().load(path);
+    public MapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
+        if (isFileExt) {
+            this.map = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(Descent.CUSTOM_LEVELS_PATH + path);
+        } else {
+            this.map = new TmxMapLoader().load(path);
+        }
         this.unitScale = unitScale;
         this.collisionLayer = this.map.getLayers().get("objects");
         this.teleportLayer = this.map.getLayers().get("teleports");

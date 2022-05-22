@@ -30,9 +30,10 @@ public class LevelFileReader {
     /**
      * Reads a file.
      * 
-     * @param file File where to read level properties
+     * @param file      File where to read level properties
+     * @param isFileExt true if the file is external
      */
-    public LevelFileReader(final FileHandle file)
+    public LevelFileReader(final FileHandle file, final Boolean isFileExt)
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
         List<String> linesList = Arrays.asList(file.readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
@@ -42,7 +43,8 @@ public class LevelFileReader {
         weapons = new LinkedList<>();
         map = new Pair<>();
         doorPosition = new Position();
-        readMap(linesList.stream().filter(s -> s.contains("MapImpl")).limit(1).collect(Collectors.joining()));
+        readMap(linesList.stream().filter(s -> s.contains("MapImpl")).limit(1).collect(Collectors.joining()),
+                isFileExt);
         readPotions(linesList.stream().filter(s -> s.contains("HealthPotionStats")).collect(Collectors.toList()));
         readKey(linesList.stream().filter(s -> s.contains("DoorKey")).limit(1).collect(Collectors.joining()));
         readMobs(linesList.stream().filter(s -> s.contains("MobStats")).collect(Collectors.toList()));
@@ -77,11 +79,11 @@ public class LevelFileReader {
                                 Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
 
-    private void readMap(final String mapLine) {
+    private void readMap(final String mapLine, final Boolean isExt) {
         map.setFirst(new MapImpl(mapLine.split(" ")[1],
                 new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
                         Integer.parseInt(mapLine.split(" ")[2].split(",")[1])),
-                Float.parseFloat(mapLine.split(" ")[3])));
+                Float.parseFloat(mapLine.split(" ")[3]), isExt));
         map.setSecond(Float.parseFloat(mapLine.split(" ")[3]));
     }
 
