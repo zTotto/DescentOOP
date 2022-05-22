@@ -211,9 +211,11 @@ public class GameScreen implements Screen {
                                 heroView.getHero().resetKey();
                             });
                         } else {
-                            this.soundtrack.pause();
-                            this.soundtrack.dispose();
-                            game.setScreen(new GameOverMenu(game));
+                            Gdx.app.postRunnable(() -> {
+                                this.soundtrack.pause();
+                                this.soundtrack.dispose();
+                                game.setScreen(new GameOverMenu(game, "You Won!"));
+                            });
                         }
                     }
                 });
@@ -228,6 +230,16 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
+
+        // Dead Hero check
+        if (this.heroView.getHero().isDead()) {
+            this.isPaused = true;
+            Gdx.app.postRunnable(() -> {
+                this.soundtrack.pause();
+                this.soundtrack.dispose();
+                game.setScreen(new GameOverMenu(game, "You Died!"));
+            });
+        }
 
         // Hero Coordinates
         final int heroX = heroView.getCharacter().getPos().getxCoord();

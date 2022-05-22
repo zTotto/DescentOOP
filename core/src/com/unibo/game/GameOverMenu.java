@@ -23,14 +23,17 @@ public class GameOverMenu implements Screen {
     private final Skin skin;
     private final Stage stage;
     private final Table table;
+    private final String msg;
 
     /**
      * Constructor for the game over menu.
      * 
      * @param game
+     * @param msg
      */
-    public GameOverMenu(final Descent game) {
+    public GameOverMenu(final Descent game, final String msg) {
         this.game = game;
+        this.msg = msg;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
@@ -43,7 +46,7 @@ public class GameOverMenu implements Screen {
         Gdx.input.setInputProcessor(stage);
         table.setFillParent(true);
 
-        final Label label = new Label("GAME OVER", skin);
+        final Label label = new Label(msg, skin);
         final TextButton mainMenu = new TextButton("Back to main menu", skin);
         final TextButton quit = new TextButton("Quit", skin);
 
