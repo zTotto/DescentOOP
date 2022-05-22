@@ -1,6 +1,7 @@
 package com.unibo.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -18,6 +19,10 @@ public class Descent extends Game {
      * Game Height.
      */
     public static final int GAME_HEIGHT = 600; // 900;
+    /**
+     * Path for custom game files.
+     */
+    public static final String CUSTOM_LEVELS_PATH = System.getenv("USERPROFILE") + "/Desktop/Descent/";
 
     /**
      * Constructor for this class.
@@ -25,6 +30,7 @@ public class Descent extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont(); // use libGDX's default Arial font
+        Gdx.files.absolute(CUSTOM_LEVELS_PATH).mkdirs();
         this.setScreen(new MainMenu(this));
     }
 
