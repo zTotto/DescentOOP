@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.unibo.util.LevelListReader;
 
 /**
- * Game over screen.
+ * Screen that appears when a loading error has been encountered.
  */
 public class LevelLoadErrorScreen implements Screen {
 
@@ -30,7 +30,7 @@ public class LevelLoadErrorScreen implements Screen {
     private final LevelListReader lvlReader;
 
     /**
-     * Constructor for the game over menu.
+     * Constructor for the level error menu.
      * 
      * @param game
      * @param errorMsg Message error
