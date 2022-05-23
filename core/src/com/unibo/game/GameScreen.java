@@ -43,11 +43,11 @@ import com.unibo.view.MobView;
 public class GameScreen implements Screen {
 
     private static final int MANA_UNIT = 1;
-    private static final int MAX_SPEED = 800;
+    private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
-    private static final double SPEED_MULTIPLAYER = 0.75;
-    private static final double TEN_PERCENT_MULTIPLAYER = 0.2;
+    private static final double SPEED_MULTIPLIER = 0.75;
+    private static final double TEN_PERCENT_MULTIPIER = 0.2;
     private final Descent game;
     private final PauseMenu menu;
     private final SkillMenu skillMenu;
@@ -58,9 +58,10 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private LevelListReader reader;
 
-    private final Texture hpTexture;
     private final Image hpPotionIcon;
     private final TextureRegion[] bloodAnim;
+    private final TextureRegion[] doorPointer;
+    private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
 
     private final Music soundtrack;
@@ -68,6 +69,7 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
+    private float randomAnim = (float) (0.1 * Math.random());
 
     private boolean isPaused;
     private boolean isSkillMenuOpen;
@@ -116,18 +118,21 @@ public class GameScreen implements Screen {
         expbar = new Expbar(Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() / 40f));
         expbar.setPosition(0, 0);
 
-        // World Texture
-        hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
-
         // Level
         lvlList = new LevelsList(reader.getLevels());
         currentLvl = lvlList.getCurrentLevel();
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
-        hpPotionIcon = new Image(hpTexture);
+        // hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
+        hpPotionIcon = new Image(new Texture("items/HealthPotion/Basic Health Potion.png"));
         hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight() * 1.2f);
         manabar.getStage().addActor(hpPotionIcon);
+
+        // Door Pointer
+        Texture doorTexture = new Texture("items/Door/Door Pointer Animation.png");
+        doorPointer = TextureRegion.split(doorTexture, doorTexture.getWidth() / 6, doorTexture.getHeight())[0];
+        doorPointerAnim = new Animation<>(1f / 8f, doorPointer);
 
         // Blood Animation
         Texture bloodTexture = new Texture("characters/bloodMob.png");
@@ -187,8 +192,8 @@ public class GameScreen implements Screen {
                     this.isSkillMenuOpen = false;
                 }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
-                        new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLAYER))
-                .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPLAYER)))
+                        new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLIER))
+                .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPIER)))
                 .addCommand(KeyBindings.SKILL_MENU, t -> {
                     Gdx.input.setInputProcessor(skillMenu.getStage());
                     this.isSkillMenuOpen = !this.isSkillMenuOpen;
@@ -255,17 +260,21 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        // Pause Activation
+        // Pause Menu
         this.input.handleInput(KeyBindings.PAUSE).ifPresent(t -> t.executeCommand(heroView));
 
-        // Pause Activation
+        // Skill Menu
         this.input.handleInput(KeyBindings.SKILL_MENU).ifPresent(t -> t.executeCommand(heroView));
 
         // Item Rendering
-        for (final Pair<Item, Texture> p : lvlView.getItemTextures()) {
-            batch.draw(p.getSecond(), p.getFirst().getPos().getxCoord() - p.getSecond().getWidth() / 2,
-                    p.getFirst().getPos().getyCoord());
+        int iAnim = 0;
+        for (final Pair<Item, Animation<TextureRegion>> p : lvlView.getItemTextures()) {
+            batch.draw(p.getSecond().getKeyFrame(elapsedTime + iAnim * randomAnim, true),
+                    p.getFirst().getPos().getxCoord() - p.getSecond().getKeyFrame(elapsedTime).getRegionWidth() / 2,
+                    p.getFirst().getPos().getyCoord() - p.getSecond().getKeyFrame(elapsedTime).getRegionHeight() / 2);
+            iAnim++;
         }
+
         // Mob Rendering
         int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
@@ -322,24 +331,6 @@ public class GameScreen implements Screen {
                 this.input.handleInput(KeyBindings.ATTACK).ifPresent(t -> t.executeCommand(heroView));
             }
 
-            if (heroView.getIsAttacking()) {
-
-                batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
-
-                // Attack timer
-                attackTime += Gdx.graphics.getDeltaTime();
-
-                if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
-                    heroView.setIsAttacking(false);
-                    attackTime = 0;
-                }
-            } else {
-                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
-
-                // Animation timer
-                elapsedTime += Gdx.graphics.getDeltaTime();
-            }
-
             // Blood animation on dead mob
             var temp = new LinkedList<>(lastDeadEnemies);
             for (Pair<Position, Float> p : temp) {
@@ -355,6 +346,32 @@ public class GameScreen implements Screen {
                     lastDeadEnemies.remove(p);
                 }
             }
+
+            if (heroView.getIsAttacking()) {
+
+                batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
+
+                // Attack timer
+                attackTime += Gdx.graphics.getDeltaTime();
+
+                if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
+                    heroView.setIsAttacking(false);
+                    attackTime = 0;
+                }
+            } else {
+                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+            }
+
+            // Door Pointer Rendering
+            batch.draw(doorPointerAnim.getKeyFrame(elapsedTime, true),
+                    currentLvl.getDoorPosition().getxCoord()
+                            - doorPointerAnim.getKeyFrame(elapsedTime).getRegionWidth() / 2,
+                    currentLvl.getDoorPosition().getyCoord()
+                            + doorPointerAnim.getKeyFrame(elapsedTime).getRegionHeight() / 2);
+
+            // Animation timer
+            elapsedTime += Gdx.graphics.getDeltaTime();
+
             heroView.move();
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
@@ -390,6 +407,9 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getPos());
+            System.out.println("Speed: " + heroView.getHero().getSpeed());
+            System.out.println("Range: " + heroView.getHero().getRange());
+            System.out.println("Door: " + currentLvl.getDoorPosition());
         }
     }
 

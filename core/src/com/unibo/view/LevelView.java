@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.Item;
@@ -14,7 +16,7 @@ import com.unibo.util.Pair;
  */
 public class LevelView {
 
-    private final List<Pair<Item, Texture>> itemTextures;
+    private final List<Pair<Item, Animation<TextureRegion>>> itemTextures;
     private final List<MobView> mobTextures;
     private final List<Healthbar> hpBars;
 
@@ -74,8 +76,9 @@ public class LevelView {
 
     private void loadItemTextures(final Level lvl) {
         for (Item i : lvl.getItems()) {
-            itemTextures.add(
-                    new Pair<>(i, new Texture("items/" + i.getClass().getSimpleName() + "/" + i.getName() + ".png")));
+            var text = new Texture("items/" + i.getClass().getSimpleName() + "/" + i.getName() + " Anim.png");
+            var region = TextureRegion.split(text, text.getWidth() / 6, text.getHeight())[0];
+            itemTextures.add(new Pair<>(i, new Animation<>(1f / 8f, region)));
         }
     }
 
@@ -95,7 +98,7 @@ public class LevelView {
     /**
      * @return a list of pairs containing an item and its texture
      */
-    public List<Pair<Item, Texture>> getItemTextures() {
+    public List<Pair<Item, Animation<TextureRegion>>> getItemTextures() {
         return this.itemTextures;
     }
 
