@@ -68,7 +68,6 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
-    private int startingGameTime;
 
     private boolean isPaused;
     private boolean isSkillMenuOpen;
@@ -290,9 +289,17 @@ public class GameScreen implements Screen {
 
             this.soundtrack.play();
             gameTime += Gdx.graphics.getDeltaTime();
-            if ((int) gameTime == startingGameTime + 1) {
-                startingGameTime++;
-                heroView.getHero().increaseCurrentMana(10);
+
+            // Timed stuff
+            if (gameTime > 0.5) {
+                gameTime = 0;
+                // Mana Regen
+                heroView.getHero().increaseCurrentMana(5);
+                // Spike Tiles Damage
+                if (currentLvl.getMap().getFirst().checkDamageTile(heroView)) {
+                    heroView.getCharacter().setCurrentHp(
+                            heroView.getCharacter().getCurrentHp() - (int) (0.05 * heroView.getCharacter().getMaxHp()));
+                }
             }
 
             // Item pick up
