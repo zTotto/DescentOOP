@@ -2,6 +2,7 @@ package com.unibo.maps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
@@ -25,6 +26,7 @@ public class MapImpl implements Map {
 
     private final MapLayer collisionLayer;
     private final MapLayer teleportLayer;
+    private final MapLayer specialTilesLayer;
     private final TiledMap map;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<>();
@@ -47,27 +49,31 @@ public class MapImpl implements Map {
         this.unitScale = unitScale;
         this.collisionLayer = this.map.getLayers().get("objects");
         this.teleportLayer = this.map.getLayers().get("teleports");
+        this.specialTilesLayer = this.map.getLayers().get("special");
         this.startingPosition = startingPos;
     }
 
     @Override
     public Boolean validMovement(final CharacterView charView, final int newX, final int newY) {
-        return polyScanner(charView, new Position(newX, newY), collisionLayer, false);
+        return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
     }
 
-    /**
-     * Checks if a character is on a teleport tile.
-     * 
-     * @param charView
-     * @return true if a player is teleported
-     */
+    @Override
     public Boolean checkTeleport(final CharacterView charView) {
-        return polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
-                charView.getCharacter().getPos().getyCoord()), teleportLayer, true);
+        return teleportLayer == null ? false
+                : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
+                        charView.getCharacter().getPos().getyCoord()), teleportLayer, TileAction.Teleport);
+    }
+
+    @Override
+    public Boolean checkDamageTile(final CharacterView charView) {
+        return specialTilesLayer == null ? false
+                : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
+                        charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.Damage);
     }
 
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
-            final Boolean teleportCharacter) {
+            final TileAction action) {
         final Rectangle rect = charView.getCharRect();
         rect.setPosition(pos.getxCoord() - (int) (rect.getWidth() / 2), pos.getyCoord());
         Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
@@ -79,14 +85,30 @@ public class MapImpl implements Map {
                 verts[i] *= unitScale;
             }
             if (Intersector.overlapConvexPolygons(poly, polyObj)) {
-                if (teleportCharacter) {
-                    charView.getCharacter().setPos((int) polyMapObj.getProperties().get("X"),
-                            (int) polyMapObj.getProperties().get("Y"));
+                switch (action) {
+                case Collision:
+                    return false;
+                case Teleport:
+                    charView.getCharacter().setPos((int) ((int) polyMapObj.getProperties().get("X") * unitScale),
+                            (int) ((int) polyMapObj.getProperties().get("Y") * unitScale));
+                    return true;
+                case Damage:
+                    return true;
+                default:
+                    break;
                 }
-                return teleportCharacter;
             }
         }
-        return !teleportCharacter;
+        switch (action) {
+        case Collision:
+            return true;
+        case Damage:
+            return false;
+        case Teleport:
+            return false;
+        default:
+            return true;
+        }
     }
 
     @Override
@@ -107,6 +129,16 @@ public class MapImpl implements Map {
     @Override
     public MapLayer getCollisionLayer() {
         return collisionLayer;
+    }
+
+    @Override
+    public Optional<MapLayer> getTeleportLayer() {
+        return Optional.ofNullable(teleportLayer);
+    }
+
+    @Override
+    public Optional<MapLayer> getSpecialTilesLayer() {
+        return Optional.ofNullable(specialTilesLayer);
     }
 
     @Override

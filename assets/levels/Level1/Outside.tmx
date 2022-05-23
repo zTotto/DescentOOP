@@ -512,13 +512,4 @@
    <polygon points="0,0 542,246 210,452 -44,36"/>
   </object>
  </objectgroup>
- <objectgroup id="4" name="teleports">
-  <object id="213" x="2740" y="13876">
-   <properties>
-    <property name="X" type="int" value="89"/>
-    <property name="Y" type="int" value="842"/>
-   </properties>
-   <polygon points="0,0 -344,0 -340,344 32,348"/>
-  </object>
- </objectgroup>
 </map>

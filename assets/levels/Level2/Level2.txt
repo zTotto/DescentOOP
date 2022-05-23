@@ -2,7 +2,7 @@
 //EnumName ITEM_NAME xCoordinate,yCoordinate
 //MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
 
-MapImpl levels/Level2/Cave.tmx 1237,1681 0.333
+MapImpl levels/Level2/Interior.tmx 970,323 0.333
 HealthPotionStats BASIC_HEALTH_POTION 1539,346
 HealthPotionStats BASIC_HEALTH_POTION 1660,334
 HealthPotionStats MEDIUM_HEALTH_POTION 1676,366

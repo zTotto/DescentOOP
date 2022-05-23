@@ -1,5 +1,7 @@
 package com.unibo.maps;
 
+import java.util.Optional;
+
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -29,9 +31,42 @@ public interface Map {
 
     TiledMapTileLayer getLayer(String path);
 
+    /**
+     * Getter for collision objects.
+     * 
+     * @return the collision layer
+     */
     MapLayer getCollisionLayer();
+
+    /**
+     * Getter for teleporting tiles.
+     * 
+     * @return the teleport tiles layer
+     */
+    Optional<MapLayer> getTeleportLayer();
+
+    /**
+     * Getter for special tiles (like slowing or damaging tiles).
+     * 
+     * @return the special tiles layer
+     */
+    Optional<MapLayer> getSpecialTilesLayer();
 
     TiledMap getTiledMap();
 
-    Boolean checkTeleport(final CharacterView charView);
+    /**
+     * Checks if a character is in a teleport tile.
+     * 
+     * @param charView
+     * @return true if the character is in a teleport tile
+     */
+    Boolean checkTeleport(CharacterView charView);
+
+    /**
+     * Checks if a character is on a special tile.
+     * 
+     * @param charView
+     * @return true if a player is damaged
+     */
+    Boolean checkDamageTile(CharacterView charView);
 }
