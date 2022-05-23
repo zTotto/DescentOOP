@@ -43,7 +43,7 @@ import com.unibo.view.MobView;
 public class GameScreen implements Screen {
 
     private static final int MANA_UNIT = 1;
-    private static final int MAX_SPEED = 200;
+    private static final int MAX_SPEED = 800;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
     private static final double SPEED_MULTIPLIER = 0.75;
@@ -73,6 +73,8 @@ public class GameScreen implements Screen {
 
     private boolean isPaused;
     private boolean isSkillMenuOpen;
+    private boolean isLastLevel;
+    private Position lastKeyPosition;
 
     private final LevelsList lvlList;
     private Level currentLvl;
@@ -121,6 +123,7 @@ public class GameScreen implements Screen {
         // Level
         lvlList = new LevelsList(reader.getLevels());
         currentLvl = lvlList.getCurrentLevel();
+        lastLevelKey();
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -213,6 +216,7 @@ public class GameScreen implements Screen {
                                 heroView.getCharacter()
                                         .setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
                                 heroView.getHero().resetKey();
+                                lastLevelKey();
                             });
                         } else {
                             Gdx.app.postRunnable(() -> {
@@ -266,10 +270,16 @@ public class GameScreen implements Screen {
         // Skill Menu
         this.input.handleInput(KeyBindings.SKILL_MENU).ifPresent(t -> t.executeCommand(heroView));
 
+        // Last Level Check
+        if (isLastLevel && currentLvl.getEnemies().isEmpty()) {
+            currentLvl.getItems().stream().filter(i -> i.getName().equals("Magic Key"))
+                    .forEach(k -> k.setPos(lastKeyPosition));
+        }
+
         // Item Rendering
         int iAnim = 0;
         for (final Pair<Item, Animation<TextureRegion>> p : lvlView.getItemTextures()) {
-            batch.draw(p.getSecond().getKeyFrame(elapsedTime + iAnim * randomAnim, true),
+            batch.draw(p.getSecond().getKeyFrame(elapsedTime + iAnim * 2 * randomAnim, true),
                     p.getFirst().getPos().getxCoord() - p.getSecond().getKeyFrame(elapsedTime).getRegionWidth() / 2,
                     p.getFirst().getPos().getyCoord() - p.getSecond().getKeyFrame(elapsedTime).getRegionHeight() / 2);
             iAnim++;
@@ -459,5 +469,15 @@ public class GameScreen implements Screen {
      */
     public Descent getGame() {
         return this.game;
+    }
+
+    private void lastLevelKey() {
+        if (!this.lvlList.hasNextLevel()) {
+            isLastLevel = true;
+            currentLvl.getItems().stream().filter(i -> i.getName().equals("Magic Key")).forEach(k -> {
+                lastKeyPosition = new Position(k.getPos().getxCoord(), k.getPos().getyCoord());
+                k.setPos(new Position(0, 0));
+            });
+        }
     }
 }
