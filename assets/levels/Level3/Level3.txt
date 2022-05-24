@@ -3,7 +3,6 @@
 //MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
 
 MapImpl levels/Level3/Maze.tmx 1106,38 0.333
-WeaponStats LONGSWORD 1106,38
 HealthPotionStats MEDIUM_HEALTH_POTION 1880,350
 HealthPotionStats MEDIUM_HEALTH_POTION 1880,1120
 HealthPotionStats MEDIUM_HEALTH_POTION 340,350
