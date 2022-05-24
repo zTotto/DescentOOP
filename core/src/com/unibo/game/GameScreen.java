@@ -43,7 +43,7 @@ import com.unibo.view.MobView;
 public class GameScreen implements Screen {
 
     private static final int MANA_UNIT = 1;
-    private static final int MAX_SPEED = 800;
+    private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
     private static final double SPEED_MULTIPLAYER = 0.75;

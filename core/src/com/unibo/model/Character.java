@@ -26,6 +26,7 @@ public abstract class Character {
     private int currentMana;
     private int maxMana;
     private int maxHp;
+    private final int initialSpeed;
     private int speed;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
@@ -46,7 +47,8 @@ public abstract class Character {
         this.currentHp = maxHp;
         this.maxMana = maxMana;
         this.setCurrentMana(maxMana);
-        this.setSpeed(speed);
+        this.initialSpeed = speed;
+        this.setSpeed(this.initialSpeed);
         this.currentWeapon = 0;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
@@ -156,6 +158,13 @@ public abstract class Character {
 
     // Speed related
 
+    /**
+     * @return the initial speed of the character.
+     */
+    public int getInitialSpeed() {
+        return initialSpeed;
+    }
+    
     /**
      * 
      * @return character speed.
