@@ -68,6 +68,7 @@ public class SkillMenu {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 gameScreen.disablePause();
+                menu.setVisible(false);
             }
         });
 

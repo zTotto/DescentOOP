@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.unibo.model.Hero;
+import com.unibo.model.Character;
 
 /**
  * Healthbar for the main character.
@@ -51,10 +51,11 @@ public class Healthbar extends ProgressBar {
 
     /**
      * Updates the health bar.
-     * @param hero
+     * 
+     * @param pg for the health value
      */
-    public void update(final Hero hero) {
-        this.setValue((float) hero.getCurrentHp() / (float) hero.getMaxHp());
+    public void update(final Character pg) {
+        this.setValue((float) pg.getCurrentHp() / (float) pg.getMaxHp());
     }
 
     /**

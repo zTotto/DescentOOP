@@ -61,7 +61,7 @@ public class HeroView extends CharacterView {
     }
 
     @Override
-    public void attack() {
+    public void selfAttack() { // TODO
         System.out.println("Attack!");
         this.getHero().setCurrentHp((int) (0.5f * this.getHero().getCurrentHp()));
     }

@@ -34,6 +34,7 @@ public class PauseMenu {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 gameScreen.disablePause();
+                menu.setVisible(false);
             }
         });
         menu.add(resume).uniform().fill().spaceBottom(10);

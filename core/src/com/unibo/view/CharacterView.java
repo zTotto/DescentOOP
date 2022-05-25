@@ -110,7 +110,7 @@ public abstract class CharacterView {
      * @return the attack animation
      */
     public TextureRegion getAttackText(final float time) {
-        return animationAttack.getKeyFrame(time, true);
+        return animationAttack.getKeyFrame(time, false);
     }
 
     /**
@@ -121,11 +121,10 @@ public abstract class CharacterView {
         return animationAttack;
     }
 
-    // TODO: Implement attack mechanic.
     /**
      * Makes the character attack.
      */
-    public abstract void attack();
+    public abstract void selfAttack();
 
     /**
      * Method to check whether the character is currently attacking.
