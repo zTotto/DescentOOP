@@ -188,7 +188,6 @@ public class GameScreen implements Screen {
                     if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
                         if (this.lvlList.hasNextLevel()) {
                             this.currentLvl = this.lvlList.getNextLevel();
-                            System.out.println("NEXT LEVEL");
 
                             Gdx.app.postRunnable(() -> {
                                 mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));

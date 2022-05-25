@@ -3,6 +3,8 @@ package com.unibo.model;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * 
@@ -46,16 +48,19 @@ public final class LevelsList {
      * @return true if there is at least another level
      */
     public boolean hasNextLevel() {
-        return this.levels.size() - 1 > this.counter;
+        return this.levels.size() > this.counter + 1;
     }
 
     /**
      * 
-     * @return the next level
+     * @return the next level if there is one, NoSuchElementException otherwise
      */
     public Level getNextLevel() {
+        if (this.hasNextLevel()) {
             this.counter++;
             return this.levels.get(this.counter);
+        }
+        throw new NoSuchElementException();
     }
 
     /**
