@@ -2,6 +2,8 @@ package com.unibo.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * 
@@ -49,11 +51,13 @@ public final class LevelsList {
 
     /**
      * 
-     * @return the next level
+     * @return the next level if there is one, NoSuchElementException otherwise
      */
     public Level getNextLevel() {
-        this.counter++;
-        return this.levels.get(this.counter);
+        if (this.hasNextLevel()) {
+            return this.levels.get(this.counter++);
+        }
+        throw new NoSuchElementException();
     }
 
     /**
