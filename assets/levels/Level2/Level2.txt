@@ -2,12 +2,16 @@
 //EnumName ITEM_NAME xCoordinate,yCoordinate
 //MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
 
-MapImpl levels/Level2/Interior.tmx 970,323 0.333
-HealthPotionStats BASIC_HEALTH_POTION 1539,346
-HealthPotionStats BASIC_HEALTH_POTION 1660,334
-HealthPotionStats MEDIUM_HEALTH_POTION 1676,366
-DoorKey 1923,1470
-DoorPosition 1116,2274
-MobStats TROLL 5 1783,321
-WeaponStats LONGSWORD 1560,288
-WeaponStats GREATAXE 1502,288
+MapImpl levels/Level2/Interior.tmx 800,272 0.275
+HealthPotionStats BASIC_HEALTH_POTION 1406,830
+HealthPotionStats BASIC_HEALTH_POTION 1273,428
+HealthPotionStats MEDIUM_HEALTH_POTION 1164,606
+HealthPotionStats MEDIUM_HEALTH_POTION 1459,967
+HealthPotionStats MEDIUM_HEALTH_POTION 1459,950
+DoorKey 215,815
+DoorPosition 798,638
+MobStats TROLL 5 186,426
+MobStats TROLL 5 186,174
+MobStats TROLL 5 470,881
+MobStats TROLL 5 470,700
+WeaponStats GREATAXE 1359,830

@@ -2,12 +2,12 @@
 //EnumName ITEM_NAME xCoordinate,yCoordinate
 //MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
 
-MapImpl levels/Level3/Maze.tmx 1237,1681 0.333
-HealthPotionStats BASIC_HEALTH_POTION 1539,346
-HealthPotionStats BASIC_HEALTH_POTION 1660,334
-HealthPotionStats MEDIUM_HEALTH_POTION 1676,366
-DoorKey 1923,1470
-DoorPosition 1116,2274
-MobStats TROLL 5 1783,321
-WeaponStats LONGSWORD 1560,288
-WeaponStats GREATAXE 1502,288
+MapImpl levels/Level3/Maze.tmx 1106,38 0.333
+HealthPotionStats MEDIUM_HEALTH_POTION 1880,350
+HealthPotionStats MEDIUM_HEALTH_POTION 1880,1120
+HealthPotionStats MEDIUM_HEALTH_POTION 340,350
+HealthPotionStats MEDIUM_HEALTH_POTION 340,1120
+DoorKey 1105,3750
+DoorPosition 1105,3750
+MobStats TROLL 5 984,2100
+MobStats TROLL 5 1233,2100
