@@ -164,7 +164,7 @@ public abstract class Character {
     public int getInitialSpeed() {
         return initialSpeed;
     }
-    
+
     /**
      * 
      * @return character speed.

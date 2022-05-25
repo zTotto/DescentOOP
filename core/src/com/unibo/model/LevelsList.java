@@ -3,7 +3,6 @@ package com.unibo.model;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * 
@@ -55,7 +54,7 @@ public final class LevelsList {
      */
     public Level getNextLevel() {
         if (this.hasNextLevel()) {
-            return this.levels.get(this.counter++);
+            return this.levels.get(++this.counter);
         }
         throw new NoSuchElementException();
     }
