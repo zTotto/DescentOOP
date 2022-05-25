@@ -53,6 +53,7 @@ public class SettingsMenu implements Screen {
         backToMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(menu);
             }
         });

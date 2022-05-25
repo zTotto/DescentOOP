@@ -4,6 +4,7 @@ import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.MobStats;
 import com.unibo.util.Position;
+import com.unibo.util.WeaponStats;
 
 /**
  * A class to model a mob.
@@ -12,16 +13,20 @@ import com.unibo.util.Position;
 public class Mob extends Character {
 
     private final String name;
+    private final int expGiven;
 
     /**
      * Constructor for the mob.
      * 
-     * @param modType        type of the created mob
-     * @param startingWeapon starting weapon of the created mob
+     * @param mobType      type of the created mob
+     * @param weaponDamage additional damage to apply to this mob (default damage is
+     *                     4);
      */
-    public Mob(final MobStats modType, final Weapon startingWeapon) {
-        super(modType.getHp(), modType.getSpeed(), startingWeapon, modType.getMana());
-        this.name = modType.getName();
+    public Mob(final MobStats mobType, final int weaponDamage) {
+        super(mobType.getHp(), mobType.getSpeed(), new Weapon(WeaponStats.FISTS, "0"), mobType.getMana());
+        this.getCurrentWeapon().applyDamageMod(weaponDamage);
+        this.name = mobType.getName();
+        this.expGiven = mobType.getExpGiven();
     }
 
     /**
@@ -68,6 +73,9 @@ public class Mob extends Character {
     public void setRange(final int range) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mob setPos(final Position p) {
         if (!isDead()) {
@@ -77,8 +85,18 @@ public class Mob extends Character {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mob setPos(final int xCoord, final int yCoord) {
         return this.setPos(new Position(xCoord, yCoord));
+    }
+
+    /**
+     * @return the exp given from the monster
+     */
+    public int getExpGiven() {
+        return expGiven;
     }
 }

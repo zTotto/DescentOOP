@@ -33,7 +33,7 @@ public class HeroView extends CharacterView {
         setDir(Direction.STILL);
 
         this.input.handleInput(KeyBindings.INCREASES_SPEED).ifPresentOrElse(t -> t.executeCommand(this),
-                () -> this.getHero().setSpeed(200));
+                () -> this.getHero().setSpeed(this.getHero().getInitialSpeed()));
 
         this.input.handleInput(KeyBindings.MOVE_LEFT).ifPresent(t -> t.executeCommand(this));
 
@@ -63,6 +63,6 @@ public class HeroView extends CharacterView {
     @Override
     public void selfAttack() { // TODO
         System.out.println("Attack!");
-        this.getHero().setCurrentHp((int) (0.5f * this.getHero().getCurrentHp()));
+        this.getHero().setCurrentHp((int) (this.getHero().getCurrentHp() - 0.4 * this.getHero().getMaxHp()));
     }
 }

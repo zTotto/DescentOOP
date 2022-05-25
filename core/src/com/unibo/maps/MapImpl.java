@@ -2,14 +2,18 @@ package com.unibo.maps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.unibo.game.Descent;
 import com.unibo.model.items.Item;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
@@ -21,33 +25,90 @@ import com.unibo.view.CharacterView;
 public class MapImpl implements Map {
 
     private final MapLayer collisionLayer;
+    private final MapLayer teleportLayer;
+    private final MapLayer specialTilesLayer;
     private final TiledMap map;
     private final Position startingPosition;
     private final List<Pair<Item, Position>> itemList = new ArrayList<>();
+    private final float unitScale;
 
     /**
      * Constructor for a map.
      * 
      * @param path        of the map
      * @param startingPos of the hero
+     * @param unitScale   float value to transform world units to pixel
+     * @param isFileExt   true if the file is external
      */
-    public MapImpl(final String path, final Position startingPos) {
-        super();
-        this.map = new TmxMapLoader().load(path);
+    public MapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
+        if (isFileExt) {
+            this.map = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(Descent.CUSTOM_LEVELS_PATH + path);
+        } else {
+            this.map = new TmxMapLoader().load(path);
+        }
+        this.unitScale = unitScale;
         this.collisionLayer = this.map.getLayers().get("objects");
+        this.teleportLayer = this.map.getLayers().get("teleports");
+        this.specialTilesLayer = this.map.getLayers().get("special");
         this.startingPosition = startingPos;
     }
 
     @Override
-    public boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+    public Boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+        return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
+    }
+
+    @Override
+    public Boolean checkTeleport(final CharacterView charView) {
+        return teleportLayer == null ? false
+                : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
+                        charView.getCharacter().getPos().getyCoord()), teleportLayer, TileAction.Teleport);
+    }
+
+    @Override
+    public Boolean checkDamageTile(final CharacterView charView) {
+        return specialTilesLayer == null ? false
+                : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
+                        charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.Damage);
+    }
+
+    private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
+            final TileAction action) {
         final Rectangle rect = charView.getCharRect();
-        rect.setPosition(newX - (int) (rect.getWidth() / 2), newY);
-        for (final RectangleMapObject rectObj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
-            if (Intersector.overlaps(rect, rectObj.getRectangle())) {
-                return false;
+        rect.setPosition(pos.getxCoord() - (int) (rect.getWidth() / 2), pos.getyCoord());
+        Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
+                rect.y + rect.height, rect.x, rect.y + rect.height });
+        for (final PolygonMapObject polyMapObj : layer.getObjects().getByType(PolygonMapObject.class)) {
+            Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
+            var verts = polyObj.getTransformedVertices();
+            for (int i = 0; i < verts.length; i++) {
+                verts[i] *= unitScale;
+            }
+            if (Intersector.overlapConvexPolygons(poly, polyObj)) {
+                switch (action) {
+                case Collision:
+                    return false;
+                case Teleport:
+                    charView.getCharacter().setPos((int) ((int) polyMapObj.getProperties().get("X") * unitScale),
+                            (int) ((int) polyMapObj.getProperties().get("Y") * unitScale));
+                    return true;
+                case Damage:
+                    return true;
+                default:
+                    break;
+                }
             }
         }
-        return true;
+        switch (action) {
+        case Collision:
+            return true;
+        case Damage:
+            return false;
+        case Teleport:
+            return false;
+        default:
+            return true;
+        }
     }
 
     @Override
@@ -68,6 +129,16 @@ public class MapImpl implements Map {
     @Override
     public MapLayer getCollisionLayer() {
         return collisionLayer;
+    }
+
+    @Override
+    public Optional<MapLayer> getTeleportLayer() {
+        return Optional.ofNullable(teleportLayer);
+    }
+
+    @Override
+    public Optional<MapLayer> getSpecialTilesLayer() {
+        return Optional.ofNullable(specialTilesLayer);
     }
 
     @Override

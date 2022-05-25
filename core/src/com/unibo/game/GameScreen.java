@@ -3,7 +3,6 @@ package com.unibo.game;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -15,31 +14,22 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
-import com.unibo.maps.Map;
-import com.unibo.maps.MapImpl;
 import com.unibo.model.HealSkill;
 import com.unibo.model.Hero;
 import com.unibo.model.Level;
 import com.unibo.model.LevelsList;
-import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
-import com.unibo.model.items.DoorKey;
-import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
-import com.unibo.model.items.Weapon;
 import com.unibo.util.Direction;
-import com.unibo.util.HealthPotionStats;
-import com.unibo.util.MobStats;
+import com.unibo.util.LevelListReader;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
-import com.unibo.util.WeaponStats;
 import com.unibo.view.Expbar;
 import com.unibo.view.Healthbar;
 import com.unibo.view.HeroView;
@@ -51,6 +41,7 @@ import com.unibo.view.MobView;
  * Game screen class.
  */
 public class GameScreen implements Screen {
+
     private static final int MANA_UNIT = 1;
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
@@ -65,7 +56,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    private Map mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+    private LevelListReader reader;
 
     private final Texture hpTexture;
     private final Image hpPotionIcon;
@@ -77,7 +68,6 @@ public class GameScreen implements Screen {
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
-    private int startingGameTime;
 
     private boolean isPaused;
     private boolean isSkillMenuOpen;
@@ -99,10 +89,14 @@ public class GameScreen implements Screen {
     /**
      * Main game scene.
      * 
-     * @param game
+     * @param game       Application
+     * @param listReader File reader used to load levels
      */
-    public GameScreen(final Descent game) {
+    public GameScreen(final Descent game, final LevelListReader listReader) {
+
         this.game = game;
+
+        reader = listReader;
 
         // Menu
         menu = new PauseMenu(this);
@@ -122,21 +116,12 @@ public class GameScreen implements Screen {
         expbar = new Expbar(Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() / 40f));
         expbar.setPosition(0, 0);
 
-        // World Items
+        // World Texture
         hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
 
         // Level
-        lvlList = new LevelsList();
+        lvlList = new LevelsList(reader.getLevels());
         currentLvl = lvlList.getCurrentLevel();
-        currentLvl
-                .addItems(new Weapon(WeaponStats.GREATAXE, "1").setPos(new Position(400, 1016)),
-                        new Weapon(WeaponStats.LONGSWORD, "2").setPos(new Position(500, 1016)),
-                        new HealthPotion(HealthPotionStats.MEDIUM_HEALTH_POTION, "0").setPos(new Position(100, 900)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(200, 1016)),
-                        new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0").setPos(new Position(300, 1016)),
-                        new DoorKey().setPos(new Position(600, 1016)))
-                .addEnemies(
-                        new Mob(MobStats.TROLL, new Weapon(WeaponStats.LONGSWORD, "2")).setPos(new Position(100, 800)));
         lvlView = new LevelView(currentLvl);
 
         // Hp Potion Icon
@@ -148,8 +133,7 @@ public class GameScreen implements Screen {
         Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, new Weapon(WeaponStats.LONGSWORD, "0"), MAX_MANA),
-                this.input);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -157,7 +141,7 @@ public class GameScreen implements Screen {
         soundtrack.setLooping(true);
         soundtrack.play();
         soundtrack.setVolume(0.4f);
-        heroView.getCharacter().setCurrentMap(mappa);
+        heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
         // Hp Potion Quantity
@@ -181,10 +165,10 @@ public class GameScreen implements Screen {
         this.input.addCommand(KeyBindings.ATTACK, t -> {
             t.setIsAttacking(true);
             t.getAttackSound().play();
-            // t.selfAttack();
             var last = t.getCharacter().hitEnemyFromLevel(currentLvl);
             if (last.isPresent()) {
-                this.lastDeadEnemies.add(new Pair<>(last.get(), 0f));
+                this.lastDeadEnemies.add(new Pair<>(last.get().getFirst(), 0f));
+                this.heroView.getHero().addExp(last.get().getSecond());
             }
             last = Optional.empty();
             currentLvl.removeDeadMobs();
@@ -216,13 +200,21 @@ public class GameScreen implements Screen {
                             this.currentLvl = this.lvlList.getNextLevel();
 
                             Gdx.app.postRunnable(() -> {
-                                mappa = new MapImpl("maps/testmap.tmx", new Position(100, 900));
+                                lvlView.updateLevel(currentLvl);
                                 renderer.getMap().dispose();
-                                renderer.setMap(mappa.getTiledMap());
-                                // this.show();
+                                renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
+                                        currentLvl.getMap().getSecond());
+                                heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
+                                heroView.getCharacter()
+                                        .setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
+                                heroView.getHero().resetKey();
                             });
                         } else {
-                            game.setScreen(new GameOverMenu(game));
+                            Gdx.app.postRunnable(() -> {
+                                this.soundtrack.pause();
+                                this.soundtrack.dispose();
+                                game.setScreen(new GameOverMenu(game, "You Won!"));
+                            });
                         }
                     }
                 });
@@ -231,11 +223,22 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        renderer = new OrthogonalTiledMapRenderer(mappa.getTiledMap());
+        renderer = new OrthogonalTiledMapRenderer(currentLvl.getMap().getFirst().getTiledMap(),
+                currentLvl.getMap().getSecond());
     }
 
     @Override
     public void render(final float delta) {
+
+        // Dead Hero check
+        if (this.heroView.getHero().isDead()) {
+            this.isPaused = true;
+            Gdx.app.postRunnable(() -> {
+                this.soundtrack.pause();
+                this.soundtrack.dispose();
+                game.setScreen(new GameOverMenu(game, "You Died!"));
+            });
+        }
 
         // Hero Coordinates
         final int heroX = heroView.getCharacter().getPos().getxCoord();
@@ -286,9 +289,17 @@ public class GameScreen implements Screen {
 
             this.soundtrack.play();
             gameTime += Gdx.graphics.getDeltaTime();
-            if ((int) gameTime == startingGameTime + 1) {
-                startingGameTime++;
-                heroView.getHero().increaseCurrentMana(10);
+
+            // Timed stuff
+            if (gameTime > 0.5) {
+                gameTime = 0;
+                // Mana Regen
+                heroView.getHero().increaseCurrentMana(5);
+                // Spike Tiles Damage
+                if (currentLvl.getMap().getFirst().checkDamageTile(heroView)) {
+                    heroView.getCharacter().setCurrentHp(
+                            heroView.getCharacter().getCurrentHp() - (int) (0.05 * heroView.getCharacter().getMaxHp()));
+                }
             }
 
             // Item pick up
@@ -312,20 +323,21 @@ public class GameScreen implements Screen {
             }
 
             if (heroView.getIsAttacking()) {
-                // Attack timer
-                attackTime += Gdx.graphics.getDeltaTime();
 
                 batch.draw(heroView.getAttackText(attackTime), heroTextureX, heroY);
+
+                // Attack timer
+                attackTime += Gdx.graphics.getDeltaTime();
 
                 if (heroView.getAttackAnim().isAnimationFinished(attackTime)) {
                     heroView.setIsAttacking(false);
                     attackTime = 0;
                 }
             } else {
+                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
+
                 // Animation timer
                 elapsedTime += Gdx.graphics.getDeltaTime();
-
-                batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
             }
 
             // Blood animation on dead mob
@@ -334,15 +346,17 @@ public class GameScreen implements Screen {
                 var anim = new Animation<>(1f / 12f, bloodAnim);
                 batch.draw(anim.getKeyFrame(p.getSecond(), false),
                         p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
-                        p.getFirst().getyCoord());
+                        p.getFirst().getyCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionWidth() / 4f);
 
+                // Timer
                 p.setSecond(p.getSecond() + Gdx.graphics.getDeltaTime());
+
                 if (anim.isAnimationFinished(p.getSecond())) {
                     lastDeadEnemies.remove(p);
                 }
             }
-
             heroView.move();
+            currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
 
         batch.end();
@@ -375,8 +389,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
-            System.out.println(heroView.getHero().getInv().toString());
-            System.out.println(lastDeadEnemies);
+            System.out.println(heroView.getHero().getPos());
         }
     }
 
@@ -404,7 +417,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        this.dispose();
     }
 
     /**

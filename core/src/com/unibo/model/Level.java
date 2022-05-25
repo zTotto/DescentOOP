@@ -3,9 +3,11 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.unibo.maps.Map;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
+import com.unibo.util.Pair;
 import com.unibo.util.Position;
 
 /**
@@ -18,14 +20,18 @@ public class Level {
     private final List<Mob> enemies;
     private Position doorPosition = new Position(0, 0);
     private final List<Position> deadMobPositions;
+    private final Pair<Map, Float> map;
 
     /**
-     * Empty constructor for a level.
+     * Constructor for a level that requires a map.
+     * 
+     * @param mapToAdd
      */
-    public Level() {
+    public Level(final Pair<Map, Float> mapToAdd) {
         items = new LinkedList<>();
         enemies = new LinkedList<>();
         deadMobPositions = new LinkedList<>();
+        map = mapToAdd;
     }
 
     /**
@@ -54,6 +60,15 @@ public class Level {
             this.enemies.add(mob);
         }
         return this;
+    }
+
+    /**
+     * Sets the position of the door to the specified one.
+     * 
+     * @param doorPos new position of the door
+     */
+    public void setDoorPosition(final Position doorPos) {
+        this.doorPosition.setPosition(doorPos);
     }
 
     /**
@@ -129,12 +144,12 @@ public class Level {
     }
 
     /**
-     * Sets the position of the door to the specified one.
+     * Gets the map and its unitScale.
      * 
-     * @param doorPosition new position of the door
+     * @return a pair containing the map and the unitScale (float)
      */
-    public void setDoorPosition(final Position doorPosition) {
-        this.doorPosition = doorPosition;
+    public Pair<Map, Float> getMap() {
+        return this.map;
     }
 
     /**

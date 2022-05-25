@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.unibo.maps.Map;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Weapon;
+import com.unibo.util.Pair;
 import com.unibo.util.Position;
 
 /**
@@ -25,6 +26,7 @@ public abstract class Character {
     private int currentMana;
     private int maxMana;
     private int maxHp;
+    private final int initialSpeed;
     private int speed;
     private final Position pos = new Position(0, 0);
     private final List<Weapon> weapons;
@@ -45,7 +47,8 @@ public abstract class Character {
         this.currentHp = maxHp;
         this.maxMana = maxMana;
         this.setCurrentMana(maxMana);
-        this.setSpeed(speed);
+        this.initialSpeed = speed;
+        this.setSpeed(this.initialSpeed);
         this.currentWeapon = 0;
         this.inv = new Inventory();
         weapons = new LinkedList<>();
@@ -155,6 +158,13 @@ public abstract class Character {
 
     // Speed related
 
+    /**
+     * @return the initial speed of the character.
+     */
+    public int getInitialSpeed() {
+        return initialSpeed;
+    }
+    
     /**
      * 
      * @return character speed.
@@ -273,12 +283,12 @@ public abstract class Character {
      * @param lvl
      * @return the position of the dead enemy
      */
-    public Optional<Position> hitEnemyFromLevel(final Level lvl) {
+    public Optional<Pair<Position, Integer>> hitEnemyFromLevel(final Level lvl) {
         if (!this.isDead()) {
             for (final Mob e : lvl.getEnemies()) {
                 if (this.canHit(e)) {
                     e.setCurrentHp(e.getCurrentHp() - this.getCurrentWeapon().getDamage());
-                    return e.isDead() ? Optional.of(e.getPos()) : Optional.empty();
+                    return e.isDead() ? Optional.of(new Pair<>(e.getPos(), e.getExpGiven())) : Optional.empty();
                 }
             }
         }

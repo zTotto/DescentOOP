@@ -14,9 +14,9 @@ public enum WeaponStats {
      */
     GREATAXE("Greataxe", 15, 48),
     /**
-     * Spear: Damage: 8 Range: 96.
+     * Fists: Damage: 4 Range: 48.
      */
-    SPEAR("Spear", 8, 96);
+    FISTS("Fists", 4, 48);
 
     private final String name;
     private final int damage;
