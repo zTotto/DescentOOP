@@ -13,6 +13,7 @@ import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.DoorKey;
 import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.Weapon;
 
 /**
@@ -20,7 +21,9 @@ import com.unibo.model.items.Weapon;
  */
 public class LevelFileReader {
 
-    private final List<HealthPotion> potions;
+    private static final double MANA_MODIFIER = 0.25; 
+    private final List<HealthPotion> healthPotions;
+    private final List<ManaPotion> manaPotions;
     private final DoorKey key;
     private final List<Mob> mobs;
     private final List<Weapon> weapons;
@@ -37,7 +40,8 @@ public class LevelFileReader {
             throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
         List<String> linesList = Arrays.asList(file.readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
-        potions = new LinkedList<>();
+        healthPotions = new LinkedList<>();
+        manaPotions = new LinkedList<>();
         key = new DoorKey();
         mobs = new LinkedList<>();
         weapons = new LinkedList<>();
@@ -45,7 +49,8 @@ public class LevelFileReader {
         doorPosition = new Position();
         readMap(linesList.stream().filter(s -> s.contains("MapImpl")).limit(1).collect(Collectors.joining()),
                 isFileExt);
-        readPotions(linesList.stream().filter(s -> s.contains("HealthPotionStats")).collect(Collectors.toList()));
+        readHealthPotions(linesList.stream().filter(s -> s.contains("HealthPotionStats")).collect(Collectors.toList()));
+        readManaPotions(linesList.stream().filter(s -> s.contains("ManaPotion")).collect(Collectors.toList()));
         readKey(linesList.stream().filter(s -> s.contains("DoorKey")).limit(1).collect(Collectors.joining()));
         readMobs(linesList.stream().filter(s -> s.contains("MobStats")).collect(Collectors.toList()));
         readWeapons(linesList.stream().filter(s -> s.contains("WeaponStats")).collect(Collectors.toList()));
@@ -53,11 +58,18 @@ public class LevelFileReader {
                 linesList.stream().filter(s -> s.contains("DoorPosition")).limit(1).collect(Collectors.joining()));
     }
 
-    private void readPotions(final List<String> potionLines) {
+    private void readHealthPotions(final List<String> potionLines) {
         potionLines.stream()
-                .forEach(l -> potions.add(new HealthPotion(HealthPotionStats.valueOf(l.split(" ")[1]), "0")
+                .forEach(l -> healthPotions.add(new HealthPotion(HealthPotionStats.valueOf(l.split(" ")[1]), "0")
                         .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                                 Integer.parseInt(l.split(" ")[2].split(",")[1])))));
+    }
+
+    private void readManaPotions(final List<String> potionLines) {
+        potionLines.stream()
+        .forEach(l -> manaPotions.add(new ManaPotion("Mana Potion", "0", MANA_MODIFIER)
+                .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
+                        Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
 
     private void readKey(final String keyLine) {
@@ -98,7 +110,16 @@ public class LevelFileReader {
      * @return a list containing all the potions of the file
      */
     public List<HealthPotion> getHealthPotions() {
-        return potions;
+        return healthPotions;
+    }
+
+    /**
+     * Gets the potions from the file.
+     * 
+     * @return a list containing all the potions of the file
+     */
+    public List<ManaPotion> getManaPotions() {
+        return manaPotions;
     }
 
     /**
@@ -145,7 +166,8 @@ public class LevelFileReader {
     public Level getLevel() {
         Level lvl = new Level(map);
         mobs.forEach(m -> lvl.addEnemies(m));
-        potions.forEach(p -> lvl.addItems(p));
+        healthPotions.forEach(p -> lvl.addItems(p));
+        manaPotions.forEach(p -> lvl.addItems(p));
         weapons.forEach(w -> lvl.addItems(w));
         lvl.addItems(key);
         lvl.setDoorPosition(doorPosition);
