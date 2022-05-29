@@ -15,9 +15,9 @@ public class ManaPotion extends ConsumableItem {
     /**
      * Constructor for a Mana potion.
      * 
-     * @param name
+     * @param name of the item
      * @param id of the item
-     * @param mod
+     * @param mod to apply to the user of the item
      */
     public ManaPotion(final String name, final String id, final double mod) {
         super(name, id, mod);

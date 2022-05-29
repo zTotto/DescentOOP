@@ -6,6 +6,7 @@ import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
+import com.unibo.model.items.WearableItem;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
@@ -98,6 +99,8 @@ public class Hero extends Character {
                         this.getWeapons().add((Weapon) item);
                     } else if (item instanceof ConsumableItem) {
                         this.getInv().addItem(item);
+                    } else if (item instanceof WearableItem) {
+                        ((WearableItem) item).wear(this);
                     } else {
                         this.key = true;
                     }

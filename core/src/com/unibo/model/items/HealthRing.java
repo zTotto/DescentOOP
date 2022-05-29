@@ -1,5 +1,6 @@
 package com.unibo.model.items;
 
+import com.unibo.model.Character;
 import com.unibo.util.Position;
 
 /**
@@ -7,12 +8,12 @@ import com.unibo.util.Position;
  * Item that increases maximum Health.
  *
  */
-public class HealthRing extends Item {
+public class HealthRing extends WearableItem {
 
     /**
-     * Constructor for a Health ring.
+     * Constructor for a health ring.
      * 
-     * @param name
+     * @param name of the item
      * @param id of the item
      */
     public HealthRing(final String name, final String id) {
@@ -20,12 +21,19 @@ public class HealthRing extends Item {
     }
 
     @Override
-    public final HealthRing setPos(final Position p) {
+    public void wear(final Character pg) {
+        pg.setMaxHp(pg.getMaxHp() + pg.getMaxHp() / DIVISOR);
+    }
+
+    @Override
+    public Item setPos(final Position p) {
         if (this.isPosNull()) {
             this.resetPos();
         }
         this.getPos().setPosition(p);
         return this;
     }
+
+
 
 }

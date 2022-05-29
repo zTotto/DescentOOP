@@ -15,6 +15,7 @@ import com.unibo.model.items.DoorKey;
 import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.Weapon;
+import com.unibo.model.items.WearableItem;
 
 /**
  * Class to read level data from text files.
@@ -24,6 +25,7 @@ public class LevelFileReader {
     private static final double MANA_MODIFIER = 0.25; 
     private final List<HealthPotion> healthPotions;
     private final List<ManaPotion> manaPotions;
+    private final List<WearableItem> wearable;
     private final DoorKey key;
     private final List<Mob> mobs;
     private final List<Weapon> weapons;
@@ -42,6 +44,7 @@ public class LevelFileReader {
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         healthPotions = new LinkedList<>();
         manaPotions = new LinkedList<>();
+        wearable = new LinkedList<>();
         key = new DoorKey();
         mobs = new LinkedList<>();
         weapons = new LinkedList<>();
@@ -119,6 +122,15 @@ public class LevelFileReader {
      * @return a list containing all the potions of the file
      */
     public List<ManaPotion> getManaPotions() {
+        return manaPotions;
+    }
+
+    /**
+     * Gets the wearable from the file.
+     * 
+     * @return a list containing all the wearable of the file
+     */
+    public List<ManaPotion> getWearable() {
         return manaPotions;
     }
 
