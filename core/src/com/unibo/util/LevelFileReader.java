@@ -13,6 +13,7 @@ import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.DoorKey;
 import com.unibo.model.items.HealthPotion;
+import com.unibo.model.items.HealthRing;
 import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.Weapon;
 import com.unibo.model.items.WearableItem;
@@ -54,6 +55,7 @@ public class LevelFileReader {
                 isFileExt);
         readHealthPotions(linesList.stream().filter(s -> s.contains("HealthPotionStats")).collect(Collectors.toList()));
         readManaPotions(linesList.stream().filter(s -> s.contains("ManaPotion")).collect(Collectors.toList()));
+        readWearable(linesList.stream().filter(s -> s.contains("Wearable")).collect(Collectors.toList()));
         readKey(linesList.stream().filter(s -> s.contains("DoorKey")).limit(1).collect(Collectors.joining()));
         readMobs(linesList.stream().filter(s -> s.contains("MobStats")).collect(Collectors.toList()));
         readWeapons(linesList.stream().filter(s -> s.contains("WeaponStats")).collect(Collectors.toList()));
@@ -71,6 +73,13 @@ public class LevelFileReader {
     private void readManaPotions(final List<String> potionLines) {
         potionLines.stream()
         .forEach(l -> manaPotions.add(new ManaPotion("Mana Potion", "0", MANA_MODIFIER)
+                .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
+                        Integer.parseInt(l.split(" ")[2].split(",")[1])))));
+    }
+
+    private void readWearable(final List<String> wearableLines) {
+        wearableLines.stream()
+        .forEach(l -> wearable.add((WearableItem) new HealthRing("Health Ring", "0")
                 .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                         Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
@@ -130,8 +139,8 @@ public class LevelFileReader {
      * 
      * @return a list containing all the wearable of the file
      */
-    public List<ManaPotion> getWearable() {
-        return manaPotions;
+    public List<WearableItem> getWearable() {
+        return wearable;
     }
 
     /**
@@ -180,6 +189,7 @@ public class LevelFileReader {
         mobs.forEach(m -> lvl.addEnemies(m));
         healthPotions.forEach(p -> lvl.addItems(p));
         manaPotions.forEach(p -> lvl.addItems(p));
+        wearable.forEach(w -> lvl.addItems(w));
         weapons.forEach(w -> lvl.addItems(w));
         lvl.addItems(key);
         lvl.setDoorPosition(doorPosition);

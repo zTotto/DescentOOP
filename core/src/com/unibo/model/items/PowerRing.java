@@ -5,29 +5,30 @@ import com.unibo.util.Position;
 
 /**
  * 
- * Item that increases maximum Health.
+ * Item that increases damage.
  *
  */
-public class HealthRing extends WearableItem {
+public class PowerRing extends WearableItem {
 
     /**
-     * Constructor for a health ring.
+     * Constructor for a power ring.
      * 
      * @param name of the item
      * @param id of the item
      */
-    public HealthRing(final String name, final String id) {
+    public PowerRing(final String name, final String id) {
         super(name, id);
     }
 
     /**
-     * Increase the pg maximum health.
+     * Icrease the pg damage.
      * 
      * @param pg the character that wear the item
      */
     @Override
     public void wear(final Character pg) {
-        pg.setMaxHp(pg.getMaxHp() + pg.getMaxHp() / DIVISOR);
+        final Weapon weapon = pg.getCurrentWeapon();
+        weapon.applyDamageMod(weapon.getDamage() + weapon.getDamage() / DIVISOR);
     }
 
     @Override
@@ -38,7 +39,5 @@ public class HealthRing extends WearableItem {
         this.getPos().setPosition(p);
         return this;
     }
-
-
 
 }
