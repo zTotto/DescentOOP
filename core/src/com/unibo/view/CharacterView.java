@@ -26,6 +26,7 @@ public abstract class CharacterView {
     private final Rectangle charRect;
     private final Sound attackSound;
     private Boolean isAttacking = false;
+    private boolean isMoving = false;
 
     /**
      * Constructor for this class.
@@ -89,7 +90,7 @@ public abstract class CharacterView {
         characterTextureAttack[0] = tmp[1][0];
         characterTextureAttack[1] = tmp[1][1];
         characterTextureAttack[2] = tmp[1][2];
-        animationAttack = new Animation<>(1f / 3f, characterTextureAttack);
+        animationAttack = new Animation<>(1f / 6f, characterTextureAttack);
     }
 
     /**
@@ -215,5 +216,20 @@ public abstract class CharacterView {
      */
     public Sound getAttackSound() {
         return attackSound;
+    }
+
+    /**
+     * @return true if the hero is moving
+     */
+    public boolean getIsMoving() {
+        return isMoving;
+    }
+
+    /**
+     * Sets whether the hero is moving or not.
+     * @param isMoving
+     */
+    public void setIsMoving(final boolean isMoving) {
+        this.isMoving = isMoving;
     }
 }
