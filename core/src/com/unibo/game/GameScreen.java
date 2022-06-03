@@ -385,7 +385,7 @@ public class GameScreen implements Screen {
             heroView.move();
             for (MobView mob : lvlView.getMobTextures()) {
             	mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
-				mob.moveAI(lvlView);
+				mob.update(lvlView);
 			}
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }

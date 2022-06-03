@@ -1,5 +1,6 @@
 package com.unibo.view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,7 +49,8 @@ public class MobView extends CharacterView {
 	    	return;
 	    	}
     	else {
-    		List<MobView> mobs = level.getMobTextures();
+    		System.out.println(level.getMobTextures().toString());
+    		List<MobView> mobs = new ArrayList<>(level.getMobTextures());
     		mobs.remove(this);
     		for (MobView mobView : mobs) {
 				if (this.getCharRect().overlaps(mobView.getCharRect())) {
@@ -69,5 +71,8 @@ public class MobView extends CharacterView {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public void update(LevelView level) {
+		this.moveAI(level);
+	}
 }
