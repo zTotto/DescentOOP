@@ -19,6 +19,7 @@ public class LevelView {
     private final List<Pair<Item, Animation<TextureRegion>>> itemTextures;
     private final List<MobView> mobTextures;
     private final List<Healthbar> hpBars;
+    private HeroView heroview;
 
     /**
      * @param level Level from where to get the items and characters
@@ -115,4 +116,12 @@ public class LevelView {
     public List<Healthbar> getMobHpBars() {
         return this.hpBars;
     }
+
+	public HeroView getHeroView() {
+		return heroview;
+	}
+
+	public void setHeroView(HeroView hero) {
+		this.heroview = hero;
+	}
 }

@@ -383,6 +383,10 @@ public class GameScreen implements Screen {
             elapsedTime += Gdx.graphics.getDeltaTime();
 
             heroView.move();
+            for (MobView mob : lvlView.getMobTextures()) {
+            	mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
+				mob.moveAI(lvlView);
+			}
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
 

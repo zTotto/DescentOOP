@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="9" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="5">
+ <tileset firstgid="1" source="wall_sheet.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="9" height="9">
+  <data encoding="csv">
+6,3221225476,3221225476,3221225476,3221225476,3221225476,3221225476,3221225476,2684354566,
+2684354564,30,30,30,30,30,30,30,1610612740,
+2684354564,30,30,30,30,30,30,30,1610612740,
+2684354564,30,30,1610612749,4,13,30,30,1610612740,
+2684354564,30,30,1610612740,25,2684354564,30,30,1610612740,
+2684354564,30,30,3221225485,3221225476,2684354573,30,30,1610612740,
+2684354564,30,30,30,30,30,30,30,1610612740,
+2684354564,30,30,30,30,30,30,30,1610612740,
+1610612742,4,4,4,4,4,4,4,3221225478
+</data>
+ </layer>
+ <objectgroup id="2" name="poligon">
+  <object id="1" x="-5.33333" y="1.33333" width="526" height="55.3333"/>
+  <object id="2" x="-0.666667" y="58" width="56" height="516.667"/>
+  <object id="3" x="53.3333" y="518.667" width="522" height="84.6667"/>
+  <object id="4" x="520.667" y="4.66667" width="72.6667" height="514"/>
+ </objectgroup>
+</map>
