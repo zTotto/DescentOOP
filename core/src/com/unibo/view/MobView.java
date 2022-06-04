@@ -10,6 +10,7 @@ import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
+import com.unibo.util.LineOfSight;
 import com.unibo.util.Pathfinding;
 import com.unibo.util.AI;
 
@@ -36,7 +37,7 @@ public class MobView extends CharacterView {
      * @param level 
      */
     public void moveAI(LevelView levelView, Level level) {
-    	if (!Pathfinding.lineOfSight(this, levelView, level.getMap().getFirst())) {
+    	if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
 	    	final Movement move;
 	    	if (moveBuffer <= 15) {
 	    		moveBuffer++;

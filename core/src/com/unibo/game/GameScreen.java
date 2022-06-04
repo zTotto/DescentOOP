@@ -33,6 +33,7 @@ import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.items.Item;
 import com.unibo.util.Direction;
 import com.unibo.util.LevelListReader;
+import com.unibo.util.LineOfSight;
 import com.unibo.util.Pair;
 import com.unibo.util.Pathfinding;
 import com.unibo.util.Position;
@@ -399,7 +400,7 @@ public class GameScreen implements Screen {
 				int mobY = mob.getCharacter().getPos().getyCoord();
 				shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 				shapeRenderer.begin(ShapeType.Line);
-				if (Pathfinding.lineOfSight(mob, lvlView, currentLvl.getMap().getFirst())) {
+				if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
 					shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
 				}
 				else {
