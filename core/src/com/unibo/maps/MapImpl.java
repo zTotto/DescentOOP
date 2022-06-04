@@ -112,11 +112,6 @@ public class MapImpl implements Map {
     }
 
     @Override
-    public void addItem(final Item item, final Position pos) {
-        itemList.add(new Pair<>(item, pos));
-    }
-
-    @Override
     public TiledMapTileLayer getLayer(final int layerNumber) {
         return (TiledMapTileLayer) map.getLayers().get(layerNumber);
     }
@@ -149,5 +144,10 @@ public class MapImpl implements Map {
     @Override
     public TiledMap getTiledMap() {
         return this.map;
+    }
+    
+    public float getUnitScale() {
+    	float answ = this.unitScale;
+    	return answ;
     }
 }

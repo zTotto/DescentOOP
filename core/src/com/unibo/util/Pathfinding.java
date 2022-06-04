@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 import com.unibo.maps.Map;
 import com.unibo.model.Movement;
 import com.unibo.view.HeroView;
@@ -27,50 +31,61 @@ public final class Pathfinding {
 		final int mobY = mob.getCharacter().getPos().getyCoord();
 		final int heroX = hero.getCharacter().getPos().getxCoord();
 		final int heroY = hero.getCharacter().getPos().getyCoord();
-		float m = 0;
-		float b;
-		int width;
+		Vector2 heroVector = new Vector2(heroX, heroY);
+		Vector2 mobVector = new Vector2(mobX, mobY);
+//		float m = 0;
+//		float b;
+//		int width;
+//		
+//		Pair<Integer, Integer> heroPair = new Pair<>(heroY, heroX);
+//		Pair<Integer, Integer> mobPair = new Pair<>(mobY, mobX);
+//		
+//		final List<Pair<Integer, Integer>> points = new ArrayList<>();
+//		
+//		if (heroX != mobX) {
+//			m = (heroY-mobY)/(heroX-mobX);
+//		}
+//		
+//		b = mobY-m*(mobX);
+//		
+////		lineFromPoints(heroPair, mobPair);
+//		
+//		if (mobX >= heroX) {
+//			width = mobX - heroX;
+//			for(int i = 0; i < width; i++) {
+//			    int x = heroX + i;
+//			    int y = (int) (heroY + (m * i));
+//			    points.add(new Pair<Integer, Integer>(x,y));
+//			}
+//		}
+//		
+//		else {
+//			width = heroX-mobX;
+//			for(int i = 0; i < width; i++) {
+//			    int x = mobX + i;
+//			    int y = (int) (mobY + (m * i));
+//			    points.add(new Pair<Integer, Integer>(x,y));
+//			}
+//		}
 		
-		Pair<Integer, Integer> heroPair = new Pair<>(heroY, heroX);
-		Pair<Integer, Integer> mobPair = new Pair<>(mobY, mobX);
+		final List<Pair<Integer, Integer>> points = pointsArray(mobX, mobY, heroX, heroY);
 		
-		final List<Pair<Integer, Integer>> points = new ArrayList<>();
+//		for (Pair<Integer, Integer> position : points) {
+//			if (!map.validMovement(mob, position.getFirst(), position.getSecond())) {
+//				return false;
+//			}
+//		}
 		
-		if (heroX != mobX) {
-			m = (heroY-mobY)/(heroX-mobX);
-		}
-		
-		b = mobY-m*(mobX);
-		
-//		lineFromPoints(heroPair, mobPair);
-		
-		if (mobX >= heroX) {
-			width = mobX - heroX;
-			for(int i = 0; i < width; i++) {
-			    int x = heroX + i;
-			    int y = (int) (heroY + (m * i));
-			    points.add(new Pair<Integer, Integer>(x,y));
-			}
-		}
-		
-		else {
-			width = heroX-mobX;
-			for(int i = 0; i < width; i++) {
-			    int x = mobX + i;
-			    int y = (int) (mobY + (m * i));
-			    points.add(new Pair<Integer, Integer>(x,y));
-			}
-		}
-
-		
-		for (Pair<Integer, Integer> position : points) {
-			if (!map.validMovement(mob, position.getFirst(), position.getSecond())) {
-				System.out.println("FALSE m "+m+" heroX "+ heroX+"  heroY "+ heroY+"  mobX "+ mobX+ " mobY" + mobY);
+		for (final PolygonMapObject polyMapObj : map.getCollisionLayer().getObjects().getByType(PolygonMapObject.class)) {
+			Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
+			var verts = polyObj.getTransformedVertices();
+	            for (int i = 0; i < verts.length; i++) {
+	                verts[i] *= map.getUnitScale();
+	            }
+			if (Intersector.intersectSegmentPolygon(mobVector, heroVector, polyObj)) {   // ???
 				return false;
 			}
 		}
-		
-		System.out.println("m "+m+"  heroX "+ heroX+"  heroY "+ heroY+"  mobX "+ mobX+ " mobY" + mobY);
 		return true;
 	}
 	
@@ -91,6 +106,38 @@ public final class Pathfinding {
 	                + a + "x + " + b + "y = " + c);
 	        }
 	    }
+	 
+	 private static List<Pair<Integer, Integer>> pointsArray (int x1, int y1, int x2, int y2){
+			final List<Pair<Integer, Integer>> points = new ArrayList<>();
+			int m = 0;
+			int q;
+			int width = 0;
+			
+			if (x1 != x2) {
+				m = (y2-y1)/(x2-x1);	//slope of the line
+			}
+			
+			q = y1-m*(x1);
+			
+			if (x1 >= x2) {
+				width = x1 - x2;
+				for(int i = 0; i < width; i++) {
+				    int x = x2 + i;
+				    int y = (int) (y2 + (m * i));
+				    points.add(new Pair<Integer, Integer>(x,y));
+				}
+			}
+			
+			else {
+				width = x2-x1;
+				for(int i = 0; i < width; i++) {
+				    int x = x1 + i;
+				    int y = (int) (y1 + (m * i));
+				    points.add(new Pair<Integer, Integer>(x,y));
+				}
+			}
+			return points;
+	 }
 	
 }
 	

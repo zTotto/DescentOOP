@@ -23,8 +23,6 @@ public interface Map {
      */
     Boolean validMovement(CharacterView charView, int newX, int newY);
 
-    void addItem(Item item, Position pos); // come segnalare posizione invalida?
-
     Position getStartingPosition();
 
     TiledMapTileLayer getLayer(int layerNumber);
@@ -69,4 +67,6 @@ public interface Map {
      * @return true if a player is damaged
      */
     Boolean checkDamageTile(CharacterView charView);
+
+	float getUnitScale();
 }

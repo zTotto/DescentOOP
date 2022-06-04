@@ -401,13 +401,9 @@ public class GameScreen implements Screen {
 				shapeRenderer.begin(ShapeType.Line);
 				if (Pathfinding.lineOfSight(mob, lvlView, currentLvl.getMap().getFirst())) {
 					shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
-					shapeRenderer.line(mobX+1, mobY+1, heroX+1, heroY+1, Color.RED, Color.RED);
-					shapeRenderer.line(mobX-1, mobY-1, heroX-1, heroY-1, Color.RED, Color.RED);
 				}
 				else {
 					shapeRenderer.line(mobX, mobY, heroX, heroY, Color.BLUE, Color.BLUE);
-					shapeRenderer.line(mobX+1, mobY+1, heroX+1, heroY+1, Color.BLUE, Color.BLUE);
-					shapeRenderer.line(mobX-1, mobY-1, heroX-1, heroY-1, Color.BLUE, Color.BLUE);
 				}
 				shapeRenderer.end();
 			}
