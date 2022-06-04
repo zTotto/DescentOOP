@@ -1,13 +1,17 @@
 package com.unibo.view;
 
+import java.time.chrono.ThaiBuddhistEra;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.unibo.maps.Map;
+import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
-import com.unibo.util.PathfindingAlgorithm;
+import com.unibo.util.Pathfinding;
+import com.unibo.util.AI;
 
 /**
  * Mob's view class.
@@ -29,9 +33,10 @@ public class MobView extends CharacterView {
 
     /**
      * TO DO (pathfinding algorithm).
+     * @param level 
      */
-    public void moveAI(LevelView level) {
-    	if (!heroSight) {
+    public void moveAI(LevelView levelView, Level level) {
+    	if (!Pathfinding.lineOfSight(this, levelView, level.getMap().getFirst())) {
 	    	final Movement move;
 	    	if (moveBuffer <= 15) {
 	    		moveBuffer++;
@@ -39,9 +44,7 @@ public class MobView extends CharacterView {
 	    		move.executeCommand(this);
 	    		return;
 	    	}
-	    	final Direction[] directions = Direction.values();
-	    	final Random random = new Random();
-	    	Direction newDir = directions[random.nextInt(directions.length)];
+	    	Direction newDir = AI.randomDirection(this, level.getMap().getFirst());
 	    	move = new Movement(newDir);
 	    	move.executeCommand(this);
 	    	lastDir = newDir;
@@ -49,14 +52,13 @@ public class MobView extends CharacterView {
 	    	return;
 	    	}
     	else {
-    		System.out.println(level.getMobTextures().toString());
-    		List<MobView> mobs = new ArrayList<>(level.getMobTextures());
+    		List<MobView> mobs = new ArrayList<>(levelView.getMobTextures());
     		mobs.remove(this);
     		for (MobView mobView : mobs) {
 				if (this.getCharRect().overlaps(mobView.getCharRect())) {
 					return;
 				}
-				else PathfindingAlgorithm.A(this, level);
+				else Pathfinding.A(this, levelView, level.getMap().getFirst());
 			}
     	}
     }
@@ -72,7 +74,7 @@ public class MobView extends CharacterView {
 		
 	}
 	
-	public void update(LevelView level) {
-		this.moveAI(level);
+	public void update(LevelView level, Level currentLvl) {
+		this.moveAI(level, currentLvl);
 	}
 }

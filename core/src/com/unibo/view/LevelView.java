@@ -124,4 +124,5 @@ public class LevelView {
 	public void setHeroView(HeroView hero) {
 		this.heroview = hero;
 	}
+
 }

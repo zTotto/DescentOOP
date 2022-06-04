@@ -2,18 +2,23 @@ package com.unibo.game;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional;import java.util.concurrent.ConcurrentMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -29,6 +34,7 @@ import com.unibo.model.items.Item;
 import com.unibo.util.Direction;
 import com.unibo.util.LevelListReader;
 import com.unibo.util.Pair;
+import com.unibo.util.Pathfinding;
 import com.unibo.util.Position;
 import com.unibo.view.Expbar;
 import com.unibo.view.Healthbar;
@@ -142,6 +148,7 @@ public class GameScreen implements Screen {
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
+        lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -238,6 +245,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
+    	
+    	ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
 
         // Dead Hero check
         if (this.heroView.getHero().isDead()) {
@@ -385,7 +394,22 @@ public class GameScreen implements Screen {
             heroView.move();
             for (MobView mob : lvlView.getMobTextures()) {
             	mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
-				mob.update(lvlView);
+				mob.update(lvlView, currentLvl);
+				int mobX = mob.getCharacter().getPos().getxCoord();
+				int mobY = mob.getCharacter().getPos().getyCoord();
+				shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+				shapeRenderer.begin(ShapeType.Line);
+				if (Pathfinding.lineOfSight(mob, lvlView, currentLvl.getMap().getFirst())) {
+					shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
+					shapeRenderer.line(mobX+1, mobY+1, heroX+1, heroY+1, Color.RED, Color.RED);
+					shapeRenderer.line(mobX-1, mobY-1, heroX-1, heroY-1, Color.RED, Color.RED);
+				}
+				else {
+					shapeRenderer.line(mobX, mobY, heroX, heroY, Color.BLUE, Color.BLUE);
+					shapeRenderer.line(mobX+1, mobY+1, heroX+1, heroY+1, Color.BLUE, Color.BLUE);
+					shapeRenderer.line(mobX-1, mobY-1, heroX-1, heroY-1, Color.BLUE, Color.BLUE);
+				}
+				shapeRenderer.end();
 			}
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
