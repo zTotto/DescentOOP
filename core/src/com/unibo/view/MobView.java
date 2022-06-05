@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.unibo.maps.Map;
+import com.unibo.model.Character;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
@@ -53,15 +54,8 @@ public class MobView extends CharacterView {
 	    	return;
 	    	}
     	else {
-    		List<MobView> mobs = new ArrayList<>(levelView.getMobTextures());
-    		mobs.remove(this);
-    		for (MobView mobView : mobs) {
-				if (this.getCharRect().overlaps(mobView.getCharRect())) {
-					return;
-				}
-				else Pathfinding.A(this, levelView, level.getMap().getFirst());
+				Pathfinding.A(this, levelView, level.getMap().getFirst());
 			}
-    	}
     }
 
     @Override
@@ -76,6 +70,12 @@ public class MobView extends CharacterView {
 	}
 	
 	public void update(LevelView level, Level currentLvl) {
-		this.moveAI(level, currentLvl);
+		if (this.getCharacter().canHit(level.getHeroView().getCharacter())) {
+			this.getCharacter().hitEnemy(level.getHeroView().getCharacter());
+		}
+		else {
+			this.moveAI(level, currentLvl);
+		}
 	}
+	
 }

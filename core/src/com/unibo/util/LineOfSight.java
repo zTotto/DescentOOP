@@ -23,7 +23,7 @@ public final class LineOfSight {
 	            for (int i = 0; i < verts.length; i++) {
 	                verts[i] *= map.getUnitScale();
 	            }
-			if (Intersector.intersectSegmentPolygon(mobVector, heroVector, polyObj)) {   // ???
+			if (Intersector.intersectSegmentPolygon(mobVector, heroVector, polyObj)) {   
 				return false;
 			}
 		}
