@@ -13,25 +13,30 @@ public final class Pathfinding {
 
 	public static void A(MobView mob, LevelView level, Map map) {
 		
-		Movement move;
 		final int heroX = level.getHeroView().getCharacter().getPos().getxCoord();
 		final int heroY = level.getHeroView().getCharacter().getPos().getyCoord();
 		final int mobX = mob.getCharacter().getPos().getxCoord();
 		final int mobY = mob.getCharacter().getPos().getyCoord();
 		final Character mobChar = mob.getCharacter();
 		final Position mobPos = mobChar.getPos();
-		
+//		System.out.println("heroX "+heroX+" heroY "+heroY+" mobX "+mobX+" mobY "+mobY);
 	    	
 	    	if (heroX > mobX) {
 	    		moveMob(mob, Direction.RIGHT);
 	    		if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
 	    			moveMob(mob, Direction.UP);
+	    			if(!hasCharacterMoved(mobPos, mobChar.getPos())){
+	    				unstuckMob(mob, map);
+	    			}
 				}
 	    		else if  (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
 	    			moveMob(mob, Direction.DOWN);
+	    			if(!hasCharacterMoved(mobPos, mobChar.getPos())){
+	    				unstuckMob(mob, map);
+	    			}
 	    		}   		
 	    		else {
-	    			moveMob(mob, AI.randomDirection(mob, map));
+	    			unstuckMob(mob, map);  // da cambiare, potrebbe scegliere una strada gia bloccata
 	    		}
 	    	}
 	    	
@@ -39,12 +44,18 @@ public final class Pathfinding {
 	    		moveMob(mob, Direction.LEFT);
 	    		if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
 	    			moveMob(mob, Direction.UP);
+	    			if(!hasCharacterMoved(mobPos, mobChar.getPos())){
+	    				unstuckMob(mob, map);
+	    			}
 				}
 	    		else if  (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
 	    			moveMob(mob, Direction.DOWN);
+	    			if(!hasCharacterMoved(mobPos, mobChar.getPos())){
+	    				unstuckMob(mob, map);
+	    			}
 	    		}   		
 	    		else {
-	    			moveMob(mob, AI.randomDirection(mob, map));
+	    			unstuckMob(mob, map);
 	    		}
 	    	}
 	    	
@@ -52,12 +63,12 @@ public final class Pathfinding {
 	    		if (heroY > mobY) {
 	    			moveMob(mob, Direction.UP);
 				}
-	    		else if  (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
+	    		else if  (heroY < mobY) {
 	    			moveMob(mob, Direction.DOWN);
-	    		}   		
-	    		else {	
-	    			moveMob(mob, AI.randomDirection(mob, map));
 	    		}
+	    		if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
+	    			unstuckMob(mob, map);
+				}
 	    	}
 		}		
 		
@@ -75,11 +86,21 @@ public final class Pathfinding {
 	}
 	
 	private static Boolean hasCharacterMoved(Position pos1, Position pos2) {
-		return (pos1 == pos2);
+		return (pos1 != pos2);
 	}
 	
 	private static void moveMob (MobView mob, Direction dir) {
 		final Movement move = new Movement(dir);
 		move.executeCommand(mob);
+	}
+	
+	private static void unstuckMob(MobView mob, Map map) {
+     	final Position startPos = new Position(mob.getCharacter().getPos());
+		Position newPos;
+		do {
+			moveMob(mob, AI.randomDirection(mob, map));
+			newPos = mob.getCharacter().getPos();
+//			System.out.println("startPos : "+startPos.toString()+ " newPos : "+newPos.toString());
+		} while (newPos == startPos);
 	}
 }

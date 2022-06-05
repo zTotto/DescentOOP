@@ -28,6 +28,11 @@ public class Position {
         this.setxCoord(x);
         this.setyCoord(y);
     }
+    
+    public Position(Position pos) {
+        this.setxCoord(pos.getxCoord());
+        this.setyCoord(pos.getyCoord());
+    }
 
     /**
      * Sets the position to the specified one.
