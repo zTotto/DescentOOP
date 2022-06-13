@@ -61,14 +61,14 @@ public abstract class CharacterView {
         characterTextureRight[0] = tmp[1][0];
         characterTextureRight[1] = tmp[1][1];
         characterTextureRight[2] = tmp[1][2];
-        animationRight = new Animation<>(1f / 8f, characterTextureRight);
+        animationRight = new Animation<>(1f / 12f, characterTextureRight);
 
         // Texture when moving left
         TextureRegion[] characterTextureLeft = new TextureRegion[3];
         characterTextureLeft[0] = tmp[3][2];
         characterTextureLeft[1] = tmp[3][1];
         characterTextureLeft[2] = tmp[3][0];
-        animationLeft = new Animation<>(1f / 8f, characterTextureLeft);
+        animationLeft = new Animation<>(1f / 12f, characterTextureLeft);
 
         // Texture when moving up
         TextureRegion[] characterTextureUp = new TextureRegion[3];
