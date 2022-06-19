@@ -100,7 +100,7 @@ public class Hero extends Character {
                     } else if (item instanceof ConsumableItem) {
                         this.getInv().addItem(item);
                     } else if (item instanceof WearableItem) {
-                        ((WearableItem) item).wear(this);
+                        ((WearableItem) item).wear();
                     } else {
                         this.key = true;
                     }
