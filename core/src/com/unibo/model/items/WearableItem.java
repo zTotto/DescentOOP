@@ -3,6 +3,7 @@ package com.unibo.model.items;
 import java.util.Optional;
 
 import com.unibo.model.Character;
+import com.unibo.model.Hero;
 import com.unibo.util.Position;
 
 /**
@@ -10,7 +11,7 @@ import com.unibo.util.Position;
  * Class to model a wearable item, like a ring, an amulet or an armor that gives some buff.
  *
  */
-public class WearableItem extends Item {
+public final class WearableItem extends Item {
 
     /**
      * Constant that determinates how much buff to give.
@@ -18,9 +19,9 @@ public class WearableItem extends Item {
     protected static final int DIVISOR = 4;
 
     private final Character pg;
-    private boolean health = false;
-    private boolean power = false;
-    private boolean mana = false;
+    private final Optional<Double> health;
+    private final Optional<Double> power;
+    private final Optional<Integer> exp;
 
     /**
      * 
@@ -29,15 +30,15 @@ public class WearableItem extends Item {
      * @param pg
      * @param health
      * @param power
-     * @param mana
+     * @param exp
      */
     private WearableItem(final String name, final String id, final Character pg,
-            final boolean health, final boolean power, final boolean mana) {
+            final Optional<Double> health, final Optional<Double> power, final Optional<Integer> exp) {
         super(name, id);
         this.pg = pg;
         this.health = health;
         this.power = power;
-        this.mana = mana;
+        this.exp = exp;
     }
 
     /**
@@ -45,15 +46,15 @@ public class WearableItem extends Item {
      * 
      */
     public void wear() {
-        if (this.health) {
-            this.pg.setMaxHp(this.pg.getMaxHp() + this.pg.getMaxHp() / DIVISOR);
+        if (this.health.isPresent()) {
+            this.pg.setMaxHp(this.pg.getMaxHp() + (int) (this.pg.getMaxHp() * this.health.get()));
         }
-        if (this.power) {
+        if (this.power.isPresent()) {
             final Weapon weapon = this.pg.getCurrentWeapon();
-            weapon.applyDamageMod(weapon.getDamage() + weapon.getDamage() / DIVISOR);
+            weapon.applyDamageMod(weapon.getDamage() + (int) (weapon.getDamage() * this.power.get()));
         }
-        if (this.mana) {
-            //pg.set
+        if (this.exp.isPresent()) {
+            ((Hero) this.pg).addExp(this.exp.get());
         }
     }
 
@@ -65,10 +66,10 @@ public class WearableItem extends Item {
         this.getPos().setPosition(p);
         return this;
     }
-    
+
     /**
      * 
-     * @author fraca
+     *  Class to build a WearableItem.
      *
      */
     public static class Builder {
@@ -76,15 +77,15 @@ public class WearableItem extends Item {
         private String name;
         private String id;
         private Character pg;
-        private boolean health = false;
-        private boolean power = false;
-        private boolean mana = false;
+        private Optional<Double> health = Optional.empty();
+        private Optional<Double> power = Optional.empty();
+        private Optional<Integer> exp = Optional.empty();
 
         /**
          * 
          * @param name
          * @param id
-         * @param pg
+         * @param pg the player that gets the buff
          */
         public Builder(final String name, final String id, final Character pg) {
             this.name = name;
@@ -92,18 +93,30 @@ public class WearableItem extends Item {
             this.pg = pg;
         }
 
-        public Builder health() {
-            this.health = true;
+        /**
+         * 
+         * @param mod 
+         * @return
+         */
+        public Builder health(final double mod) {
+            this.health = Optional.of(mod);
             return this;
         }
 
-        public Builder power() {
-            this.power = true;
+        public Builder power(final double mod) {
+            this.power = Optional.of(mod);
             return this;
         }
 
-        public Builder mana() {
-            this.mana = true;
+        /**
+         * 
+         * @param e
+         * @return this
+         */
+        public Builder exp(final int e) {
+            if (e != 0) {
+                this.exp = Optional.of(e);
+            }
             return this;
         }
 
@@ -114,10 +127,10 @@ public class WearableItem extends Item {
          */
         public WearableItem build() throws IllegalStateException {
             if (this.name == null || this.id == null
-                    || (!this.health && !this.power && !this.mana)) {
-                throw new IllegalStateException();
+                    || (this.health.isEmpty() && this.power.isEmpty() && this.exp.isEmpty())) {
+                throw new IllegalStateException("No attributes added");
             }
-            return new WearableItem(this.name, this.id, this.pg, this.health, this.power, this.mana);
+            return new WearableItem(this.name, this.id, this.pg, this.health, this.power, this.exp);
         }
     }
 }
