@@ -12,8 +12,13 @@ import com.unibo.view.MobView;
 
 public final class Pathfinding {
 	
-	
-	 /**
+	 private Pathfinding() {
+		super();
+	}
+
+
+
+	/**
      * Moves the mob given as a parameter according to a simple
      * pathfinding algorithm.
      * The Algorithm takes care of line of sight and stuck mobs.
