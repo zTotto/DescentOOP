@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.unibo.maps.Map;
-import com.unibo.maps.MapImpl;
+import com.unibo.maps.DescentMap;
+import com.unibo.maps.DescentMapImpl;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.DoorKey;
@@ -24,7 +24,7 @@ public class LevelFileReader {
     private final DoorKey key;
     private final List<Mob> mobs;
     private final List<Weapon> weapons;
-    private final Pair<Map, Float> map;
+    private final Pair<DescentMap, Float> map;
     private final Position doorPosition;
 
     /**
@@ -80,7 +80,7 @@ public class LevelFileReader {
     }
 
     private void readMap(final String mapLine, final Boolean isExt) {
-        map.setFirst(new MapImpl(mapLine.split(" ")[1],
+        map.setFirst(new DescentMapImpl(mapLine.split(" ")[1],
                 new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
                         Integer.parseInt(mapLine.split(" ")[2].split(",")[1])),
                 Float.parseFloat(mapLine.split(" ")[3]), isExt));
@@ -133,7 +133,7 @@ public class LevelFileReader {
      * 
      * @return a pair containing a map and its unitScale
      */
-    public Pair<Map, Float> getMap() {
+    public Pair<DescentMap, Float> getMap() {
         return map;
     }
 

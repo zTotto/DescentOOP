@@ -8,12 +8,12 @@ public enum MobStats {
      * Mob with 60 hp, a speed of 130 and 50 of mana, 
      * that will give 20 exp to the hero.
      */
-    ORC("Orc", 60, 130, 50, 20),
+    ORC("Orc", 60, 145, 50, 20),
     /**
      * Mob with 30 hp, a speed of 170 and 20 of mana, 
      * that will give 12 exp to the hero.
      */
-    TROLL("Troll", 30, 170, 20, 12);
+    TROLL("Troll", 30, 150, 20, 12);
 
     private final String name;
     private final int hp;
