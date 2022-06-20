@@ -50,9 +50,10 @@ public final class LevelsList {
 
     /**
      * 
-     * @return the next level if there is one, NoSuchElementException otherwise
+     * @return the next level if there is one
+     * @throws NoSuchElementException if there are no more levels
      */
-    public Level getNextLevel() {
+    public Level getNextLevel() throws NoSuchElementException {
         if (this.hasNextLevel()) {
             return this.levels.get(++this.counter);
         }

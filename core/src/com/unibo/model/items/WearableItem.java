@@ -11,12 +11,7 @@ import com.unibo.util.Position;
  * Class to model a wearable item, like a ring, an amulet or an armor that gives some buff.
  *
  */
-public final class WearableItem extends Item {
-
-    /**
-     * Constant that determinates how much buff to give.
-     */
-    protected static final int DIVISOR = 4;
+public class WearableItem extends Item {
 
     private final Character pg;
     private final Optional<Double> health;
@@ -24,10 +19,11 @@ public final class WearableItem extends Item {
     private final Optional<Integer> exp;
 
     /**
+     * Constructor for a WearableItem.
      * 
-     * @param name
-     * @param id
-     * @param pg
+     * @param name of the item
+     * @param id of the item
+     * @param pg the carachter that gets the buff
      * @param health
      * @param power
      * @param exp
@@ -42,7 +38,7 @@ public final class WearableItem extends Item {
     }
 
     /**
-     * The selected pg wear the item getting its buff.
+     * The selected pg wear the item getting its buffs.
      * 
      */
     public void wear() {
@@ -82,10 +78,11 @@ public final class WearableItem extends Item {
         private Optional<Integer> exp = Optional.empty();
 
         /**
+         * Constructor for the WearableItem Builder.
          * 
-         * @param name
-         * @param id
-         * @param pg the player that gets the buff
+         * @param name of the item
+         * @param id of the item
+         * @param pg the player that gets the buffs
          */
         public Builder(final String name, final String id, final Character pg) {
             this.name = name;
@@ -94,36 +91,43 @@ public final class WearableItem extends Item {
         }
 
         /**
+         * Increase the pg maximum health.
          * 
-         * @param mod 
-         * @return
+         * @param mod to apply to the pg to increase maximum life ranging from 0 to 1 excluded
+         * @return this
          */
         public Builder health(final double mod) {
-            this.health = Optional.of(mod);
-            return this;
-        }
-
-        public Builder power(final double mod) {
-            this.power = Optional.of(mod);
+            this.health = Optional.of(mod).filter(k -> k > 0 && k < 1);
             return this;
         }
 
         /**
+         * Increase the damage of the player's current weapon.
          * 
-         * @param e
+         * @param mod to apply to the pg to icrease the damage ranging from 0 to 1 excluded
+         * @return this
+         */
+        public Builder power(final double mod) {
+            this.power = Optional.of(mod).filter(k -> k > 0 && k < 1);
+            return this;
+        }
+
+        /**
+         * Add experience to the pg.
+         * 
+         * @param e experience to add to the pg ranging from 1 to 999
          * @return this
          */
         public Builder exp(final int e) {
-            if (e != 0) {
-                this.exp = Optional.of(e);
-            }
+            this.exp = Optional.of(e).filter(k -> k > 0 && k < 1000);
             return this;
         }
 
         /**
+         * Build a WearableItem with the chosen attributes.
          * 
          * @return a WearableItem
-         * @throws IllegalStateException
+         * @throws IllegalStateException if no attributes are added
          */
         public WearableItem build() throws IllegalStateException {
             if (this.name == null || this.id == null
