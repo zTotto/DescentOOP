@@ -3,7 +3,7 @@ package com.unibo.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.unibo.maps.Map;
+import com.unibo.maps.DescentMap;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Item;
 import com.unibo.model.items.Weapon;
@@ -20,14 +20,14 @@ public class Level {
     private final List<Mob> enemies;
     private Position doorPosition = new Position(0, 0);
     private final List<Position> deadMobPositions;
-    private final Pair<Map, Float> map;
+    private final Pair<DescentMap, Float> map;
 
     /**
      * Constructor for a level that requires a map.
      * 
      * @param mapToAdd
      */
-    public Level(final Pair<Map, Float> mapToAdd) {
+    public Level(final Pair<DescentMap, Float> mapToAdd) {
         items = new LinkedList<>();
         enemies = new LinkedList<>();
         deadMobPositions = new LinkedList<>();
@@ -148,7 +148,7 @@ public class Level {
      * 
      * @return a pair containing the map and the unitScale (float)
      */
-    public Pair<Map, Float> getMap() {
+    public Pair<DescentMap, Float> getMap() {
         return this.map;
     }
 

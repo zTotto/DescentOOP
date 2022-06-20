@@ -59,10 +59,4 @@ public class HeroView extends CharacterView {
         this.hero.switchWeapon();
         this.createTextures("characters/hero" + this.hero.getCurrentWeapon().getName() + ".png");
     }
-
-    @Override
-    public void selfAttack() { // TODO
-        System.out.println("Attack!");
-        this.getHero().setCurrentHp((int) (this.getHero().getCurrentHp() - 0.4 * this.getHero().getMaxHp()));
-    }
 }

@@ -3,15 +3,24 @@ package com.unibo.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.unibo.maps.Map;
+import com.unibo.maps.DescentMap;
 import com.unibo.model.Character;
+import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.view.LevelView;
 import com.unibo.view.MobView;
 
 public final class Pathfinding {
-
-	public static void A(MobView mob, LevelView level, Map map) {
+	
+	
+	 /**
+     * Moves the mob given as a parameter according to a simple
+     * pathfinding algorithm.
+     * The Algorithm takes care of line of sight and stuck mobs.
+     * 
+     * @param Mobview, LevelView, Map
+     */
+	public static void moveMob(MobView mob, LevelView level, DescentMap map) {
 		
 		final int heroX = level.getHeroView().getCharacter().getPos().getxCoord();
 		final int heroY = level.getHeroView().getCharacter().getPos().getyCoord();
@@ -19,7 +28,6 @@ public final class Pathfinding {
 		final int mobY = mob.getCharacter().getPos().getyCoord();
 		final Character mobChar = mob.getCharacter();
 		final Position mobPos = mobChar.getPos();
-//		System.out.println("heroX "+heroX+" heroY "+heroY+" mobX "+mobX+" mobY "+mobY);
 	    	
 	    	if (heroX > mobX) {
 	    		moveMob(mob, Direction.RIGHT);
@@ -36,7 +44,7 @@ public final class Pathfinding {
 	    			}
 	    		}   		
 	    		else {
-	    			unstuckMob(mob, map);  // da cambiare, potrebbe scegliere una strada gia bloccata
+	    			unstuckMob(mob, map);
 	    		}
 	    	}
 	    	
@@ -85,22 +93,41 @@ public final class Pathfinding {
 		return false;
 	}
 	
+	
+	 /**
+     * Getter for a specific layer in the TiledMap.
+     * 
+     * @param Starting position of a character, current positiong of a character
+     * @return True if the 2 positions are different, False if they're equal 
+     */
 	private static Boolean hasCharacterMoved(Position pos1, Position pos2) {
 		return (pos1 != pos2);
 	}
 	
+	
+	 /**
+     * Method to move the mob in a certain direction
+     * 
+     * @param The Mobview of the mob we want to move, Direction in which to move it
+     */
 	private static void moveMob (MobView mob, Direction dir) {
 		final Movement move = new Movement(dir);
 		move.executeCommand(mob);
 	}
 	
-	private static void unstuckMob(MobView mob, Map map) {
+	 /**
+     * Method that tries to move the mob in random directions
+     * until it's position changes
+     * 
+     * @param Mobview of the mob that's stuck, the DescentMap in which he is
+     */
+	private static void unstuckMob(MobView mob, DescentMap map) {
      	final Position startPos = new Position(mob.getCharacter().getPos());
 		Position newPos;
 		do {
 			moveMob(mob, AI.randomDirection(mob, map));
 			newPos = mob.getCharacter().getPos();
-//			System.out.println("startPos : "+startPos.toString()+ " newPos : "+newPos.toString());
 		} while (newPos == startPos);
 	}
+
 }

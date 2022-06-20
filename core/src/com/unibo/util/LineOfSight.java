@@ -4,7 +4,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.unibo.maps.Map;
+import com.unibo.maps.DescentMap;
 import com.unibo.model.Character;
 import com.unibo.view.HeroView;
 import com.unibo.view.LevelView;
@@ -12,7 +12,7 @@ import com.unibo.view.MobView;
 
 public final class LineOfSight {
 	
-	public static boolean isHeroSeen(MobView mob, LevelView level, Map map) {
+	public static boolean isHeroSeen(MobView mob, LevelView level, DescentMap map) {
 		final HeroView hero = level.getHeroView();
 		Vector2 heroVector = characterVector(mob.getCharacter());
 		Vector2 mobVector = characterVector(hero.getCharacter());

@@ -122,11 +122,6 @@ public abstract class CharacterView {
     }
 
     /**
-     * Makes the character attack.
-     */
-    public abstract void selfAttack();
-
-    /**
      * Method to check whether the character is currently attacking.
      * 
      * @return true if the character is attacking

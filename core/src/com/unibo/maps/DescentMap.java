@@ -12,7 +12,7 @@ import com.unibo.util.Position;
 /**
  * Interface for a map.
  */
-public interface Map {
+public interface DescentMap {
     /**
      * Method to check whether a movement is valid.
      * 
@@ -23,10 +23,27 @@ public interface Map {
      */
     Boolean validMovement(CharacterView charView, int newX, int newY);
 
+    /**
+     * Getter for the starting position of the Hero.
+     * 
+     * @return a Pair<Integer, Integer> 
+     */
     Position getStartingPosition();
 
+    /**
+     * Getter for a specific layer in the TiledMap.
+     * 
+     * @param an Integer number
+     * @return a TiledMapLayer 
+     */
     TiledMapTileLayer getLayer(int layerNumber);
 
+    /**
+     * Getter for a specific layer in the TiledMap.
+     * 
+     * @param a string indicating the name of the layer
+     * @return a TiledMapLayer 
+     */
     TiledMapTileLayer getLayer(String path);
 
     /**
@@ -50,6 +67,11 @@ public interface Map {
      */
     Optional<MapLayer> getSpecialTilesLayer();
 
+    /**
+     * Getter for the Tiled Map set in MapImpl
+     * 
+     * @return the Tiled Map
+     */
     TiledMap getTiledMap();
 
     /**
@@ -67,6 +89,12 @@ public interface Map {
      * @return true if a player is damaged
      */
     Boolean checkDamageTile(CharacterView charView);
-
+    
+    /**
+     * Getter for the float number used to rescale the map to
+     * better fit the game screen
+     * 
+     * @return the scale of the map
+     */
 	float getUnitScale();
 }

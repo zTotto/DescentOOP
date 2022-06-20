@@ -1,9 +1,6 @@
 package com.unibo.maps;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -14,22 +11,19 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.unibo.game.Descent;
-import com.unibo.model.items.Item;
-import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
 
 /**
  * Implementation of the map interface.
  */
-public class MapImpl implements Map {
+public class DescentMapImpl implements DescentMap {
 
     private final MapLayer collisionLayer;
     private final MapLayer teleportLayer;
     private final MapLayer specialTilesLayer;
     private final TiledMap map;
     private final Position startingPosition;
-    private final List<Pair<Item, Position>> itemList = new ArrayList<>();
     private final float unitScale;
 
     /**
@@ -40,7 +34,7 @@ public class MapImpl implements Map {
      * @param unitScale   float value to transform world units to pixel
      * @param isFileExt   true if the file is external
      */
-    public MapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
+    public DescentMapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
         if (isFileExt) {
             this.map = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(Descent.CUSTOM_LEVELS_PATH + path);
         } else {
@@ -147,7 +141,6 @@ public class MapImpl implements Map {
     }
     
     public float getUnitScale() {
-    	float answ = this.unitScale;
-    	return answ;
+    	return this.unitScale;
     }
 }

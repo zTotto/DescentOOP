@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import com.unibo.maps.Map;
+import com.unibo.maps.DescentMap;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.Weapon;
 import com.unibo.util.Pair;
@@ -32,7 +32,7 @@ public abstract class Character {
     private final List<Weapon> weapons;
     private int currentWeapon;
     private final Inventory inv;
-    private Map currentMap;
+    private DescentMap currentMap;
 
     /**
      * Constructor for a character.
@@ -386,7 +386,7 @@ public abstract class Character {
     /**
      * @return the current map
      */
-    public Map getCurrentMap() {
+    public DescentMap getCurrentMap() {
         return currentMap;
     }
 
@@ -395,7 +395,7 @@ public abstract class Character {
      * 
      * @param map
      */
-    public void setCurrentMap(final Map map) {
+    public void setCurrentMap(final DescentMap map) {
         this.currentMap = map;
     }
 

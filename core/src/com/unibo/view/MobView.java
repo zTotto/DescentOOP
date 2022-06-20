@@ -15,7 +15,6 @@ public class MobView extends CharacterView {
 
     private int moveBuffer = 0;
     private Direction lastDir = Direction.UP;
-    private Boolean heroSight = false;
     private float attackTime = 0;
 
     /**
@@ -49,13 +48,8 @@ public class MobView extends CharacterView {
             moveBuffer = 0;
             return;
         } else {
-            Pathfinding.A(this, levelView, level.getMap().getFirst());
+            Pathfinding.moveMob(this, levelView, level.getMap().getFirst());
         }
-    }
-
-    @Override
-    public void selfAttack() {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -95,4 +89,5 @@ public class MobView extends CharacterView {
     public Direction getLastDir() {
         return lastDir;
     }
+
 }
