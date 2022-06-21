@@ -26,6 +26,7 @@ public abstract class CharacterView {
     private final Rectangle charRect;
     private final Sound attackSound;
     private Boolean isAttacking = false;
+    private boolean isMoving = false;
 
     /**
      * Constructor for this class.
@@ -60,14 +61,14 @@ public abstract class CharacterView {
         characterTextureRight[0] = tmp[1][0];
         characterTextureRight[1] = tmp[1][1];
         characterTextureRight[2] = tmp[1][2];
-        animationRight = new Animation<>(1f / 8f, characterTextureRight);
+        animationRight = new Animation<>(1f / 12f, characterTextureRight);
 
         // Texture when moving left
         TextureRegion[] characterTextureLeft = new TextureRegion[3];
         characterTextureLeft[0] = tmp[3][2];
         characterTextureLeft[1] = tmp[3][1];
         characterTextureLeft[2] = tmp[3][0];
-        animationLeft = new Animation<>(1f / 8f, characterTextureLeft);
+        animationLeft = new Animation<>(1f / 12f, characterTextureLeft);
 
         // Texture when moving up
         TextureRegion[] characterTextureUp = new TextureRegion[3];
@@ -89,7 +90,7 @@ public abstract class CharacterView {
         characterTextureAttack[0] = tmp[1][0];
         characterTextureAttack[1] = tmp[1][1];
         characterTextureAttack[2] = tmp[1][2];
-        animationAttack = new Animation<>(1f / 3f, characterTextureAttack);
+        animationAttack = new Animation<>(1f / 6f, characterTextureAttack);
     }
 
     /**
@@ -210,5 +211,20 @@ public abstract class CharacterView {
      */
     public Sound getAttackSound() {
         return attackSound;
+    }
+
+    /**
+     * @return true if the hero is moving
+     */
+    public boolean getIsMoving() {
+        return isMoving;
+    }
+
+    /**
+     * Sets whether the hero is moving or not.
+     * @param isMoving
+     */
+    public void setIsMoving(final boolean isMoving) {
+        this.isMoving = isMoving;
     }
 }

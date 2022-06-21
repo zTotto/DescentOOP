@@ -70,9 +70,12 @@ public class GameScreen implements Screen {
 
     private final Music soundtrack;
 
+    private boolean isRunningSoundPlaying = false;
+
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
+    private float soundTime;
     private float randomAnim = (float) (0.1 * Math.random());
 
     private boolean isPaused;
@@ -394,6 +397,17 @@ public class GameScreen implements Screen {
                 batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
             }
 
+            // Running Sound
+            if (heroView.getIsMoving() && !this.isRunningSoundPlaying) {
+                heroView.getRunningSound().play(1, 0.8f, 0);
+                this.isRunningSoundPlaying = true;
+            }
+            this.soundTime += Gdx.graphics.getDeltaTime();
+            if (this.soundTime > 0.160 / 0.8) {
+                this.isRunningSoundPlaying = false;
+                this.soundTime = 0;
+            }
+
             // Door Pointer Rendering
             batch.draw(doorPointerAnim.getKeyFrame(elapsedTime, true),
                     currentLvl.getDoorPosition().getxCoord()
@@ -457,6 +471,7 @@ public class GameScreen implements Screen {
             System.out.println("Speed: " + heroView.getHero().getSpeed());
             System.out.println("Range: " + heroView.getHero().getRange());
             System.out.println("Door: " + currentLvl.getDoorPosition());
+            System.out.println(heroView.getIsMoving());
         }
     }
 

@@ -34,6 +34,7 @@ public class Movement implements Command {
         final int deltaMovement = (int) (character.getSpeed() * Gdx.graphics.getDeltaTime());
         final DescentMap map = character.getCurrentMap();
         characterView.setDir(this.direction);
+        characterView.setIsMoving(true);
 
         if (this.direction == Direction.LEFT
                 && map.validMovement(characterView, xPosition - deltaMovement, yPosition)) {
