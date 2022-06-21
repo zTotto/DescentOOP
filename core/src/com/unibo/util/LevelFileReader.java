@@ -78,7 +78,7 @@ public class LevelFileReader {
 
     private void readWearable(final List<String> wearableLines) {
         wearableLines.stream()
-        .forEach(l -> wearable.add((WearableItem) new WearableItem.Builder("Health Ring", "0", null)
+        .forEach(l -> wearable.add((WearableItem) new WearableItem.Builder("Health Ring", "0")
                 .health(GENERIC_MODIFIER)
                 .build()
                 .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),

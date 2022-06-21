@@ -1,7 +1,6 @@
 package com.unibo.model.items;
 
 import java.util.Optional;
-
 import com.unibo.model.Character;
 import com.unibo.model.Hero;
 import com.unibo.util.Position;
@@ -13,7 +12,6 @@ import com.unibo.util.Position;
  */
 public class WearableItem extends Item {
 
-    private final Character pg;
     private final Optional<Double> health;
     private final Optional<Double> power;
     private final Optional<Integer> exp;
@@ -23,15 +21,13 @@ public class WearableItem extends Item {
      * 
      * @param name of the item
      * @param id of the item
-     * @param pg the carachter that gets the buff
      * @param health
      * @param power
      * @param exp
      */
-    private WearableItem(final String name, final String id, final Character pg,
-            final Optional<Double> health, final Optional<Double> power, final Optional<Integer> exp) {
+    private WearableItem(final String name, final String id, final Optional<Double> health,
+            final Optional<Double> power, final Optional<Integer> exp) {
         super(name, id);
-        this.pg = pg;
         this.health = health;
         this.power = power;
         this.exp = exp;
@@ -40,17 +36,18 @@ public class WearableItem extends Item {
     /**
      * The selected pg wear the item getting its buffs.
      * 
+     * @param pg the player that gets the buffs
      */
-    public void wear() {
+    public void wear(final Character pg) {
         if (this.health.isPresent()) {
-            this.pg.setMaxHp(this.pg.getMaxHp() + (int) (this.pg.getMaxHp() * this.health.get()));
+            pg.setMaxHp(pg.getMaxHp() + (int) (pg.getMaxHp() * this.health.get()));
         }
         if (this.power.isPresent()) {
-            final Weapon weapon = this.pg.getCurrentWeapon();
+            final Weapon weapon = pg.getCurrentWeapon();
             weapon.applyDamageMod(weapon.getDamage() + (int) (weapon.getDamage() * this.power.get()));
         }
         if (this.exp.isPresent()) {
-            ((Hero) this.pg).addExp(this.exp.get());
+            ((Hero) pg).addExp(this.exp.get());
         }
     }
 
@@ -72,7 +69,6 @@ public class WearableItem extends Item {
 
         private String name;
         private String id;
-        private Character pg;
         private Optional<Double> health = Optional.empty();
         private Optional<Double> power = Optional.empty();
         private Optional<Integer> exp = Optional.empty();
@@ -82,12 +78,10 @@ public class WearableItem extends Item {
          * 
          * @param name of the item
          * @param id of the item
-         * @param pg the player that gets the buffs
          */
-        public Builder(final String name, final String id, final Character pg) {
+        public Builder(final String name, final String id) {
             this.name = name;
             this.id = id;
-            this.pg = pg;
         }
 
         /**
@@ -134,7 +128,7 @@ public class WearableItem extends Item {
                     || (this.health.isEmpty() && this.power.isEmpty() && this.exp.isEmpty())) {
                 throw new IllegalStateException("No attributes added");
             }
-            return new WearableItem(this.name, this.id, this.pg, this.health, this.power, this.exp);
+            return new WearableItem(this.name, this.id, this.health, this.power, this.exp);
         }
     }
 }
