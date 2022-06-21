@@ -7,12 +7,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -28,6 +31,7 @@ import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.items.Item;
 import com.unibo.util.Direction;
 import com.unibo.util.LevelListReader;
+import com.unibo.util.LineOfSight;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.view.Expbar;
@@ -145,6 +149,7 @@ public class GameScreen implements Screen {
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
+        lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -242,6 +247,8 @@ public class GameScreen implements Screen {
     @Override
     public void render(final float delta) {
 
+        ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
+
         // Dead Hero check
         if (this.heroView.getHero().isDead()) {
             this.isPaused = true;
@@ -291,8 +298,23 @@ public class GameScreen implements Screen {
         // Mob Rendering
         int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
-            batch.draw(m.getAttackText(elapsedTime), m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
-                    m.getCharacter().getPos().getyCoord());
+            if (m.getIsAttacking()) {
+                batch.draw(m.getAttackText(m.getAttackTime()),
+                        m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
+                        m.getCharacter().getPos().getyCoord());
+
+                // Attack Time
+                m.setAttackTime(m.getAttackTime() + Gdx.graphics.getDeltaTime());
+
+                if (m.getAttackAnim().isAnimationFinished(m.getAttackTime())) {
+                    m.setIsAttacking(false);
+                    m.setAttackTime(0);
+                }
+            } else {
+                batch.draw(m.getAnimFromDir(m.getLastDir(), elapsedTime),
+                        m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
+                        m.getCharacter().getPos().getyCoord());
+            }
             Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
             mobBar.update(m.getCharacter());
             mobBar.setPosition(m.getCharacter().getPos().getxCoord() - m.getWidth() / 2f,
@@ -397,6 +419,21 @@ public class GameScreen implements Screen {
             elapsedTime += Gdx.graphics.getDeltaTime();
 
             heroView.move();
+
+            for (MobView mob : lvlView.getMobTextures()) {
+                mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
+                mob.update(lvlView, currentLvl);
+                int mobX = mob.getCharacter().getPos().getxCoord();
+                int mobY = mob.getCharacter().getPos().getyCoord();
+                shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+                shapeRenderer.begin(ShapeType.Line);
+                if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
+                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
+                } else {
+                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.BLUE, Color.BLUE);
+                }
+                shapeRenderer.end();
+            }
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
 
