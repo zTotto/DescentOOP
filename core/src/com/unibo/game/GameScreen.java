@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.unibo.audio.AudioManagerImpl;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.HealSkill;
@@ -68,7 +69,7 @@ public class GameScreen implements Screen {
     private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
 
-    private final Music soundtrack;
+//    private final Music soundtrack;
 
     private boolean isRunningSoundPlaying = false;
 
@@ -96,6 +97,8 @@ public class GameScreen implements Screen {
     private final Label levelNumber;
 
     private final InputHandler input = new InputHandler();
+    
+    private final AudioManagerImpl audioManager = new AudioManagerImpl();
 
     /**
      * Main game scene.
@@ -153,10 +156,8 @@ public class GameScreen implements Screen {
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
-        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("audio/backgroundsong.mp3"));
-        soundtrack.setLooping(true);
-        soundtrack.play();
-        soundtrack.setVolume(0.4f);
+        audioManager.startUp("audio/backgroundsong.mp3");
+        
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
@@ -228,8 +229,8 @@ public class GameScreen implements Screen {
                             });
                         } else {
                             Gdx.app.postRunnable(() -> {
-                                this.soundtrack.pause();
-                                this.soundtrack.dispose();
+                                audioManager.stopMusic();
+                                audioManager.disposeMusic();
                                 game.setScreen(new GameOverMenu(game, "You Won!"));
                             });
                         }
@@ -253,8 +254,8 @@ public class GameScreen implements Screen {
         if (this.heroView.getHero().isDead()) {
             this.isPaused = true;
             Gdx.app.postRunnable(() -> {
-                this.soundtrack.pause();
-                this.soundtrack.dispose();
+            	audioManager.stopMusic();
+                audioManager.disposeMusic();
                 game.setScreen(new GameOverMenu(game, "You Died!"));
             });
         }
@@ -325,13 +326,13 @@ public class GameScreen implements Screen {
 
         // Last hero direction and music stopped during any kind of pause
         if (this.isPaused || this.isSkillMenuOpen) {
-            this.soundtrack.pause();
+        	audioManager.pauseMusic();
             batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
         }
 
         if (!this.isPaused && !this.isSkillMenuOpen) {
 
-            this.soundtrack.play();
+        	audioManager.playMusic();
             gameTime += Gdx.graphics.getDeltaTime();
 
             // Timed stuff
