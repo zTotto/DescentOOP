@@ -48,7 +48,7 @@ public class DescentMapImpl implements DescentMap {
     }
 
     @Override
-    public Boolean validMovement(final CharacterView charView, final int newX, final int newY) {
+    public Boolean validMovement(final CharacterView charView, final float newX, final float newY) {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
     }
 
@@ -69,7 +69,7 @@ public class DescentMapImpl implements DescentMap {
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
             final TileAction action) {
         final Rectangle rect = charView.getCharRect();
-        rect.setPosition(pos.getxCoord() - (int) (rect.getWidth() / 2), pos.getyCoord());
+        rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());
         Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
                 rect.y + rect.height, rect.x, rect.y + rect.height });
         for (final PolygonMapObject polyMapObj : layer.getObjects().getByType(PolygonMapObject.class)) {

@@ -62,9 +62,9 @@ public class MobView extends CharacterView {
         if (!this.getIsAttacking()) {
             this.setIsAttacking(true);
             this.getCharacter().hitEnemy(level.getHeroView().getCharacter());
-        } // else {
-        this.moveAI(level, currentLvl);
-        // }
+        } else {
+            this.moveAI(level, currentLvl);
+        }
     }
 
     /**

@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.unibo.view.CharacterView;
-import com.unibo.model.items.Item;
 import com.unibo.util.Position;
 
 /**
@@ -21,28 +20,26 @@ public interface DescentMap {
      * @param newY     y coordinate to test
      * @return true if the movement is valid.
      */
-    Boolean validMovement(CharacterView charView, int newX, int newY);
+    Boolean validMovement(CharacterView charView, float newX, float newY);
 
     /**
-     * Getter for the starting position of the Hero.
-     * 
-     * @return a Pair<Integer, Integer> 
+     * @return the starting position of the Hero.
      */
     Position getStartingPosition();
 
     /**
      * Getter for a specific layer in the TiledMap.
      * 
-     * @param an Integer number
-     * @return a TiledMapLayer 
+     * @param layerNumber number of the layer
+     * @return a TiledMapLayer
      */
     TiledMapTileLayer getLayer(int layerNumber);
 
     /**
      * Getter for a specific layer in the TiledMap.
      * 
-     * @param a string indicating the name of the layer
-     * @return a TiledMapLayer 
+     * @param path a string indicating the name of the layer
+     * @return a TiledMapLayer
      */
     TiledMapTileLayer getLayer(String path);
 
@@ -68,7 +65,7 @@ public interface DescentMap {
     Optional<MapLayer> getSpecialTilesLayer();
 
     /**
-     * Getter for the Tiled Map set in MapImpl
+     * Getter for the Tiled Map set in MapImpl.
      * 
      * @return the Tiled Map
      */
@@ -89,12 +86,12 @@ public interface DescentMap {
      * @return true if a player is damaged
      */
     Boolean checkDamageTile(CharacterView charView);
-    
+
     /**
-     * Getter for the float number used to rescale the map to
-     * better fit the game screen
+     * Getter for the float number used to rescale the map to better fit the game
+     * screen.
      * 
      * @return the scale of the map
      */
-	float getUnitScale();
+    float getUnitScale();
 }

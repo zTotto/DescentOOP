@@ -346,7 +346,7 @@ public abstract class Character {
      * @param yCoord
      * @return the character
      */
-    public abstract Character setPos(int xCoord, int yCoord);
+    public abstract Character setPos(float xCoord, float yCoord);
 
     /**
      * Moves the character up (movement is speed-based).
