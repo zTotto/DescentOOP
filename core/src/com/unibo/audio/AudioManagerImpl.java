@@ -47,21 +47,25 @@ public class AudioManagerImpl implements AudioManager {
 		this.soundtrack = Gdx.audio.newMusic(Gdx.files.internal(path));
 	}
 
-	public void playSoundEffect(String path) {
+	public void playSoundEffect(String path, Float volume) {
 		if (soundEffects.containsKey(path)) {
+			soundEffects.get(path).setVolume(0, volume);
 			soundEffects.get(path).play();
 		}
 		
 		else {
 			Sound sound = Gdx.audio.newSound(Gdx.files.internal(path));
+			sound.setVolume(0, volume);
 			soundEffects.put(path, sound);
 			soundEffects.get(path).play();
 		}
 	}
 	
-	public void changeSoundVolume(float f, String path) {
+	public void changeSoundVolume(String path, Float f) {
 		if (soundEffects.containsKey(path)) {
 			soundEffects.get(path).setVolume(0, f);
 		}
 	}
+
+
 }

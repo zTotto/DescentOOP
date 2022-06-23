@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.unibo.audio.AudioManager;
 import com.unibo.audio.AudioManagerImpl;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
@@ -134,7 +135,7 @@ public class GameScreen implements Screen {
         lvlList = new LevelsList(reader.getLevels());
         currentLvl = lvlList.getCurrentLevel();
         lastLevelKey();
-        lvlView = new LevelView(currentLvl);
+        lvlView = new LevelView(currentLvl, audioManager);
 
         // Hp Potion Icon
         // hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
@@ -151,12 +152,12 @@ public class GameScreen implements Screen {
         Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input, audioManager);
         lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
-        audioManager.startUp("audio/backgroundsong.mp3");
+        audioManager.startUp("audio/music/Danmachi.mp3");
         
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
@@ -181,7 +182,6 @@ public class GameScreen implements Screen {
 
         this.input.addCommand(KeyBindings.ATTACK, t -> {
             t.setIsAttacking(true);
-            t.getAttackSound().play();
             var last = t.getCharacter().hitEnemyFromLevel(currentLvl);
             if (last.isPresent()) {
                 this.lastDeadEnemies.add(new Pair<>(last.get().getFirst(), 0f));

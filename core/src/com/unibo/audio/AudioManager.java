@@ -14,7 +14,7 @@ public interface AudioManager {
 	
 	public void changeMusic(String path);
 	
-	public void playSoundEffect(String path);
+	public void playSoundEffect(String path, Float volume);
 	
-	public void changeSoundVolume(float f, String path);
+	public void changeSoundVolume(String path, Float volume);
 }
