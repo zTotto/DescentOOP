@@ -60,6 +60,21 @@ public class WearableItem extends Item {
         return this;
     }
 
+    @Override
+    public String toString() {
+        String s = "\n Wearable item: " + this.getName() + " [" + this.getPos() + "]";
+        if (this.health.isPresent()) {
+            s += "\nHealth: " + this.health.get();
+        }
+        if (this.power.isPresent()) {
+            s += "\nPower: " + this.power.get();
+        }
+        if (this.exp.isPresent()) {
+            s += "\nExperience: " + this.exp.get();
+        }
+        return s;
+    }
+
     /**
      * 
      *  Class to build a WearableItem.
@@ -67,8 +82,8 @@ public class WearableItem extends Item {
      */
     public static class Builder {
 
-        private String name;
-        private String id;
+        private final String name;
+        private final String id;
         private Optional<Double> health = Optional.empty();
         private Optional<Double> power = Optional.empty();
         private Optional<Integer> exp = Optional.empty();
