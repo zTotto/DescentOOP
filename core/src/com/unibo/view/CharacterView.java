@@ -48,7 +48,7 @@ public abstract class CharacterView {
      * 
      * @param fileName
      */
-    protected void createTextures(final String fileName) {
+    private void createTextures(final String fileName) {
         final Texture characterTextures = new Texture(fileName);
         final TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
                 characterTextures.getHeight() / 4);
@@ -91,6 +91,15 @@ public abstract class CharacterView {
         characterTextureAttack[1] = tmp[1][1];
         characterTextureAttack[2] = tmp[1][2];
         animationAttack = new Animation<>(1f / 6f, characterTextureAttack);
+    }
+
+    /**
+     * Recreates moving and attacking textures.
+     * 
+     * @param fileName
+     */
+    public void recreateTextures(final String fileName) {
+        this.createTextures(fileName);
     }
 
     /**
@@ -222,6 +231,7 @@ public abstract class CharacterView {
 
     /**
      * Sets whether the hero is moving or not.
+     * 
      * @param isMoving
      */
     public void setIsMoving(final boolean isMoving) {
