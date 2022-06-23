@@ -17,7 +17,7 @@ public class MobView extends CharacterView {
     private int moveBuffer = 0;
     private Direction lastDir = Direction.UP;
     private float attackTime = 0;
-    private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/Hadouken.mp3";
+    private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
 
     /**
      * Constructor for the Mob view.
@@ -64,7 +64,6 @@ public class MobView extends CharacterView {
         if (!this.getIsAttacking() && 
         		this.getCharacter().canHit(level.getHeroView().getCharacter())) {
             this.setIsAttacking(true);
-            System.out.println("Attacking");
             this.getCharacter().hitEnemy(level.getHeroView().getCharacter());
             
         } 

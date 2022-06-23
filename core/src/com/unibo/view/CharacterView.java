@@ -142,7 +142,6 @@ public abstract class CharacterView {
         this.isAttacking = isAttacking;
         if (isAttacking.booleanValue()) {
         	notifyAudioManager(attackSoundPath);
-        	System.out.println("Attacking inside");
         }
     }
 
