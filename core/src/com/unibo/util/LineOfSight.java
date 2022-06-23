@@ -9,19 +9,20 @@ import com.unibo.model.Character;
 import com.unibo.view.HeroView;
 import com.unibo.view.LevelView;
 import com.unibo.view.MobView;
+
 /**
  *
  */
 public final class LineOfSight {
 
-    public static boolean isHeroSeen(MobView mob, LevelView level, DescentMap map) {
+    public static boolean isHeroSeen(final MobView mob, final LevelView level, final DescentMap map) {
         final HeroView hero = level.getHeroView();
-        Vector2 heroVector = characterVector(mob.getCharacter());
-        Vector2 mobVector = characterVector(hero.getCharacter());
+        final Vector2 heroVector = characterVector(mob.getCharacter());
+        final Vector2 mobVector = characterVector(hero.getCharacter());
 
         for (final PolygonMapObject polyMapObj : map.getCollisionLayer().getObjects()
                 .getByType(PolygonMapObject.class)) {
-            Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
+            final Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
             var verts = polyObj.getTransformedVertices();
             for (int i = 0; i < verts.length; i++) {
                 verts[i] *= map.getUnitScale();
@@ -33,7 +34,7 @@ public final class LineOfSight {
         return true;
     }
 
-    public static Vector2 characterVector(Character character) {
+    public static Vector2 characterVector(final Character character) {
         final float x = character.getPos().getxCoord();
         final float y = character.getPos().getyCoord();
         return new Vector2(x, y);

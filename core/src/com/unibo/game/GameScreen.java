@@ -57,20 +57,17 @@ public class GameScreen implements Screen {
     private final SkillMenu skillMenu;
 
     private OrthographicCamera camera;
-    private SpriteBatch batch;
-    private HeroView heroView;
+    private final SpriteBatch batch;
+    private final HeroView heroView;
     private OrthogonalTiledMapRenderer renderer;
-    private LevelListReader reader;
 
-    private final Image hpPotionIcon;
     private final TextureRegion[] bloodAnim;
-    private final TextureRegion[] doorPointer;
     private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
 
     private final Music soundtrack;
 
-    private boolean isRunningSoundPlaying = false;
+    private boolean isRunningSoundPlaying;
 
     private float elapsedTime;
     private float attackTime;
@@ -107,7 +104,7 @@ public class GameScreen implements Screen {
 
         this.game = game;
 
-        reader = listReader;
+        final LevelListReader reader = listReader;
 
         // Menu
         menu = new PauseMenu(this);
@@ -135,17 +132,18 @@ public class GameScreen implements Screen {
 
         // Hp Potion Icon
         // hpTexture = new Texture("items/HealthPotion/Basic Health Potion.png");
-        hpPotionIcon = new Image(new Texture("items/HealthPotion/Basic Health Potion.png"));
+        final Image hpPotionIcon = new Image(new Texture("items/HealthPotion/Basic Health Potion.png"));
         hpPotionIcon.setPosition(manabar.getX(), manabar.getY() - manabar.getHeight() * 1.2f);
         manabar.getStage().addActor(hpPotionIcon);
 
         // Door Pointer
-        Texture doorTexture = new Texture("items/Door/Door Pointer Animation.png");
-        doorPointer = TextureRegion.split(doorTexture, doorTexture.getWidth() / 6, doorTexture.getHeight())[0];
+        final Texture doorTexture = new Texture("items/Door/Door Pointer Animation.png");
+        final TextureRegion[] doorPointer = TextureRegion.split(doorTexture, doorTexture.getWidth() / 6,
+                doorTexture.getHeight())[0];
         doorPointerAnim = new Animation<>(1f / 8f, doorPointer);
 
         // Blood Animation
-        Texture bloodTexture = new Texture("characters/bloodMob.png");
+        final Texture bloodTexture = new Texture("characters/bloodMob.png");
         bloodAnim = TextureRegion.split(bloodTexture, bloodTexture.getWidth() / 12, bloodTexture.getHeight())[0];
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input);
@@ -247,7 +245,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(final float delta) {
 
-        ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
+        final ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
 
         // Dead Hero check
         if (this.heroView.getHero().isDead()) {
@@ -282,7 +280,7 @@ public class GameScreen implements Screen {
 
         // Last Level Check
         if (isLastLevel && currentLvl.getEnemies().isEmpty()) {
-            currentLvl.getItems().stream().filter(i -> i.getName().equals("Magic Key"))
+            currentLvl.getItems().stream().filter(i -> "Magic Key".equals(i.getName()))
                     .forEach(k -> k.setPos(lastKeyPosition));
         }
 
@@ -315,7 +313,7 @@ public class GameScreen implements Screen {
                         m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                         m.getCharacter().getPos().getyCoord());
             }
-            Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
+            final Healthbar mobBar = lvlView.getMobHpBars().get(barIndex);
             mobBar.update(m.getCharacter());
             mobBar.setPosition(m.getCharacter().getPos().getxCoord() - m.getWidth() / 2f,
                     m.getCharacter().getPos().getyCoord() + m.getHeight() * 1.1f);
@@ -367,9 +365,9 @@ public class GameScreen implements Screen {
             }
 
             // Blood animation on dead mob
-            var temp = new LinkedList<>(lastDeadEnemies);
-            for (Pair<Position, Float> p : temp) {
-                var anim = new Animation<>(1f / 12f, bloodAnim);
+            final var temp = new LinkedList<>(lastDeadEnemies);
+            for (final Pair<Position, Float> p : temp) {
+                final var anim = new Animation<>(1f / 12f, bloodAnim);
                 batch.draw(anim.getKeyFrame(p.getSecond(), false),
                         p.getFirst().getxCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionHeight() / 2f,
                         p.getFirst().getyCoord() - anim.getKeyFrame(p.getSecond(), false).getRegionWidth() / 4f);
@@ -420,11 +418,11 @@ public class GameScreen implements Screen {
 
             heroView.move();
 
-            for (MobView mob : lvlView.getMobTextures()) {
+            for (final MobView mob : lvlView.getMobTextures()) {
                 mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
                 mob.update(lvlView, currentLvl);
-                float mobX = mob.getCharacter().getPos().getxCoord();
-                float mobY = mob.getCharacter().getPos().getyCoord();
+                final float mobX = mob.getCharacter().getPos().getxCoord();
+                final float mobY = mob.getCharacter().getPos().getyCoord();
                 shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
                 shapeRenderer.begin(ShapeType.Line);
                 if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
@@ -526,7 +524,7 @@ public class GameScreen implements Screen {
     private void lastLevelKey() {
         if (!this.lvlList.hasNextLevel()) {
             isLastLevel = true;
-            currentLvl.getItems().stream().filter(i -> i.getName().equals("Magic Key")).forEach(k -> {
+            currentLvl.getItems().stream().filter(i -> "Magic Key".equals(i.getName())).forEach(k -> {
                 lastKeyPosition = new Position(k.getPos().getxCoord(), k.getPos().getyCoord());
                 k.setPos(new Position(0, 0));
             });

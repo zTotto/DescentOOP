@@ -29,7 +29,7 @@ public class PauseMenu {
         menu.setFillParent(true);
         stage = new Stage(new ScreenViewport());
 
-        TextButton resume = new TextButton("Resume Game", skin);
+        final TextButton resume = new TextButton("Resume Game", skin);
         resume.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
@@ -37,19 +37,16 @@ public class PauseMenu {
                 menu.setVisible(false);
             }
         });
-        TextButton mainMenu = new TextButton("Main Menu", skin);
+        final TextButton mainMenu = new TextButton("Main Menu", skin);
         mainMenu.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 game.getGame().setScreen(new MainMenu(game.getGame()));
             }
         });
-        TextButton save = new TextButton("Save Game", skin);
-        TextButton quit = new TextButton("Quit Game", skin);
+        final TextButton quit = new TextButton("Quit Game", skin);
 
         menu.add(resume).uniform().fill().spaceBottom(10);
-        menu.row();
-        menu.add(save).uniform().fill().spaceBottom(10);
         menu.row();
         menu.add(mainMenu).uniform().fill().spaceBottom(10);
         menu.row();

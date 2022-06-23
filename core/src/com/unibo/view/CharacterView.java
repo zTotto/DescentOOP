@@ -26,7 +26,7 @@ public abstract class CharacterView {
     private final Rectangle charRect;
     private final Sound attackSound;
     private Boolean isAttacking = false;
-    private boolean isMoving = false;
+    private boolean isMoving;
 
     /**
      * Constructor for this class.
