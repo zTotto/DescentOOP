@@ -93,5 +93,5 @@ public interface DescentMap {
      * 
      * @return the scale of the map
      */
-    float getUnitScale();
+    Float getUnitScale();
 }

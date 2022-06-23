@@ -15,7 +15,7 @@ import com.unibo.util.Position;
 import com.unibo.view.CharacterView;
 
 /**
- * Implementation of the map interface.
+ * Implementation of the map interface that leverages the libgdx and Tiledmap framework.
  */
 public class DescentMapImpl implements DescentMap {
 
@@ -47,7 +47,9 @@ public class DescentMapImpl implements DescentMap {
         this.startingPosition = startingPos;
     }
 
-    @Override
+    /**
+	 * {@inheritDoc}
+	 */
     public Boolean validMovement(final CharacterView charView, final float newX, final float newY) {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
     }
@@ -140,7 +142,8 @@ public class DescentMapImpl implements DescentMap {
         return this.map;
     }
     
-    public float getUnitScale() {
+    @Override
+    public Float getUnitScale() {
     	return this.unitScale;
     }
 }

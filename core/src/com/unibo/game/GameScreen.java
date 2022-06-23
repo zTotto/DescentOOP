@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
-        audioManager.startUp("audio/music/Danmachi.mp3");
+        audioManager.setMusic("audio/music/Danmachi.mp3");
         
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());

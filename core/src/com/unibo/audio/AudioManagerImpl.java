@@ -5,55 +5,77 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Implementation of AudioManager interface that leverages the LibGdx sound framework
+ * under the assumption that only one soundtrack is played at any given time 
+ * (Typically the background song of a map).
+ */
 public class AudioManagerImpl implements AudioManager {
 	
 	private  Music soundtrack = null;
+	private final Map<String, Sound> soundEffects = new HashMap<>();
 	
+	/**
+	 * Constructor used for a level without a soundtrack,
+	 * though one can be added with setMusic method.
+	 */
 	public AudioManagerImpl() {
 		super();
 	}
 	
-	public AudioManagerImpl(Music soundtrack) {
+	
+	/**
+	 * Constructor that sets the background song.
+	 * @param path	the path of the song file
+	 */
+	public AudioManagerImpl(final String path) {
 		super();
-		this.soundtrack = soundtrack;
+		setMusic(path);
 	}
 	
-	private final Map<String, Sound> soundEffects = new HashMap<>();
-	
-	public void startUp(String path) {
-		soundtrack = Gdx.audio.newMusic(Gdx.files.internal(path));
-        soundtrack.setLooping(true);
-        soundtrack.play();
-        soundtrack.setVolume(0.4f);
-	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void stopMusic() {
 		soundtrack.stop();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void pauseMusic() {
 		soundtrack.pause();
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void playMusic() {
 		soundtrack.play();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void disposeMusic() {
 		soundtrack.dispose();
 	}
 	
-	public void changeMusic(String path) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setMusic(final String path) {
 		this.soundtrack = Gdx.audio.newMusic(Gdx.files.internal(path));
 	}
-
-	public void playSoundEffect(String path, Float volume) {
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void playSoundEffect(final String path, final Float volume) {
 		if (soundEffects.containsKey(path)) {
 			soundEffects.get(path).setVolume(0, volume);
 			soundEffects.get(path).play();
-		}
-		
-		else {
+		}	else {
 			Sound sound = Gdx.audio.newSound(Gdx.files.internal(path));
 			sound.setVolume(0, volume);
 			soundEffects.put(path, sound);
@@ -61,10 +83,22 @@ public class AudioManagerImpl implements AudioManager {
 		}
 	}
 	
-	public void changeSoundVolume(String path, Float f) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void changeSoundVolume(final String path, final Float f) {
 		if (soundEffects.containsKey(path)) {
 			soundEffects.get(path).setVolume(0, f);
 		}
+	}
+
+	/**
+	 * Sets the current song's volume and whether or not it's looping.
+	 * Should not be used if a song isn't already set.
+	 */
+	public void modifyMusic(final Boolean looping, final Float volume) {
+		this.soundtrack.setVolume(volume);
+		this.soundtrack.setLooping(looping);
 	}
 
 
