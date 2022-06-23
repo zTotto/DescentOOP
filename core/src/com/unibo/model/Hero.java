@@ -246,7 +246,7 @@ public class Hero extends Character {
     }
 
     @Override
-    public Hero setPos(final int xCoord, final int yCoord) {
+    public Hero setPos(final float xCoord, final float yCoord) {
         return this.setPos(new Position(xCoord, yCoord));
     }
 }

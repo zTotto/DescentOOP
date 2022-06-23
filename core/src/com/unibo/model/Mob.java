@@ -89,7 +89,7 @@ public class Mob extends Character {
      * {@inheritDoc}
      */
     @Override
-    public Mob setPos(final int xCoord, final int yCoord) {
+    public Mob setPos(final float xCoord, final float yCoord) {
         return this.setPos(new Position(xCoord, yCoord));
     }
 

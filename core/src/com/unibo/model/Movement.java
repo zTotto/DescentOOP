@@ -29,9 +29,9 @@ public class Movement implements Command {
     @Override
     public void executeCommand(final CharacterView characterView) {
         final Character character = characterView.getCharacter();
-        final int xPosition = character.getPos().getxCoord();
-        final int yPosition = character.getPos().getyCoord();
-        final int deltaMovement = (int) (character.getSpeed() * Gdx.graphics.getDeltaTime());
+        final float xPosition = character.getPos().getxCoord();
+        final float yPosition = character.getPos().getyCoord();
+        final float deltaMovement = character.getSpeed() * Gdx.graphics.getDeltaTime();
         final DescentMap map = character.getCurrentMap();
         characterView.setDir(this.direction);
         characterView.setIsMoving(true);
