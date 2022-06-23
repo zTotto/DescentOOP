@@ -261,9 +261,9 @@ public class GameScreen implements Screen {
         }
 
         // Hero Coordinates
-        final int heroX = heroView.getCharacter().getPos().getxCoord();
-        final int heroTextureX = heroX - (int) (heroView.getWidth() / 2);
-        final int heroY = heroView.getCharacter().getPos().getyCoord();
+        final float heroX = heroView.getCharacter().getPos().getxCoord();
+        final float heroTextureX = heroX - heroView.getWidth() / 2;
+        final float heroY = heroView.getCharacter().getPos().getyCoord();
 
         // Camera and batch initial settings
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -424,8 +424,8 @@ public class GameScreen implements Screen {
             for (MobView mob : lvlView.getMobTextures()) {
                 mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
                 mob.update(lvlView, currentLvl);
-                int mobX = mob.getCharacter().getPos().getxCoord();
-                int mobY = mob.getCharacter().getPos().getyCoord();
+                float mobX = mob.getCharacter().getPos().getxCoord();
+                float mobY = mob.getCharacter().getPos().getyCoord();
                 shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
                 shapeRenderer.begin(ShapeType.Line);
                 if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
@@ -472,7 +472,7 @@ public class GameScreen implements Screen {
             System.out.println("Speed: " + heroView.getHero().getSpeed());
             System.out.println("Range: " + heroView.getHero().getRange());
             System.out.println("Door: " + currentLvl.getDoorPosition());
-            System.out.println(heroView.getIsMoving());
+            System.out.println((int) (heroView.getHero().getSpeed() * Gdx.graphics.getDeltaTime()));
         }
     }
 

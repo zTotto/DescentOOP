@@ -8,8 +8,8 @@ import java.util.Objects;
  */
 public class Position {
 
-    private int x;
-    private int y;
+    private float x;
+    private float y;
 
     /**
      * Empty constructor for a position.
@@ -24,12 +24,16 @@ public class Position {
      * @param x coordinate
      * @param y coordinate
      */
-    public Position(final int x, final int y) {
+    public Position(final float x, final float y) {
         this.setxCoord(x);
         this.setyCoord(y);
     }
-    
-    public Position(Position pos) {
+
+    /**
+     * Constructor with premade position.
+     * @param pos
+     */
+    public Position(final Position pos) {
         this.setxCoord(pos.getxCoord());
         this.setyCoord(pos.getyCoord());
     }
@@ -48,7 +52,7 @@ public class Position {
      * 
      * @return the y coordinate
      */
-    public int getyCoord() {
+    public float getyCoord() {
         return y;
     }
 
@@ -56,7 +60,7 @@ public class Position {
      * 
      * @return the x coordinate
      */
-    public int getxCoord() {
+    public float getxCoord() {
         return x;
     }
 
@@ -65,7 +69,7 @@ public class Position {
      * 
      * @param yCoord
      */
-    public void setyCoord(final int yCoord) {
+    public void setyCoord(final float yCoord) {
         this.y = yCoord;
     }
 
@@ -74,7 +78,7 @@ public class Position {
      * 
      * @param xCoord
      */
-    public void setxCoord(final int xCoord) {
+    public void setxCoord(final float xCoord) {
         this.x = xCoord;
     }
 
