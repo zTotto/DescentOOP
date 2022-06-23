@@ -1,12 +1,11 @@
 package com.unibo.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.unibo.util.Direction;
+import com.unibo.audio.AudioManager;
 import com.unibo.model.Character;
 
 /**
@@ -24,7 +23,9 @@ public abstract class CharacterView {
     private Animation<TextureRegion> animationAttack;
     private Direction dir = Direction.STILL;
     private final Rectangle charRect;
-    private final Sound attackSound;
+    private String attackSoundPath;
+    private static final Float ATTACK_VOLUME = (float) 1.0;
+    private AudioManager audioManager;
     private Boolean isAttacking = false;
     private boolean isMoving = false;
 
@@ -35,10 +36,11 @@ public abstract class CharacterView {
      * @param texturePath     path of the character movement animation
      * @param attackSoundPath path of the attack sound
      */
-    public CharacterView(final Character character, final String texturePath, final String attackSoundPath) {
+    public CharacterView(final Character character, final String texturePath, final String attackSoundPath, final AudioManager manager) {
         this.character = character;
-        this.attackSound = Gdx.audio.newSound(Gdx.files.internal(attackSoundPath));
+        this.attackSoundPath = attackSoundPath;
         this.createTextures(texturePath);
+        this.audioManager = manager;
         this.charRect = new Rectangle(this.character.getPos().getxCoord(), this.character.getPos().getyCoord(),
                 still.getRegionWidth() * 0.66f, still.getRegionHeight() / 6);
     }
@@ -138,6 +140,9 @@ public abstract class CharacterView {
      */
     public void setIsAttacking(final Boolean isAttacking) {
         this.isAttacking = isAttacking;
+        if (isAttacking.booleanValue()) {
+        	notifyAudioManager(attackSoundPath);
+        }
     }
 
     /**
@@ -207,13 +212,6 @@ public abstract class CharacterView {
     }
 
     /**
-     * @return the attack sound
-     */
-    public Sound getAttackSound() {
-        return attackSound;
-    }
-
-    /**
      * @return true if the hero is moving
      */
     public boolean getIsMoving() {
@@ -226,5 +224,13 @@ public abstract class CharacterView {
      */
     public void setIsMoving(final boolean isMoving) {
         this.isMoving = isMoving;
+    }
+    
+    public void setAudioManager(AudioManager manager) {
+    	this.audioManager = manager;
+    }
+    
+    public void notifyAudioManager(String s) {
+    	audioManager.playSoundEffect(s, ATTACK_VOLUME);
     }
 }

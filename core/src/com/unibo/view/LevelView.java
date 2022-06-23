@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.unibo.audio.AudioManager;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.items.Item;
@@ -19,17 +20,19 @@ public class LevelView {
     private final List<Pair<Item, Animation<TextureRegion>>> itemTextures;
     private final List<MobView> mobTextures;
     private final List<Healthbar> hpBars;
+    private AudioManager audioManager;
     private HeroView heroview;
 
     /**
      * @param level Level from where to get the items and characters
      */
-    public LevelView(final Level level) {
+    public LevelView(final Level level, final AudioManager audioManager) {
         this.itemTextures = new LinkedList<>();
         this.mobTextures = new LinkedList<>();
         this.hpBars = new LinkedList<>();
+        this.audioManager = audioManager;
         this.loadItemTextures(level);
-        this.loadMobTextures(level);
+        this.loadMobTextures(level, this.audioManager);
         this.loadMobHpBars();
     }
 
@@ -43,7 +46,7 @@ public class LevelView {
         itemTextures.clear();
         hpBars.clear();
         loadItemTextures(level);
-        loadMobTextures(level);
+        loadMobTextures(level, this.audioManager);
         loadMobHpBars();
     }
 
@@ -64,7 +67,7 @@ public class LevelView {
      */
     public void updateMobs(final Level lvl) {
         mobTextures.clear();
-        loadMobTextures(lvl);
+        loadMobTextures(lvl, this.audioManager);
     }
 
     /**
@@ -83,9 +86,9 @@ public class LevelView {
         }
     }
 
-    private void loadMobTextures(final Level lvl) {
+    private void loadMobTextures(final Level lvl, AudioManager manager) {
         for (Mob mob : lvl.getEnemies()) {
-            mobTextures.add(new MobView(mob));
+            mobTextures.add(new MobView(mob, manager));
         }
     }
 
