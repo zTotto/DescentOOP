@@ -8,11 +8,11 @@ public enum WeaponStats {
     /**
      * Longsword: Damage: 10 Range: 64.
      */
-    LONGSWORD("Longsword", 10, 64),
+    LONGSWORD("Longsword", 10, 80),
     /**
      * Greataxe: Damage: 15 Range: 48.
      */
-    GREATAXE("Greataxe", 15, 48),
+    GREATAXE("Greataxe", 15, 64),
     /**
      * Fists: Damage: 4 Range: 48.
      */
