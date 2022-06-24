@@ -55,12 +55,15 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java-library"
-
-
+	
+	test {
+	    useJUnitPlatform()
+	}
+	
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        testImplementation  "org.junit:junit-bom:5.8.2"
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     }
 }

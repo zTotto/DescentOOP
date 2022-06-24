@@ -150,6 +150,13 @@ public class DescentMapImpl implements DescentMap {
     	return this.unitScale;
     }
     
+    
+    /**
+   	 * Calculates the polygon representing the character's hitbox if he moved to the defined position.
+   	 * @param character CharacterView of the character
+   	 * @param pos the position the character wants to move to
+   	 * @return a polygon
+   	 */
     private Polygon getProjectedCharacterPolygon(final CharacterView character, final Position pos) {
     	final Rectangle rect = character.getCharRect();
         rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());
