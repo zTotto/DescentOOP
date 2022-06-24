@@ -5,7 +5,9 @@ import java.util.List;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
+import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.Weapon;
+import com.unibo.model.items.WearableItem;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
@@ -26,7 +28,7 @@ public class Hero extends Character {
     private int range;
 
     private long exp;
-    private long expToLevelUp = 60;
+    private long expToLevelUp;
 
     /**
      * Constructor for the Hero.
@@ -36,10 +38,11 @@ public class Hero extends Character {
      * @param speed   Speed of the Hero
      * @param maxMana Max mana of the Hero
      */
-    public Hero(final String name, final int maxHp, final int speed, final int maxMana) {
+    public Hero(final String name, final int maxHp, final int speed, final int maxMana, final long expToLevelUp) {
         super(maxHp, speed, new Weapon(WeaponStats.FISTS, "0"), maxMana);
         this.name = name;
         this.range = speed / 6;
+        this.expToLevelUp = expToLevelUp;
     }
 
     /**
@@ -68,9 +71,9 @@ public class Hero extends Character {
     }
 
     /**
-     * If there's any, uses a potion.
+     * If there's any, uses a health potion.
      */
-    public void usePotion() {
+    public void useHealthPotion() {
         HealthPotion pot = null;
         for (final Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof HealthPotion) {
@@ -83,6 +86,24 @@ public class Hero extends Character {
             this.getInv().removeItem(pot);
         }
     }
+
+    /**
+     * If there's any, uses a mana potion.
+     */
+    public void useManaPotion() {
+        ManaPotion pot = null;
+        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+            if (p.getFirst() instanceof ManaPotion) {
+                pot = (ManaPotion) p.getFirst();
+                break;
+            }
+        }
+        if (!(pot == null) && pot.canUse(this)) {
+            pot.use(this);
+            this.getInv().removeItem(pot);
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -98,6 +119,8 @@ public class Hero extends Character {
                         this.getWeapons().add((Weapon) item);
                     } else if (item instanceof ConsumableItem) {
                         this.getInv().addItem(item);
+                    } else if (item instanceof WearableItem) {
+                        ((WearableItem) item).wear(this);
                     } else {
                         this.key = true;
                     }
@@ -140,7 +163,7 @@ public class Hero extends Character {
      * 
      * @param exp to be added to the hero
      */
-    public void addExp(final int exp) {
+    public void addExp(final long exp) {
         if (this.getLevel() < MAX_LEVEL) {
             this.exp += exp;
             if (this.isExpEnough()) {
@@ -172,26 +195,35 @@ public class Hero extends Character {
      */
     // Could become public if there will be an item that will level up the hero.
     private void levelUp() {
-        this.exp -= this.getExpToLevelUp();
-        this.incrementLevel();
-        if (this.getLevel() < MAX_LEVEL / 2) {
-            this.setExpToLevelUp(
-                    Math.round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
+        if (this.getLevel() < MAX_LEVEL) {
+            this.exp -= this.getExpToLevelUp();
+            this.incrementLevel();
+            this.increaseExpToLevelUp();
+            this.increaseStats();
+            
+            if (this.isExpEnough()) {
+                this.levelUp();
+            }
         } else {
-            this.setExpToLevelUp(Math.round(
-                    this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
+            this.resetXP();
         }
+    }
+
+    private void increaseExpToLevelUp() {
+        if (this.getLevel() < MAX_LEVEL / 2) {
+            this.setExpToLevelUp(Math
+                    .round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
+        } else {
+            this.setExpToLevelUp(Math.
+                    round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
+        }        
+    }
+
+    private void increaseStats() {
         this.setMaxHp((int) (this.getMaxHp() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setMaxMana((int) (this.getMaxMana() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setCurrentHp(this.getMaxHp());
-        this.setCurrentMana(this.getMaxMana());
-        if (this.isExpEnough()) {
-            this.levelUp();
-        }
-
-        if (this.getLevel() == MAX_LEVEL) {
-            this.resetXP();
-        }
+        this.setCurrentMana(this.getMaxMana());        
     }
 
     private void resetXP() {

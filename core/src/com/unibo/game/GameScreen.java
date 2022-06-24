@@ -52,6 +52,7 @@ public class GameScreen implements Screen {
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
+    private static final long EXP_TO_LVL_UP = 60;
     private static final double SPEED_MULTIPLIER = 0.75;
     private static final double TEN_PERCENT_MULTIPIER = 0.2;
     private final Descent game;
@@ -68,15 +69,10 @@ public class GameScreen implements Screen {
     private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
     private final Texture debug = new Texture("characters/debug.png");
-
-//    private final Music soundtrack;
-
-    private boolean isRunningSoundPlaying;
-
+  
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
-    private float soundTime;
     private float randomAnim = (float) (0.1 * Math.random());
 
     private boolean isPaused;
@@ -154,12 +150,13 @@ public class GameScreen implements Screen {
         // Blood Puddle
         bloodPuddle = new Texture("characters/bloodPuddle.png");
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input, audioManager);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA, EXP_TO_LVL_UP), this.input, audioManager);
         lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
-
-        audioManager.startUp("audio/music/Danmachi.mp3");
+        
+//        currentLvl.getMap().getFirst().setBackgroundSong("audio/music/Danmachi.mp3");
+//        audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0);
         
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
@@ -204,7 +201,8 @@ public class GameScreen implements Screen {
                     this.isPaused = !this.isPaused;
                     this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
-                }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
+                }).addCommand(KeyBindings.USE_HEALTH_POTION, t -> ((Hero) t.getCharacter()).useHealthPotion())
+                .addCommand(KeyBindings.USE_MANA_POTION, t -> ((Hero) t.getCharacter()).useManaPotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
                         new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLIER))
                 .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPIER)))
@@ -231,8 +229,8 @@ public class GameScreen implements Screen {
                             });
                         } else {
                             Gdx.app.postRunnable(() -> {
-                                audioManager.stopMusic();
-                                audioManager.disposeMusic();
+                                audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
+                                audioManager.disposeMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                                 game.setScreen(new GameOverMenu(game, "You Won!"));
                             });
                         }
@@ -256,8 +254,8 @@ public class GameScreen implements Screen {
         if (this.heroView.getHero().isDead()) {
             this.isPaused = true;
             Gdx.app.postRunnable(() -> {
-            	audioManager.stopMusic();
-                audioManager.disposeMusic();
+            	audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
+                audioManager.disposeMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                 game.setScreen(new GameOverMenu(game, "You Died!"));
             });
         }
@@ -328,13 +326,13 @@ public class GameScreen implements Screen {
 
         // Last hero direction and music stopped during any kind of pause
         if (this.isPaused || this.isSkillMenuOpen) {
-        	audioManager.pauseMusic();
+        	audioManager.pauseMusic(currentLvl.getMap().getFirst().getBackgroundSong());
             batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
         }
 
         if (!this.isPaused && !this.isSkillMenuOpen) {
 
-        	audioManager.playMusic();
+        	audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0.5);
             gameTime += Gdx.graphics.getDeltaTime();
 
             // Timed stuff
@@ -352,8 +350,11 @@ public class GameScreen implements Screen {
             // Item pick up
             this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
 
-            // Use potion
-            this.input.handleInput(KeyBindings.USE_POTION).ifPresent(t -> t.executeCommand(heroView));
+            // Use Health potion
+            this.input.handleInput(KeyBindings.USE_HEALTH_POTION).ifPresent(t -> t.executeCommand(heroView));
+
+            // Use Mana potion
+            this.input.handleInput(KeyBindings.USE_MANA_POTION).ifPresent(t -> t.executeCommand(heroView));
 
             // Use skill heal
             this.input.handleInput(KeyBindings.HEAL).ifPresent(t -> t.executeCommand(heroView));
@@ -402,17 +403,6 @@ public class GameScreen implements Screen {
                 }
             } else {
                 batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
-            }
-
-            // Running Sound
-            if (heroView.getIsMoving() && !this.isRunningSoundPlaying) {
-                heroView.getRunningSound().play(1, 0.8f, 0);
-                this.isRunningSoundPlaying = true;
-            }
-            this.soundTime += Gdx.graphics.getDeltaTime();
-            if (this.soundTime > 0.160 / 0.8) {
-                this.isRunningSoundPlaying = false;
-                this.soundTime = 0;
             }
 
             // Door Pointer Rendering

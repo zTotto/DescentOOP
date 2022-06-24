@@ -15,13 +15,15 @@ public class HeroView extends CharacterView {
 
     private final InputHandler input;
     private final Hero hero;
-    private final Sound runningSound = Gdx.audio.newSound(Gdx.files.internal("audio/sounds/run.wav"));
+    private static final String WALK_SOUND = "audio/sounds/run.wav";
+    private static final float WALK_VOLUME = (float) 1;
 
     /**
      * Constructor for the view.
      * 
      * @param hero  the hero model
      * @param input handler for keyboard inputs
+     * @param audioManager AudioManager for the hero's sounds
      */
     public HeroView(final Hero hero, final InputHandler input, final AudioManager audioManager) {
         super(hero, "characters/hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/weaponSound.mp3", audioManager);
@@ -30,7 +32,7 @@ public class HeroView extends CharacterView {
     }
 
     /**
-     * Moves the hero depending on the pressed key, and speed it up if pressed the
+     * Moves the hero depending on the pressed key, and speeds it up if pressed the
      * SpeedUp skill key.
      */
     public void move() {
@@ -47,6 +49,10 @@ public class HeroView extends CharacterView {
         this.input.handleInput(KeyBindings.MOVE_UP).ifPresent(t -> t.executeCommand(this));
 
         this.input.handleInput(KeyBindings.MOVE_DOWN).ifPresent(t -> t.executeCommand(this));
+        
+        if (this.getIsMoving()) {
+        	musicNotifyAudiomanager(WALK_SOUND, false, WALK_VOLUME);
+        }
 
     }
 
@@ -65,10 +71,4 @@ public class HeroView extends CharacterView {
         this.recreateTextures("characters/hero" + this.hero.getCurrentWeapon().getName() + ".png");
     }
 
-    /**
-     * @return the hero running sound
-     */
-    public Sound getRunningSound() {
-        return runningSound;
-    }
 }

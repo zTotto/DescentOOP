@@ -15,13 +15,13 @@ public final class LevelsList {
     private int counter;
 
     /**
-     * Constructor for a level list.
+     * Constructor for a levels list.
      * 
      * @param levelsToAdd
      */
     public LevelsList(final List<Level> levelsToAdd) {
         this.counter = 0;
-        levels = levelsToAdd;
+        this.levels = levelsToAdd;
     }
 
     /**
@@ -45,14 +45,15 @@ public final class LevelsList {
      * @return true if there is at least another level
      */
     public boolean hasNextLevel() {
-        return counter < levels.size() - 1;
+        return this.counter < this.levels.size() - 1;
     }
 
     /**
      * 
-     * @return the next level if there is one, NoSuchElementException otherwise
+     * @return the next level if there is one
+     * @throws NoSuchElementException if there are no more levels
      */
-    public Level getNextLevel() {
+    public Level getNextLevel() throws NoSuchElementException {
         if (this.hasNextLevel()) {
             return this.levels.get(++this.counter);
         }
@@ -67,4 +68,18 @@ public final class LevelsList {
         return !this.hasNextLevel();
     }
 
+    /**
+     * 
+     * @return a string describing the levels list
+     */
+    public String toString() {
+        String s = "\nLevelList: ";
+        if (!this.getLevels().isEmpty()) {
+            s += "total levels = " + this.getLevels().size() + ", current level = "
+                    + this.getLevels().indexOf(this.getCurrentLevel()) + 1;
+        } else {
+            s += "no levels";
+        }
+        return s;
+    }
 }
