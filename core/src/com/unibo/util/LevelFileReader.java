@@ -21,7 +21,7 @@ import com.unibo.model.items.WearableItem;
  */
 public class LevelFileReader {
 
-    private static final double GENERIC_MODIFIER = 0.25; 
+    private static final double GENERIC_MODIFIER = 0.25;
     private final List<HealthPotion> healthPotions;
     private final List<ManaPotion> manaPotions;
     private final List<WearableItem> wearable;
@@ -69,27 +69,27 @@ public class LevelFileReader {
 
     private void readManaPotions(final List<String> potionLines) {
         potionLines.stream()
-        .forEach(l -> manaPotions.add(new ManaPotion(l.split(" ")[1], "0", Double.parseDouble(l.split(" ")[2]))
-                .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
-                        Integer.parseInt(l.split(" ")[2].split(",")[1])))));
+                .forEach(l -> manaPotions.add(new ManaPotion(l.split(" ")[1], "0", Double.parseDouble(l.split(" ")[2]))
+                        .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
+                                Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
 
     private void readWearable(final List<String> wearableLines) {
-        for (String l : wearableLines) {
-            String[] str = l.split(" ");
-            WearableItem.Builder w = new WearableItem.Builder(str[1], "0");
-            for (String s : str) {
+        for (final String l : wearableLines) {
+            final String[] str = l.split(" ");
+            final WearableItem.Builder w = new WearableItem.Builder(str[1], "0");
+            for (final String s : str) {
                 if (s.contains("Hp")) {
-                    w.health(Integer.parseInt(s.split(":")[1]));
+                    w.health(Double.parseDouble(s.split(":")[1]));
                 }
                 if (s.contains("Exp")) {
                     w.exp(Integer.parseInt(s.split(":")[1]));
                 }
                 if (s.contains("Dmg")) {
-                    w.power(Integer.parseInt(s.split(":")[1]));
+                    w.power(Double.parseDouble(s.split(":")[1]));
                 }
                 if (s.contains(",")) {
-                    WearableItem wI = w.build();
+                    final WearableItem wI = w.build();
                     wI.setPos(new Position(Integer.parseInt(s.split(",")[0]), Integer.parseInt(s.split(",")[1])));
                     break;
                 }
