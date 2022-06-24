@@ -68,7 +68,7 @@ public class LevelFileReader {
 
     private void readManaPotions(final List<String> potionLines) {
         potionLines.stream()
-                .forEach(l -> manaPotions.add(new ManaPotion(l.split(" ")[1], "0", Double.parseDouble(l.split(" ")[2]))
+                .forEach(l -> manaPotions.add(new ManaPotion(l.split(" ")[0], "0", Double.parseDouble(l.split(" ")[1]))
                         .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                                 Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
