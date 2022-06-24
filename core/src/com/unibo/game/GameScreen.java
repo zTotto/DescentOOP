@@ -25,9 +25,7 @@ import com.unibo.model.Level;
 import com.unibo.model.LevelsList;
 import com.unibo.model.Movement;
 import com.unibo.model.SpeedUpSkill;
-import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
-import com.unibo.model.items.ManaPotion;
 import com.unibo.util.Direction;
 import com.unibo.util.LevelListReader;
 import com.unibo.util.Pair;
@@ -195,8 +193,8 @@ public class GameScreen implements Screen {
                     this.isPaused = !this.isPaused;
                     this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
-                }).addCommand(KeyBindings.USE_HEALTH_POTION, t -> ((Hero) t.getCharacter()).usePotion())
-                //.addCommand(KeyBindings.USE_MANA_POTION, t -> ((Hero) t.getCharacter()).usePotion())
+                }).addCommand(KeyBindings.USE_HEALTH_POTION, t -> ((Hero) t.getCharacter()).useHealthPotion())
+                .addCommand(KeyBindings.USE_MANA_POTION, t -> ((Hero) t.getCharacter()).useManaPotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
                         new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLIER))
                 .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPIER)))
