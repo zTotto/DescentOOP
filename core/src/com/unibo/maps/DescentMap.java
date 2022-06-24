@@ -94,4 +94,16 @@ public interface DescentMap {
      * @return the scale of the map
      */
     Float getUnitScale();
+    
+    /**
+     * Getter for the path to the background song of the map.
+     * @return an optional of the song's path
+     */
+    String getBackgroundSong();
+    
+    /**
+     * Setter for the path to the background song of the map.
+     * @param path	a String with the song's file path
+     */
+     void setBackgroundSong(String path);
 }

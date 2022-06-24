@@ -1,6 +1,8 @@
 package com.unibo.maps;
 
 import java.util.Optional;
+
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -25,6 +27,8 @@ public class DescentMapImpl implements DescentMap {
     private final TiledMap map;
     private final Position startingPosition;
     private final float unitScale;
+    private String backgroundMusic;
+    private static final float VOLUME = (float) 1.0;
 
     /**
      * Constructor for a map.
@@ -33,8 +37,9 @@ public class DescentMapImpl implements DescentMap {
      * @param startingPos of the hero
      * @param unitScale   float value to transform world units to pixel
      * @param isFileExt   true if the file is external
+     * @param musicPath   the background music's file path
      */
-    public DescentMapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
+    public DescentMapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt, final String musicPath) {
         if (isFileExt) {
             this.map = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(Descent.CUSTOM_LEVELS_PATH + path);
         } else {
@@ -45,11 +50,12 @@ public class DescentMapImpl implements DescentMap {
         this.teleportLayer = this.map.getLayers().get("teleports");
         this.specialTilesLayer = this.map.getLayers().get("special");
         this.startingPosition = startingPos;
+        this.backgroundMusic = musicPath;
     }
 
     /**
-	 * {@inheritDoc}
-	 */
+     * {@inheritDoc}
+     */
     public Boolean validMovement(final CharacterView charView, final float newX, final float newY) {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
     }
@@ -70,10 +76,7 @@ public class DescentMapImpl implements DescentMap {
 
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
             final TileAction action) {
-        final Rectangle rect = charView.getCharRect();
-        rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());
-        Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
-                rect.y + rect.height, rect.x, rect.y + rect.height });
+        Polygon poly = getProjectedCharacterPolygon(charView, pos);
         for (final PolygonMapObject polyMapObj : layer.getObjects().getByType(PolygonMapObject.class)) {
             Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
             var verts = polyObj.getTransformedVertices();
@@ -146,4 +149,27 @@ public class DescentMapImpl implements DescentMap {
     public Float getUnitScale() {
     	return this.unitScale;
     }
+    
+    private Polygon getProjectedCharacterPolygon(final CharacterView character, final Position pos) {
+    	final Rectangle rect = character.getCharRect();
+        rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());
+        Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
+                rect.y + rect.height, rect.x, rect.y + rect.height });
+        return poly;
+    }
+
+    /**
+   	 * {@inheritDoc}
+   	 */
+	public String getBackgroundSong() {
+		return backgroundMusic;
+	}
+
+	 /**
+		 * {@inheritDoc}
+		 */
+	public void setBackgroundSong(final String path) {
+		this.backgroundMusic = path;
+	}
+
 }

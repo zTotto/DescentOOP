@@ -141,7 +141,7 @@ public abstract class CharacterView {
     public void setIsAttacking(final Boolean isAttacking) {
         this.isAttacking = isAttacking;
         if (isAttacking.booleanValue()) {
-        	notifyAudioManager(attackSoundPath);
+        	soundNotifyAudiomanager(attackSoundPath, ATTACK_VOLUME);
         }
     }
 
@@ -230,7 +230,11 @@ public abstract class CharacterView {
     	this.audioManager = manager;
     }
     
-    public void notifyAudioManager(String s) {
-    	audioManager.playSoundEffect(s, ATTACK_VOLUME);
+    public void soundNotifyAudiomanager(String s, float volume) {
+    	audioManager.playSoundEffect(s, volume);
+    }
+    
+    public void musicNotifyAudiomanager(String s, Boolean looping, float volume) {
+    	audioManager.playMusic(s, looping, volume);
     }
 }
