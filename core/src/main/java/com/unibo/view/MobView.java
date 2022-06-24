@@ -13,7 +13,6 @@ import com.unibo.util.Direction;
  * Mob's view class.
  */
 public class MobView extends CharacterView {
-
 	private int moveBuffer = 0;
 	private Direction lastDir = Direction.UP;
 	private float attackTime = 0;
