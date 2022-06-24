@@ -1,6 +1,8 @@
 package com.unibo.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -63,5 +65,34 @@ public class ExperienceLevelUp {
         
         assertEquals(10, this.hero.getLevel());
         assertEquals(0, this.hero.getExp());
+        
+        this.hero.incrementLevel();
+        assertEquals(11, this.hero.getLevel());
+        this.hero.addExp(10);
+        assertEquals(0, this.hero.getExp());
+        assertEquals(0, this.hero.getExpToLevelUp());
+        
+    }
+    
+    @Test
+    public void testSkills() {
+        this.hero = new Hero("TestSkill", 100, 200, 100, 60);
+        assertFalse(this.hero.increaseSpeed(10));
+        assertFalse(this.hero.heal(10));
+        
+        this.hero.incrementLevel();
+        assertEquals(2, this.hero.getLevel());
+        assertTrue(this.hero.increaseSpeed(10));
+        assertFalse(this.hero.heal(10));
+        
+        this.hero.incrementLevel();
+        assertEquals(3, this.hero.getLevel());
+        assertTrue(this.hero.increaseSpeed(10));
+        assertFalse(this.hero.heal(10));
+        
+        this.hero.incrementLevel();
+        assertEquals(4, this.hero.getLevel());
+        assertTrue(this.hero.increaseSpeed(10));
+        assertTrue(this.hero.heal(10));    
     }
 }
