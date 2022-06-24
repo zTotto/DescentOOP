@@ -170,6 +170,9 @@ public class Hero extends Character {
                 this.levelUp();
             }
         }
+        else {
+            this.resetXP();
+        }
     }
 
     /**
