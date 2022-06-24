@@ -31,46 +31,43 @@ public class MobView extends CharacterView {
 																										// for mobs
 	}
 
-	public void moveAI(final LevelView levelView, final Level level) {
-		if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
+	@Override
+	public void move() {
+		
+	}
+	
+	/**
+	 * Method to be called each time the screen is rendered.
+	 * It decides whether the mob attacks or moves and if it
+	 * moves randomly or according to a pathfinding algorithm.
+	 * 
+	 * @param levelView		the levelview of the level the mob is in
+	 * @param level		the level the mob is in
+	 */
+	public void update(final LevelView levelView, final Level level) {
+		
+		if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
+			this.setIsAttacking(true);
+			this.getCharacter().hitEnemy(levelView.getHeroView().getCharacter());
+		}
+		
+		else if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
 			final Movement move;
 			if (moveBuffer <= 15) {
 				moveBuffer++;
 				move = new Movement(lastDir);
 				move.executeCommand(this);
 				return;
-			}
+				}
 			Direction newDir = Pathfinding.randomDirection();
 			move = new Movement(newDir);
 			move.executeCommand(this);
 			lastDir = newDir;
 			moveBuffer = 0;
 			return;
-		} else {
-			pathfinding.moveMob(this, levelView, level.getMap().getFirst());
-		}
-	}
-
-	@Override
-	public void move() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	/**
-	 * Method to be called each time the screen is rendered.
-	 * It decides whether the mob attacks or moves.
-	 * 
-	 * @param levelView		the levelview of the level the mob is in
-	 * @param level		the level the mob is in
-	 */
-	public void update(final LevelView levelView, final Level level) {
-		if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
-			this.setIsAttacking(true);
-			this.getCharacter().hitEnemy(levelView.getHeroView().getCharacter());
-		} else {
-			this.moveAI(levelView, level);
-		}
+			} else {
+				pathfinding.moveMob(this, levelView, level.getMap().getFirst());
+				}
 	}
 
 	/**

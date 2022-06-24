@@ -155,9 +155,6 @@ public class GameScreen implements Screen {
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
         
-//        currentLvl.getMap().getFirst().setBackgroundSong("audio/music/Danmachi.mp3");
-//        audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0);
-        
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
@@ -174,7 +171,8 @@ public class GameScreen implements Screen {
         levelNumber.setFontScale(0.5f);
         levelNumber.setPosition(0, 0);
         expbar.getStage().addActor(this.levelNumber);
-
+        
+        // Camera setup
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
@@ -247,8 +245,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
-
-        final ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
+    	
+    	// renderer for line of sight debugging
+        final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
         // Dead Hero check
         if (this.heroView.getHero().isDead()) {
@@ -427,7 +426,7 @@ public class GameScreen implements Screen {
 
             heroView.move();
 
-            // Debug
+            // Draws line of sights for debugging
             for (final MobView mob : lvlView.getMobTextures()) {
                 mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
                 mob.update(lvlView, currentLvl);
