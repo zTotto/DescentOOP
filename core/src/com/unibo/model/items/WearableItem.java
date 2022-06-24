@@ -103,7 +103,7 @@ public class WearableItem extends Item {
          * Increase the pg maximum health.
          * 
          * @param mod to apply to the pg to increase maximum life ranging from 0 to 1 excluded
-         * @return this
+         * @return this for chaining
          */
         public Builder health(final double mod) {
             this.health = Optional.of(mod).filter(k -> k > 0 && k < 1);
@@ -114,7 +114,7 @@ public class WearableItem extends Item {
          * Increase the damage of the player's current weapon.
          * 
          * @param mod to apply to the pg to icrease the damage ranging from 0 to 1 excluded
-         * @return this
+         * @return this for chaining
          */
         public Builder power(final double mod) {
             this.power = Optional.of(mod).filter(k -> k > 0 && k < 1);
@@ -125,7 +125,7 @@ public class WearableItem extends Item {
          * Add experience to the pg.
          * 
          * @param e experience to add to the pg ranging from 1 to 999
-         * @return this
+         * @return this for chaining
          */
         public Builder exp(final int e) {
             this.exp = Optional.of(e).filter(k -> k > 0 && k < 1000);

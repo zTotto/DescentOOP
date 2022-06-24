@@ -71,18 +71,32 @@ public class LevelFileReader {
 
     private void readManaPotions(final List<String> potionLines) {
         potionLines.stream()
-        .forEach(l -> manaPotions.add(new ManaPotion("Mana Potion", "0", GENERIC_MODIFIER)
+        .forEach(l -> manaPotions.add(new ManaPotion(l.split(" ")[1], "0", Double.parseDouble(l.split(" ")[2]))
                 .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
                         Integer.parseInt(l.split(" ")[2].split(",")[1])))));
     }
 
     private void readWearable(final List<String> wearableLines) {
-        wearableLines.stream()
-        .forEach(l -> wearable.add((WearableItem) new WearableItem.Builder("Health Ring", "0")
-                .health(GENERIC_MODIFIER)
-                .build()
-                .setPos(new Position(Integer.parseInt(l.split(" ")[2].split(",")[0]),
-                        Integer.parseInt(l.split(" ")[2].split(",")[1])))));
+        for (String l : wearableLines) {
+            String[] str = l.split(" ");
+            WearableItem.Builder w = new WearableItem.Builder(str[1], "0");
+            for (String s : str) {
+                if (s.contains("Hp")) {
+                    w.health(Integer.parseInt(s.split(":")[1]));
+                }
+                if (s.contains("Exp")) {
+                    w.exp(Integer.parseInt(s.split(":")[1]));
+                }
+                if (s.contains("Dmg")) {
+                    w.power(Integer.parseInt(s.split(":")[1]));
+                }
+                if (s.contains(",")) {
+                    WearableItem wI = w.build();
+                    wI.setPos(new Position(Integer.parseInt(s.split(",")[0]), Integer.parseInt(s.split(",")[1])));
+                    break;
+                }
+            }
+        }
     }
 
     private void readKey(final String keyLine) {
