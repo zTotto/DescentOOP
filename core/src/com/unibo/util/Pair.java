@@ -96,7 +96,7 @@ public class Pair<X, Y> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Pair<X, Y> other = (Pair<X, Y>) obj;
+        final Pair<X, Y> other = (Pair<X, Y>) obj;
         return Objects.equals(first, other.first) && Objects.equals(second, other.second);
     }
 }

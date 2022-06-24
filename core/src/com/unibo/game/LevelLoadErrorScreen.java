@@ -80,7 +80,7 @@ public class LevelLoadErrorScreen implements Screen {
         });
 
         table.add(label).spaceBottom(70).row();
-        if (!msg.get(0).equals("NO VALID LEVELS!")) {
+        if (!"NO VALID LEVELS!".equals(msg.get(0))) {
             table.add(loadGame).uniform().fill().spaceBottom(10).row();
         }
         table.add(mainMenu).uniform().fill().spaceBottom(10).row();

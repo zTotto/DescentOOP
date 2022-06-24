@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.unibo.maps.DescentMap;
 import com.unibo.maps.DescentMapImpl;
 import com.unibo.model.Level;
@@ -33,9 +32,8 @@ public class LevelFileReader {
      * @param file      File where to read level properties
      * @param isFileExt true if the file is external
      */
-    public LevelFileReader(final FileHandle file, final Boolean isFileExt)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
-        List<String> linesList = Arrays.asList(file.readString().split("\\r?\\n")).stream()
+    public LevelFileReader(final FileHandle file, final Boolean isFileExt) {
+        final List<String> linesList = Arrays.asList(file.readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         potions = new LinkedList<>();
         key = new DoorKey();
@@ -143,7 +141,7 @@ public class LevelFileReader {
      * @return the level
      */
     public Level getLevel() {
-        Level lvl = new Level(map);
+        final Level lvl = new Level(map);
         mobs.forEach(m -> lvl.addEnemies(m));
         potions.forEach(p -> lvl.addItems(p));
         weapons.forEach(w -> lvl.addItems(w));

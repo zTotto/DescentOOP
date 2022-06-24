@@ -20,14 +20,17 @@ public abstract class CharacterView {
     private Animation<TextureRegion> animationRight;
     private Animation<TextureRegion> animationUp;
     private Animation<TextureRegion> animationDown;
-    private Animation<TextureRegion> animationAttack;
+    private Animation<TextureRegion> animationAttackLeft;
+    private Animation<TextureRegion> animationAttackRight;
+    private Animation<TextureRegion> animationAttackUp;
+    private Animation<TextureRegion> animationAttackDown;
     private Direction dir = Direction.STILL;
     private final Rectangle charRect;
     private String attackSoundPath;
     private static final Float ATTACK_VOLUME = (float) 1.0;
     private AudioManager audioManager;
     private Boolean isAttacking = false;
-    private boolean isMoving = false;
+    private boolean isMoving;
 
     /**
      * Constructor for this class.
@@ -50,49 +53,80 @@ public abstract class CharacterView {
      * 
      * @param fileName
      */
-    protected void createTextures(final String fileName) {
+    private void createTextures(final String fileName) {
         final Texture characterTextures = new Texture(fileName);
-        final TextureRegion[][] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 3,
-                characterTextures.getHeight() / 4);
+        final TextureRegion[] tmp = TextureRegion.split(characterTextures, characterTextures.getWidth() / 29,
+                characterTextures.getHeight())[0];
 
         // Texture when still
-        still = tmp[2][1];
+        still = tmp[11];
 
         // Texture when moving right
-        TextureRegion[] characterTextureRight = new TextureRegion[3];
-        characterTextureRight[0] = tmp[1][0];
-        characterTextureRight[1] = tmp[1][1];
-        characterTextureRight[2] = tmp[1][2];
-        animationRight = new Animation<>(1f / 12f, characterTextureRight);
+        TextureRegion[] characterTextureRight = new TextureRegion[4];
+        characterTextureRight[0] = tmp[6];
+        characterTextureRight[1] = tmp[7];
+        characterTextureRight[2] = tmp[8];
+        characterTextureRight[3] = tmp[9];
+        animationRight = new Animation<>(1f / 8f, characterTextureRight);
 
         // Texture when moving left
-        TextureRegion[] characterTextureLeft = new TextureRegion[3];
-        characterTextureLeft[0] = tmp[3][2];
-        characterTextureLeft[1] = tmp[3][1];
-        characterTextureLeft[2] = tmp[3][0];
-        animationLeft = new Animation<>(1f / 12f, characterTextureLeft);
+        TextureRegion[] characterTextureLeft = new TextureRegion[4];
+        characterTextureLeft[0] = tmp[14];
+        characterTextureLeft[1] = tmp[15];
+        characterTextureLeft[2] = tmp[16];
+        characterTextureLeft[3] = tmp[17];
+        animationLeft = new Animation<>(1f / 8f, characterTextureLeft);
 
         // Texture when moving up
-        TextureRegion[] characterTextureUp = new TextureRegion[3];
-        characterTextureUp[0] = tmp[0][0];
-        characterTextureUp[1] = tmp[0][1];
-        characterTextureUp[2] = tmp[0][2];
-        animationUp = new Animation<>(1f / 8f, characterTextureUp);
+        TextureRegion[] characterTextureUp = new TextureRegion[6];
+        characterTextureUp[0] = tmp[0];
+        characterTextureUp[1] = tmp[1];
+        characterTextureUp[2] = tmp[2];
+        characterTextureUp[3] = tmp[3];
+        characterTextureUp[4] = tmp[4];
+        characterTextureUp[5] = tmp[5];
+        animationUp = new Animation<>(1f / 15f, characterTextureUp);
 
         // Texture when moving down
-        TextureRegion[] characterTextureDown = new TextureRegion[3];
-        characterTextureDown[0] = tmp[2][0];
-        characterTextureDown[1] = tmp[2][1];
-        characterTextureDown[2] = tmp[2][2];
+        TextureRegion[] characterTextureDown = new TextureRegion[4];
+        characterTextureDown[0] = tmp[10];
+        characterTextureDown[1] = tmp[11];
+        characterTextureDown[2] = tmp[12];
+        characterTextureDown[3] = tmp[13];
         animationDown = new Animation<>(1f / 8f, characterTextureDown);
 
-        // Texture when attacking
-        // TODO: CHANGE WHEN SPRITES ARE READY
-        TextureRegion[] characterTextureAttack = new TextureRegion[3];
-        characterTextureAttack[0] = tmp[1][0];
-        characterTextureAttack[1] = tmp[1][1];
-        characterTextureAttack[2] = tmp[1][2];
-        animationAttack = new Animation<>(1f / 6f, characterTextureAttack);
+        // Textures when attacking
+        TextureRegion[] characterTextureAttackUp = new TextureRegion[2];
+        characterTextureAttackUp[0] = tmp[18];
+        characterTextureAttackUp[1] = tmp[19];
+        animationAttackUp = new Animation<>(1f / 6f, characterTextureAttackUp);
+
+        TextureRegion[] characterTextureAttackDown = new TextureRegion[3];
+        characterTextureAttackDown[0] = tmp[23];
+        characterTextureAttackDown[1] = tmp[24];
+        characterTextureAttackDown[2] = tmp[25];
+        animationAttackDown = new Animation<>(1f / 6f, characterTextureAttackDown);
+
+        TextureRegion[] characterTextureAttackRight = new TextureRegion[3];
+        characterTextureAttackRight[0] = tmp[20];
+        characterTextureAttackRight[1] = tmp[21];
+        characterTextureAttackRight[2] = tmp[22];
+        animationAttackRight = new Animation<>(1f / 6f, characterTextureAttackRight);
+
+        TextureRegion[] characterTextureAttackLeft = new TextureRegion[3];
+        characterTextureAttackLeft[0] = tmp[26];
+        characterTextureAttackLeft[1] = tmp[27];
+        characterTextureAttackLeft[2] = tmp[28];
+        animationAttackLeft = new Animation<>(1f / 6f, characterTextureAttackLeft);
+    }
+
+    /**
+     * Recreates moving and attacking textures.
+     * 
+     * @param fileName
+     */
+    public void recreateTextures(final String fileName) {
+        this.createTextures(fileName);
     }
 
     /**
@@ -108,20 +142,35 @@ public abstract class CharacterView {
     }
 
     /**
+     * Getter for a frame of the attack animation from a given direction.
      * 
      * @param time
-     * @return the attack animation
+     * @param dir  Character direction
+     * @return the attack animation frame
      */
-    public TextureRegion getAttackText(final float time) {
-        return animationAttack.getKeyFrame(time, false);
+    public TextureRegion getAttackFrame(final float time, final Direction dir) {
+        return this.getAttackAnim(dir).getKeyFrame(time, false);
     }
 
     /**
+     * Getter for the attack animation from a given direction.
      * 
+     * @param dir Character direction
      * @return the attack animation
      */
-    public Animation<TextureRegion> getAttackAnim() {
-        return animationAttack;
+    public Animation<TextureRegion> getAttackAnim(final Direction dir) {
+        switch (dir) {
+        case DOWN:
+            return animationAttackDown;
+        case LEFT:
+            return animationAttackLeft;
+        case RIGHT:
+            return animationAttackRight;
+        case UP:
+            return animationAttackUp;
+        default:
+            return animationAttackDown;
+        }
     }
 
     /**
@@ -186,7 +235,7 @@ public abstract class CharacterView {
         case DOWN:
             return animationDown.getKeyFrame(time, true);
         default:
-            return new TextureRegion(still);
+            return still;
         }
     }
 
@@ -220,6 +269,7 @@ public abstract class CharacterView {
 
     /**
      * Sets whether the hero is moving or not.
+     * 
      * @param isMoving
      */
     public void setIsMoving(final boolean isMoving) {

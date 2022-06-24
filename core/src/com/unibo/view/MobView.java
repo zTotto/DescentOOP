@@ -14,9 +14,9 @@ import com.unibo.util.AI;
  */
 public class MobView extends CharacterView {
 
-    private int moveBuffer = 0;
+    private int moveBuffer;
     private Direction lastDir = Direction.UP;
-    private float attackTime = 0;
+    private float attackTime;
     private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
 
     /**
@@ -43,7 +43,7 @@ public class MobView extends CharacterView {
                 move.executeCommand(this);
                 return;
             }
-            Direction newDir = AI.randomDirection(this, level.getMap().getFirst());
+            final Direction newDir = AI.randomDirection(this, level.getMap().getFirst());
             move = new Movement(newDir);
             move.executeCommand(this);
             lastDir = newDir;

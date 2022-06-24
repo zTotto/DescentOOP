@@ -72,13 +72,13 @@ public class Hero extends Character {
      */
     public void usePotion() {
         HealthPotion pot = null;
-        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+        for (final Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof HealthPotion) {
                 pot = (HealthPotion) p.getFirst();
                 break;
             }
         }
-        if (!(pot == null) && pot.canUse(this)) {
+        if (pot != null && pot.canUse(this)) {
             pot.use(this);
             this.getInv().removeItem(pot);
         }
@@ -90,7 +90,7 @@ public class Hero extends Character {
     @Override
     public Boolean pickUpfromLevel(final Level lvl) {
         if (!this.isDead()) {
-            List<Item> items = lvl.getItems();
+            final List<Item> items = lvl.getItems();
             int index = 0;
             for (final Item item : items) {
                 if (this.isInRange(item.getPos())) {
