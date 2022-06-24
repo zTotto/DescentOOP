@@ -27,8 +27,7 @@ public class MobView extends CharacterView {
 	 * @param audioManager for the mob's sound
 	 */
 	public MobView(final Mob mob, final AudioManager audioManager) {
-		super(mob, "characters/" + mob.getName() + ".png", DEFAULT_ATTACK_SOUND_PATH, audioManager); // TODO add sounds
-																										// for mobs
+		super(mob, "characters/" + mob.getName() + ".png", DEFAULT_ATTACK_SOUND_PATH, audioManager); 																										
 	}
 
 	@Override
