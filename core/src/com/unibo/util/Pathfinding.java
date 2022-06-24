@@ -22,9 +22,9 @@ public final class Pathfinding {
      * Moves the mob given as a parameter according to a simple pathfinding
      * algorithm. The Algorithm takes care of line of sight and stuck mobs.
      * 
-     * @param mob Mobview
+     * @param mob   Mobview
      * @param level LevelView
-     * @param map Map
+     * @param map   Map
      */
     public static void moveMob(final MobView mob, final LevelView level, final DescentMap map) {
 
@@ -80,7 +80,7 @@ public final class Pathfinding {
     private static Boolean mobCollides(final MobView mob, final LevelView level) {
         final List<MobView> mobs = new ArrayList<>(level.getMobTextures());
         mobs.remove(mob);
-        for (MobView mobView : mobs) {
+        for (final MobView mobView : mobs) {
             if (mob.getCharRect().overlaps(mobView.getCharRect())) {
                 return true;
             }
@@ -96,7 +96,7 @@ public final class Pathfinding {
      * @return True if the 2 positions are different, False if they're equal
      */
     private static Boolean hasCharacterMoved(final Position pos1, final Position pos2) {
-        return (pos1 != pos2);
+        return pos1 != pos2;
     }
 
     /**

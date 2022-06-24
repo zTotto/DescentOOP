@@ -8,13 +8,13 @@ public enum TileAction {
     /**
      * Collision tile.
      */
-    Collision,
+    COLLISION,
     /**
      * Teleport tile.
      */
-    Teleport,
+    TELEPORT,
     /**
      * Damage tile.
      */
-    Damage;
+    DAMAGE;
 }

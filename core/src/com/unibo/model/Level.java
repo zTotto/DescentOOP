@@ -108,7 +108,7 @@ public class Level {
      * @return a list containing all the consumables
      */
     public List<ConsumableItem> getConsumables() {
-        List<ConsumableItem> res = new LinkedList<>();
+        final List<ConsumableItem> res = new LinkedList<>();
         items.stream().filter(i -> i instanceof ConsumableItem).forEach(item -> res.add((ConsumableItem) item));
         return res;
     }
@@ -117,7 +117,7 @@ public class Level {
      * @return a list containing all the weapons
      */
     public List<Weapon> getWeapons() {
-        List<Weapon> res = new LinkedList<>();
+        final List<Weapon> res = new LinkedList<>();
         items.stream().filter(i -> i instanceof Weapon).forEach(item -> res.add((Weapon) item));
         return res;
     }

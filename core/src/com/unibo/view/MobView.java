@@ -30,12 +30,6 @@ public class MobView extends CharacterView {
 																										// for mobs
 	}
 
-	/**
-	 * TO DO (pathfinding algorithm).
-	 * 
-	 * @param levelView View of the level
-	 * @param level     Model of the level
-	 */
 	public void moveAI(final LevelView levelView, final Level level) {
 		if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
 			final Movement move;

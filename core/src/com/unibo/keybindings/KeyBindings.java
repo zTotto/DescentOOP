@@ -40,9 +40,13 @@ public enum KeyBindings {
      */
     SWITCH_WEAPON(Input.Keys.W, "SwitchWeapon"),
     /**
-     * Key to use a potion.
+     * Key to use a health potion.
      */
-    USE_POTION(Input.Keys.F, "UsePotion"),
+    USE_HEALTH_POTION(Input.Keys.F, "UseHealthPotion"),
+    /**
+     * Key to use a mana potion.
+     */
+    USE_MANA_POTION(Input.Keys.M, "UseManaPotion"),
     /**
      * Key to use skill: Increases Speed.
      */

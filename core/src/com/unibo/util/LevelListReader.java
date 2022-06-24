@@ -25,12 +25,11 @@ public class LevelListReader {
      * @param file      File where to read levels
      * @param isFileExt true if the file is external
      */
-    public LevelListReader(final FileHandle file, final Boolean isFileExt)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException, GdxRuntimeException {
+    public LevelListReader(final FileHandle file, final Boolean isFileExt) {
         lvlList = new LinkedList<>();
         errorList = new LinkedList<>();
         this.file = file;
-        List<String> levelLines = Arrays.asList(file.child("LevelList.txt").readString().split("\\r?\\n")).stream()
+        final List<String> levelLines = Arrays.asList(file.child("LevelList.txt").readString().split("\\r?\\n")).stream()
                 .filter(l -> !l.contains("//")).collect(Collectors.toList());
         for (final String s : levelLines) {
             try {
