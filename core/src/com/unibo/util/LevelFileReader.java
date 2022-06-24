@@ -21,7 +21,6 @@ import com.unibo.model.items.WearableItem;
  */
 public class LevelFileReader {
 
-    private static final double GENERIC_MODIFIER = 0.25;
     private final List<HealthPotion> healthPotions;
     private final List<ManaPotion> manaPotions;
     private final List<WearableItem> wearable;
@@ -91,6 +90,7 @@ public class LevelFileReader {
                 if (s.contains(",")) {
                     final WearableItem wI = w.build();
                     wI.setPos(new Position(Integer.parseInt(s.split(",")[0]), Integer.parseInt(s.split(",")[1])));
+                    wearable.add(wI);
                     break;
                 }
             }
