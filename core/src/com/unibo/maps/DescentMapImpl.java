@@ -148,6 +148,7 @@ public class DescentMapImpl implements DescentMap {
     @Override
     public Float getUnitScale() {
     	return this.unitScale;
+    }
     
     private Polygon getProjectedCharacterPolygon(final CharacterView character, final Position pos) {
     	final Rectangle rect = character.getCharRect();
