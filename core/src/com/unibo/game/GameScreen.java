@@ -52,6 +52,7 @@ public class GameScreen implements Screen {
     private static final int MAX_SPEED = 200;
     private static final int MAX_HP = 100;
     private static final int MAX_MANA = 100;
+    private static final long EXP_TO_LVL_UP = 60;
     private static final double SPEED_MULTIPLIER = 0.75;
     private static final double TEN_PERCENT_MULTIPIER = 0.2;
     private final Descent game;
@@ -154,7 +155,7 @@ public class GameScreen implements Screen {
         // Blood Puddle
         bloodPuddle = new Texture("characters/bloodPuddle.png");
 
-        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA), this.input, audioManager);
+        heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA, EXP_TO_LVL_UP), this.input, audioManager);
         lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);

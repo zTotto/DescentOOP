@@ -26,7 +26,7 @@ public class Hero extends Character {
     private int range;
 
     private long exp;
-    private long expToLevelUp = 60;
+    private long expToLevelUp;
 
     /**
      * Constructor for the Hero.
@@ -36,10 +36,11 @@ public class Hero extends Character {
      * @param speed   Speed of the Hero
      * @param maxMana Max mana of the Hero
      */
-    public Hero(final String name, final int maxHp, final int speed, final int maxMana) {
+    public Hero(final String name, final int maxHp, final int speed, final int maxMana, final long expToLevelUp) {
         super(maxHp, speed, new Weapon(WeaponStats.FISTS, "0"), maxMana);
         this.name = name;
         this.range = speed / 6;
+        this.expToLevelUp = expToLevelUp;
     }
 
     /**
@@ -140,7 +141,7 @@ public class Hero extends Character {
      * 
      * @param exp to be added to the hero
      */
-    public void addExp(final int exp) {
+    public void addExp(final long exp) {
         if (this.getLevel() < MAX_LEVEL) {
             this.exp += exp;
             if (this.isExpEnough()) {
