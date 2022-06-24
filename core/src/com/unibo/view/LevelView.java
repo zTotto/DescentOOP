@@ -79,10 +79,10 @@ public class LevelView {
     }
 
     private void loadItemTextures(final Level lvl) {
-        for (Item i : lvl.getItems()) {
-            var text = new Texture("items/" + i.getClass().getSimpleName() + "/" + i.getName() + " Anim.png");
-            var region = TextureRegion.split(text, text.getWidth() / 6, text.getHeight())[0];
-            itemTextures.add(new Pair<>(i, new Animation<>(1f / 8f, region)));
+        for (final Item i : lvl.getItems()) {
+            final var text = new Texture("items/" + i.getClass().getSimpleName() + "/" + i.getName() + " Anim.png");
+            itemTextures.add(new Pair<>(i,
+                    new Animation<>(1f / 8f, TextureRegion.split(text, text.getWidth() / 6, text.getHeight())[0])));
         }
     }
 
@@ -93,9 +93,8 @@ public class LevelView {
     }
 
     private void loadMobHpBars() {
-        for (MobView m : this.mobTextures) {
-            Healthbar mobBar = new Healthbar((int) m.getWidth(), (int) (m.getHeight() / 10f));
-            this.hpBars.add(mobBar);
+        for (final MobView m : this.mobTextures) {
+            this.hpBars.add(new Healthbar((int) m.getWidth(), (int) (m.getHeight() / 10f)));
         }
     }
 
@@ -120,12 +119,20 @@ public class LevelView {
         return this.hpBars;
     }
 
-	public HeroView getHeroView() {
-		return heroview;
-	}
+    /**
+     * @return the Hero View
+     */
+    public HeroView getHeroView() {
+        return heroview;
+    }
 
-	public void setHeroView(HeroView hero) {
-		this.heroview = hero;
-	}
+    /**
+     * Sets the level Hero View.
+     * 
+     * @param heroView
+     */
+    public void setHeroView(final HeroView heroView) {
+        this.heroview = heroView;
+    }
 
 }

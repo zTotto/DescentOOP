@@ -9,11 +9,9 @@ import com.unibo.view.MobView;
  * 
  */
 public final class AI {
-    public static Direction randomDirection(MobView mob, DescentMap map) {
+    public static Direction randomDirection(final MobView mob, final DescentMap map) {
         final Direction[] directions = Direction.values();
         final Random random = new Random();
-        Direction newDir = directions[random.nextInt(directions.length)];
-
-        return newDir;
+        return directions[random.nextInt(directions.length)];
     }
 }

@@ -34,7 +34,8 @@ public class DescentMapImpl implements DescentMap {
      * @param unitScale   float value to transform world units to pixel
      * @param isFileExt   true if the file is external
      */
-    public DescentMapImpl(final String path, final Position startingPos, final float unitScale, final Boolean isFileExt) {
+    public DescentMapImpl(final String path, final Position startingPos, final float unitScale,
+            final Boolean isFileExt) {
         if (isFileExt) {
             this.map = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(Descent.CUSTOM_LEVELS_PATH + path);
         } else {
@@ -49,44 +50,44 @@ public class DescentMapImpl implements DescentMap {
 
     @Override
     public Boolean validMovement(final CharacterView charView, final float newX, final float newY) {
-        return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.Collision);
+        return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.COLLISION);
     }
 
     @Override
     public Boolean checkTeleport(final CharacterView charView) {
         return teleportLayer == null ? false
                 : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
-                        charView.getCharacter().getPos().getyCoord()), teleportLayer, TileAction.Teleport);
+                        charView.getCharacter().getPos().getyCoord()), teleportLayer, TileAction.TELEPORT);
     }
 
     @Override
     public Boolean checkDamageTile(final CharacterView charView) {
         return specialTilesLayer == null ? false
                 : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
-                        charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.Damage);
+                        charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.DAMAGE);
     }
 
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
             final TileAction action) {
         final Rectangle rect = charView.getCharRect();
         rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());
-        Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
+        final Polygon poly = new Polygon(new float[] { rect.x, rect.y, rect.x + rect.width, rect.y, rect.x + rect.width,
                 rect.y + rect.height, rect.x, rect.y + rect.height });
         for (final PolygonMapObject polyMapObj : layer.getObjects().getByType(PolygonMapObject.class)) {
-            Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
+            final Polygon polyObj = new Polygon(polyMapObj.getPolygon().getTransformedVertices());
             var verts = polyObj.getTransformedVertices();
             for (int i = 0; i < verts.length; i++) {
                 verts[i] *= unitScale;
             }
             if (Intersector.overlapConvexPolygons(poly, polyObj)) {
                 switch (action) {
-                case Collision:
+                case COLLISION:
                     return false;
-                case Teleport:
+                case TELEPORT:
                     charView.getCharacter().setPos((int) ((int) polyMapObj.getProperties().get("X") * unitScale),
                             (int) ((int) polyMapObj.getProperties().get("Y") * unitScale));
                     return true;
-                case Damage:
+                case DAMAGE:
                     return true;
                 default:
                     break;
@@ -94,11 +95,11 @@ public class DescentMapImpl implements DescentMap {
             }
         }
         switch (action) {
-        case Collision:
+        case COLLISION:
             return true;
-        case Damage:
+        case DAMAGE:
             return false;
-        case Teleport:
+        case TELEPORT:
             return false;
         default:
             return true;
@@ -139,8 +140,8 @@ public class DescentMapImpl implements DescentMap {
     public TiledMap getTiledMap() {
         return this.map;
     }
-    
+
     public float getUnitScale() {
-    	return this.unitScale;
+        return this.unitScale;
     }
 }
