@@ -276,15 +276,34 @@ public abstract class CharacterView {
         this.isMoving = isMoving;
     }
     
+    /**
+     * Sets the audioManager for this character
+     * 
+     * @param manager	the audioManager
+     */
     public void setAudioManager(AudioManager manager) {
     	this.audioManager = manager;
     }
     
-    public void soundNotifyAudiomanager(String s, float volume) {
-    	audioManager.playSoundEffect(s, volume);
+    /**
+     * notifies the audioManager that an action occurred
+     * and sends the path of  that action's sound effect.
+     * 
+     * @param path the path of the sound effect's file
+     * @param volume the desired volume
+     */
+    public void soundNotifyAudiomanager(String path, float volume) {
+    	audioManager.playSoundEffect(path, volume);
     }
     
-    public void musicNotifyAudiomanager(String s, Boolean looping, float volume) {
-    	audioManager.playMusic(s, looping, volume);
+    /**
+     * notifies the audioManager that an action occurred
+     * and sends the path of that action's Music.
+     * 
+     * @param path the path of the Music's file
+     * @param volume the desired volume
+     */
+    public void musicNotifyAudiomanager(String path, Boolean looping, float volume) {
+    	audioManager.playMusic(path, looping, volume);
     }
 }

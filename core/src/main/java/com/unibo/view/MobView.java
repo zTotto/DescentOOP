@@ -1,13 +1,13 @@
 package com.unibo.view;
 
+import com.unibo.ai.LineOfSight;
+import com.unibo.ai.Pathfinding;
+import com.unibo.ai.SimplePathfinding;
 import com.unibo.audio.AudioManager;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
-import com.unibo.util.LineOfSight;
-import com.unibo.util.Pathfinding;
-import com.unibo.util.AI;
 
 /**
  * Mob's view class.
@@ -18,6 +18,7 @@ public class MobView extends CharacterView {
 	private Direction lastDir = Direction.UP;
 	private float attackTime = 0;
 	private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
+	private final Pathfinding pathfinding = new SimplePathfinding();
 
 	/**
 	 * Constructor for the Mob view.
@@ -39,14 +40,14 @@ public class MobView extends CharacterView {
 				move.executeCommand(this);
 				return;
 			}
-			Direction newDir = AI.randomDirection(this, level.getMap().getFirst());
+			Direction newDir = Pathfinding.randomDirection();
 			move = new Movement(newDir);
 			move.executeCommand(this);
 			lastDir = newDir;
 			moveBuffer = 0;
 			return;
 		} else {
-			Pathfinding.moveMob(this, levelView, level.getMap().getFirst());
+			pathfinding.moveMob(this, levelView, level.getMap().getFirst());
 		}
 	}
 

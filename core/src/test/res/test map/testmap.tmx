@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="9">
+ <imagelayer id="2" name="Background" locked="1">
+  <image source="testmap.png" width="448" height="448"/>
+ </imagelayer>
+ <objectgroup id="3" name="objects">
+  <object id="1" x="14.9021" y="9.13354" width="425.911" height="43.7448"/>
+  <object id="2" x="5.76855" y="50.4748" width="47.5905" height="396.107"/>
+  <object id="3" x="53.8398" y="393.223" width="352.362" height="52.3977"/>
+  <object id="4" x="391.3" y="51.4362" width="55.7626" height="396.588"/>
+  <object id="5" x="201.419" y="137.003" width="45.6677" height="111.045"/>
+ </objectgroup>
+</map>
