@@ -86,7 +86,7 @@ public class LevelView {
         }
     }
 
-    private void loadMobTextures(final Level lvl, AudioManager manager) {
+    private void loadMobTextures(final Level lvl, final AudioManager manager) {
         for (Mob mob : lvl.getEnemies()) {
             mobTextures.add(new MobView(mob, manager));
         }
