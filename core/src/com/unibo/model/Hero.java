@@ -195,16 +195,16 @@ public class Hero extends Character {
      */
     // Could become public if there will be an item that will level up the hero.
     private void levelUp() {
-        this.exp -= this.getExpToLevelUp();
-        this.incrementLevel();
-        this.increaseExpToLevelUp();
-        this.increaseStats();
-        
-        if (this.isExpEnough()) {
-            this.levelUp();
-        }
-
-        if (this.getLevel() == MAX_LEVEL) {
+        if (this.getLevel() < MAX_LEVEL) {
+            this.exp -= this.getExpToLevelUp();
+            this.incrementLevel();
+            this.increaseExpToLevelUp();
+            this.increaseStats();
+            
+            if (this.isExpEnough()) {
+                this.levelUp();
+            }
+        } else {
             this.resetXP();
         }
     }
