@@ -2,6 +2,7 @@ package com.unibo.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.unibo.audio.AudioManager;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
 import com.unibo.model.Hero;
@@ -22,8 +23,8 @@ public class HeroView extends CharacterView {
      * @param hero  the hero model
      * @param input handler for keyboard inputs
      */
-    public HeroView(final Hero hero, final InputHandler input) {
-        super(hero, "characters/hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/weaponSound.mp3");
+    public HeroView(final Hero hero, final InputHandler input, final AudioManager audioManager) {
+        super(hero, "characters/hero" + hero.getCurrentWeapon().getName() + ".png", "audio/sounds/weaponSound.mp3", audioManager);
         this.hero = hero;
         this.input = input;
     }
