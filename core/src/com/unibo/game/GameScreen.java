@@ -205,7 +205,8 @@ public class GameScreen implements Screen {
                     this.isPaused = !this.isPaused;
                     this.menu.getMenu().setVisible(isPaused);
                     this.isSkillMenuOpen = false;
-                }).addCommand(KeyBindings.USE_POTION, t -> ((Hero) t.getCharacter()).usePotion())
+                }).addCommand(KeyBindings.USE_HEALTH_POTION, t -> ((Hero) t.getCharacter()).useHealthPotion())
+                .addCommand(KeyBindings.USE_MANA_POTION, t -> ((Hero) t.getCharacter()).useManaPotion())
                 .addCommand(KeyBindings.INCREASES_SPEED,
                         new SpeedUpSkill(MANA_UNIT, MAX_SPEED, MAX_SPEED * SPEED_MULTIPLIER))
                 .addCommand(KeyBindings.HEAL, new HealSkill(MANA_UNIT * 50, (int) (MAX_HP * TEN_PERCENT_MULTIPIER)))
@@ -353,8 +354,11 @@ public class GameScreen implements Screen {
             // Item pick up
             this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
 
-            // Use potion
-            this.input.handleInput(KeyBindings.USE_POTION).ifPresent(t -> t.executeCommand(heroView));
+            // Use Health potion
+            this.input.handleInput(KeyBindings.USE_HEALTH_POTION).ifPresent(t -> t.executeCommand(heroView));
+
+            // Use Mana potion
+            this.input.handleInput(KeyBindings.USE_MANA_POTION).ifPresent(t -> t.executeCommand(heroView));
 
             // Use skill heal
             this.input.handleInput(KeyBindings.HEAL).ifPresent(t -> t.executeCommand(heroView));

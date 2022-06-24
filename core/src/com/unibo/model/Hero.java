@@ -5,7 +5,9 @@ import java.util.List;
 import com.unibo.model.items.ConsumableItem;
 import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.Item;
+import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.Weapon;
+import com.unibo.model.items.WearableItem;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
@@ -69,9 +71,9 @@ public class Hero extends Character {
     }
 
     /**
-     * If there's any, uses a potion.
+     * If there's any, uses a health potion.
      */
-    public void usePotion() {
+    public void useHealthPotion() {
         HealthPotion pot = null;
         for (final Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof HealthPotion) {
@@ -84,6 +86,24 @@ public class Hero extends Character {
             this.getInv().removeItem(pot);
         }
     }
+
+    /**
+     * If there's any, uses a mana potion.
+     */
+    public void useManaPotion() {
+        ManaPotion pot = null;
+        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+            if (p.getFirst() instanceof ManaPotion) {
+                pot = (ManaPotion) p.getFirst();
+                break;
+            }
+        }
+        if (!(pot == null) && pot.canUse(this)) {
+            pot.use(this);
+            this.getInv().removeItem(pot);
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -99,6 +119,8 @@ public class Hero extends Character {
                         this.getWeapons().add((Weapon) item);
                     } else if (item instanceof ConsumableItem) {
                         this.getInv().addItem(item);
+                    } else if (item instanceof WearableItem) {
+                        ((WearableItem) item).wear(this);
                     } else {
                         this.key = true;
                     }
