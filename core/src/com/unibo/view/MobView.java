@@ -1,5 +1,6 @@
 package com.unibo.view;
 
+import com.unibo.audio.AudioManager;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
@@ -16,14 +17,15 @@ public class MobView extends CharacterView {
     private int moveBuffer;
     private Direction lastDir = Direction.UP;
     private float attackTime;
+    private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
 
     /**
      * Constructor for the Mob view.
      * 
      * @param mob the mob model
      */
-    public MobView(final Mob mob) {
-        super(mob, "characters/" + mob.getName() + ".png", "audio/sounds/Hadouken.mp3"); // TODO add sounds for mobs
+    public MobView(final Mob mob, final AudioManager audioManager) {
+        super(mob, "characters/" + mob.getName() + ".png", DEFAULT_ATTACK_SOUND_PATH, audioManager); // TODO add sounds for mobs
     }
 
     /**
@@ -59,11 +61,13 @@ public class MobView extends CharacterView {
     }
 
     public void update(final LevelView level, final Level currentLvl) {
-        if (!this.getIsAttacking()) {
+        if (!this.getIsAttacking() && 
+        		this.getCharacter().canHit(level.getHeroView().getCharacter())) {
             this.setIsAttacking(true);
-            this.getCharacter().hitEnemy(level.getHeroView().getCharacter());
-        } else {
-            this.moveAI(level, currentLvl);
+            this.getCharacter().hitEnemy(level.getHeroView().getCharacter());    
+        } 
+        else {
+        	this.moveAI(level, currentLvl);
         }
     }
 
