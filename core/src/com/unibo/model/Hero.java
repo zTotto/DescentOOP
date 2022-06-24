@@ -195,26 +195,35 @@ public class Hero extends Character {
      */
     // Could become public if there will be an item that will level up the hero.
     private void levelUp() {
-        this.exp -= this.getExpToLevelUp();
-        this.incrementLevel();
-        if (this.getLevel() < MAX_LEVEL / 2) {
-            this.setExpToLevelUp(
-                    Math.round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
+        if (this.getLevel() < MAX_LEVEL) {
+            this.exp -= this.getExpToLevelUp();
+            this.incrementLevel();
+            this.increaseExpToLevelUp();
+            this.increaseStats();
+            
+            if (this.isExpEnough()) {
+                this.levelUp();
+            }
         } else {
-            this.setExpToLevelUp(Math.round(
-                    this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
+            this.resetXP();
         }
+    }
+
+    private void increaseExpToLevelUp() {
+        if (this.getLevel() < MAX_LEVEL / 2) {
+            this.setExpToLevelUp(Math
+                    .round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
+        } else {
+            this.setExpToLevelUp(Math.
+                    round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
+        }        
+    }
+
+    private void increaseStats() {
         this.setMaxHp((int) (this.getMaxHp() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setMaxMana((int) (this.getMaxMana() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setCurrentHp(this.getMaxHp());
-        this.setCurrentMana(this.getMaxMana());
-        if (this.isExpEnough()) {
-            this.levelUp();
-        }
-
-        if (this.getLevel() == MAX_LEVEL) {
-            this.resetXP();
-        }
+        this.setCurrentMana(this.getMaxMana());        
     }
 
     private void resetXP() {

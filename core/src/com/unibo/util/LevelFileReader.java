@@ -120,7 +120,8 @@ public class LevelFileReader {
         map.setFirst(new DescentMapImpl(mapLine.split(" ")[1],
                 new Position(Integer.parseInt(mapLine.split(" ")[2].split(",")[0]),
                         Integer.parseInt(mapLine.split(" ")[2].split(",")[1])),
-                Float.parseFloat(mapLine.split(" ")[3]), isExt));
+                Float.parseFloat(mapLine.split(" ")[3]), isExt,
+                mapLine.split(" ")[4]));
         map.setSecond(Float.parseFloat(mapLine.split(" ")[3]));
     }
 

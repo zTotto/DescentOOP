@@ -2,7 +2,7 @@
 //EnumName ITEM_NAME xCoordinate,yCoordinate
 //MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
 
-MapImpl levels/Level2/Interior.tmx 800,272 0.275
+MapImpl levels/Level2/Interior.tmx 800,272 0.275 audio/music/Danmachi.mp3
 HealthPotionStats BASIC_HEALTH_POTION 1406,830
 HealthPotionStats BASIC_HEALTH_POTION 1273,428
 HealthPotionStats MEDIUM_HEALTH_POTION 1164,606
