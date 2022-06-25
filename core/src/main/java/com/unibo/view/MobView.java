@@ -1,15 +1,10 @@
 package com.unibo.view;
 
-import com.unibo.ai.LineOfSight;
 import com.unibo.ai.Pathfinding;
-import com.unibo.ai.SimplePathfinding;
 import com.unibo.ai.SimplePathfinding;
 import com.unibo.audio.AudioManager;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
-import com.unibo.model.Movement;
-import com.unibo.util.Direction;
-
 /**
  * Mob's view class.
  */
@@ -37,7 +32,6 @@ public class MobView extends CharacterView {
 	/**
 	 * Method to be called each time the screen is rendered.
 	 * It decides whether the mob attacks or moves and if it
-	 * moves randomly or according to a pathfinding algorithm.
 	 * 
 	 * @param levelView		the levelview of the level the mob is in
 	 * @param level		the level the mob is in
@@ -47,38 +41,21 @@ public class MobView extends CharacterView {
 		attack(levelView);
 		
 		if (!this.getIsAttacking()) {
-			moveAI(levelView, level);
-		}
-	}
-
-	private void moveAI(final LevelView levelView, final Level level) {
-		if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
-			final Movement move;
-			if (moveBuffer <= 15) {
-				moveBuffer++;
-				move = new Movement(this.getDir());
-				move.executeCommand(this);
-				return;
-				}
-			Direction newDir = Pathfinding.randomDirection();
-			move = new Movement(newDir);
-			move.executeCommand(this);
-			moveBuffer = 0;
-			return;
-			} else {
-				pathfinding.moveMob(this, levelView, level.getMap().getFirst());
+			pathfinding.moveMob(this, levelView, level.getMap().getFirst());
 			}
-	}
-
-	private void attack(final LevelView levelView) {
-		if (this.getIsAttacking()) {
-			return;  //no action to be done until the attack is finished
 		}
-		else if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
+	
+	/**
+	 * Makes the mob attack the hero if able to do so
+	 * 
+	 * @param levelView		the levelview of the level the mob is in
+	 */
+	private void attack(LevelView levelView) {
+		if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
 			this.setIsAttacking(true);
 			this.getCharacter().hitEnemy(levelView.getHeroView().getCharacter());
-			System.out.println(getDir());
 		}
+		
 	}
 
 	/**
@@ -95,6 +72,29 @@ public class MobView extends CharacterView {
 	 */
 	public void setAttackTime(final float attackTime) {
 		this.attackTime = attackTime;
+	}
+	
+	/**
+	 * Sets the mob's moveBuffer to 0
+	 */
+	public void resetMoveBuffer() {
+		this.moveBuffer = 0;
+	}
+	
+	/**
+	 * Increases the mob's moveBuffer by 1
+	 */
+	public void increaseMoveBuffer() {
+		this.moveBuffer++;
+	}
+	
+	/**
+	 * Getter for the mob's moveBuffer
+	 * @return an integer
+	 */
+	public int getMoveBuffer() {
+		int answ = moveBuffer;
+		return answ;
 	}
 
 }
