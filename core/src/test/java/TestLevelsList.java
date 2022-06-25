@@ -11,7 +11,7 @@ import com.unibo.model.LevelsList;
 
 /**
  * 
- * Simple class to test LevelsList
+ * Class to test LevelsList
  *
  */
 public class TestLevelsList {
@@ -30,14 +30,12 @@ public class TestLevelsList {
         assertTrue(l.hasNextLevel());
         assertEquals(3, l.getLevels().size());
         assertFalse(l.isGameOver());
-        System.out.println(l.toString());
         
         assertEquals(l.getNextLevel(), l.getLevels().get(1));
         assertTrue(l.hasNextLevel());
         assertEquals(3, l.getLevels().size());
         assertEquals(l.getNextLevel(), l.getLevels().get(2));
         
-        System.out.println(l.toString());
         assertFalse(l.hasNextLevel());
         assertEquals(l.getCurrentLevel(), l.getLevels().get(2));
           
@@ -53,7 +51,6 @@ public class TestLevelsList {
         
         assertTrue(l.getLevels().isEmpty());
         assertFalse(l.hasNextLevel());
-        System.out.println(l.toString());
     }
     
 }

@@ -62,7 +62,7 @@ public class WearableItem extends Item {
 
     @Override
     public String toString() {
-        String s = "\n Wearable item: " + this.getName() + " [" + this.getPos() + "]";
+        String s = "\nWearable item: " + this.getName() + " [" + this.getPos() + "]";
         if (this.health.isPresent()) {
             s += "\nHealth: " + this.health.get();
         }
