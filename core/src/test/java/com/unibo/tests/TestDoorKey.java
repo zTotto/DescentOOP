@@ -9,18 +9,27 @@ import com.unibo.model.Level;
 import com.unibo.model.items.DoorKey;
 import com.unibo.util.Position;
 
+/**
+ *  Class test for the door key
+ */
 public class TestDoorKey {
 
     private final Hero hero;
     private final Level lvl;
     private final DoorKey key;
 
+    /**
+     * Initialize the hero, the level and the door key in order to test the key
+     */
     public TestDoorKey() {
         this.hero = new Hero("Tester", 100, 100, 100, 100);
         this.lvl = new Level(null);
         this.key = new DoorKey();
     }
     
+    /**
+     * Test if the key works as wanted
+     */
     @Test
     public void testDoorkey() {
         assertTrue(key.isPosNull());

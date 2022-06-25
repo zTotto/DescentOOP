@@ -19,12 +19,18 @@ public class TestLevelsList {
 
     private LevelsList l;
 
+    /**
+     * Initialize the levels list
+     */
     public TestLevelsList() {
         final List<Level> list = new LinkedList<>(List.of(new Level(null),
                 new Level(null), new Level(null)));
         this.l = new LevelsList(list);
     }
     
+    /**
+     * Test a levels list
+     */
     @Test
     public void testGenericLevelsList() {
         assertEquals(l.getCurrentLevel(), l.getLevels().get(0));
@@ -46,6 +52,9 @@ public class TestLevelsList {
         assertFalse(l.getLevels().isEmpty());
     }
     
+    /**
+     * Test an epty level list
+     */
     @Test
     public void TestEmptyLevelsList() {
         this.l = new LevelsList(List.of());
