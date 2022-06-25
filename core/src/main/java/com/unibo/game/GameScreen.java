@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,10 +13,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.unibo.ai.LineOfSight;
 import com.unibo.audio.AudioManagerImpl;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
@@ -148,8 +151,8 @@ public class GameScreen implements Screen {
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA, EXP_TO_LVL_UP), this.input, audioManager);
         lvlView.setHeroView(heroView);
-        lvlView.getMobTextures().forEach(x -> x.getCharacter().            //imposta la mappa per ogni mob
-        		setCurrentMap(currentLvl.getMap().getFirst()));
+//        lvlView.getMobTextures().forEach(x -> x.getCharacter().            //imposta la mappa per ogni mob
+//        		setCurrentMap(currentLvl.getMap().getFirst()));
         
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
@@ -210,6 +213,7 @@ public class GameScreen implements Screen {
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
                     if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
+                    	audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                         if (this.lvlList.hasNextLevel()) {
                             this.currentLvl = this.lvlList.getNextLevel();
                             audioManager.playSoundEffect(MAP_CHANGE_SOUND, SOUND_VOLUME);
@@ -418,9 +422,11 @@ public class GameScreen implements Screen {
 
             heroView.move();
             
+            lvlView.getMobTextures().forEach(x -> x.getCharacter().setCurrentMap(currentLvl.getMap().getFirst()));
             lvlView.getMobTextures().forEach(x -> x.update(lvlView, currentLvl));
- // Draws line of sights for debugging
+            //Draws line of sights for debugging
 //            for (final MobView mob : lvlView.getMobTextures()) {
+//            	mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
 //                mob.update(lvlView, currentLvl);
 //                final float mobX = mob.getCharacter().getPos().getxCoord();
 //                final float mobY = mob.getCharacter().getPos().getyCoord();
