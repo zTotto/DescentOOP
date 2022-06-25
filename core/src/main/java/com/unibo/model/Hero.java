@@ -169,8 +169,8 @@ public class Hero extends Character {
             if (this.isExpEnough()) {
                 this.levelUp();
             }
-        }
-        else {
+            
+        } else {
             this.resetXP();
         }
     }
