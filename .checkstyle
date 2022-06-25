@@ -2,7 +2,10 @@
 
 <fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
   <local-check-config name="checkstyle.xml" location="internal_config_1649760694808.xml" type="internal" description=""/>
-  <fileset name="all" enabled="true" check-config-name="checkstyle.xml" local="true">
+  <local-check-config name="OOP" location="C:\Users\jonat\Desktop\Descent\OOP21-Descent\config\checkstyle\checkstyle.xml" type="external" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="OOP" local="true">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
 </fileset-config>

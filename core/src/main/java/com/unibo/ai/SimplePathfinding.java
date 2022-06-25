@@ -2,15 +2,13 @@ package com.unibo.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.unibo.maps.DescentMap;
-import com.unibo.model.Character;
-import com.unibo.model.Movement;
 import com.unibo.util.Direction;
-import com.unibo.util.Position;
+import com.unibo.view.CharacterView;
 import com.unibo.view.LevelView;
 import com.unibo.view.MobView;
 
 /**
- *
+ * Implements pathfinding interface with a very simple pathfinding algorithm
  */
 public class SimplePathfinding implements Pathfinding {
 
@@ -19,99 +17,62 @@ public class SimplePathfinding implements Pathfinding {
     }
 
     /**
-     * Moves the mob given as a parameter according to a simple pathfinding
-     * algorithm. The mob follows the player only if he's in sight.
+     * Moves the mob given as a parameter according to a simple pathfinding algorithm.
      * @param mob   Mobview
      * @param level LevelView
      * @param map   Map
      */
     public void moveMob(final MobView mob, final LevelView level, final DescentMap map) {
- 
+    	
+    	CharacterView hero = level.getHeroView();
         final float heroX = level.getHeroView().getCharacter().getPos().getxCoord();
         final float heroY = level.getHeroView().getCharacter().getPos().getyCoord();
         final float mobX = mob.getCharacter().getPos().getxCoord();
         final float mobY = mob.getCharacter().getPos().getyCoord();
-        final Character mobChar = mob.getCharacter();
-        final Position mobPos = mobChar.getPos();
+        final float delta = Gdx.graphics.getDeltaTime();
+        final float deltaMovement = mob.getCharacter().getSpeed() * delta;
 
-        if (heroX > mobX) {
-            moveMob(mob, Direction.RIGHT);
-            if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.UP);
-                if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
-                    unstuckMob(mob, map);
-                }
-            } else if (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.DOWN);
-                if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
-                    unstuckMob(mob, map);
-                }
-            } else {
-                unstuckMob(mob, map);
-            }
-        } else if (heroX < mobX) {
-            moveMob(mob, Direction.LEFT);
-            if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.UP);
-                if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
-                    unstuckMob(mob, map);
-                }
-            } else if (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.DOWN);
-                if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
-                    unstuckMob(mob, map);
-                }
-            } else {
-                unstuckMob(mob, map);
-            }
-        } else {
-            if (heroY > mobY) {
-                moveMob(mob, Direction.UP);
-            } else if (heroY < mobY) {
-                moveMob(mob, Direction.DOWN);
-            }
-            if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
-                unstuckMob(mob, map);
-            }
+        if (heroX > mobX && map.validMovement(mob, mobX+deltaMovement, mobY) && !isAlligned(mob, hero)){
+        	updatePosition(mob, mobX+deltaMovement, mobY);
+        	mob.setDir(Direction.RIGHT);
         }
+        else if (heroX < mobX && map.validMovement(mob, mobX-deltaMovement, mobY) && !isAlligned(mob, hero)) {
+        	updatePosition(mob, mobX-deltaMovement, mobY);
+        	mob.setDir(Direction.LEFT);
+        }
+        else if (heroY > mobY && map.validMovement(mob, mobX, mobY+deltaMovement)) {
+        	updatePosition(mob, mobX, mobY+deltaMovement);
+        	mob.setDir(Direction.UP);
+        }
+        else if (heroY < mobY && map.validMovement(mob, mobX, mobY-deltaMovement)) {
+        	updatePosition(mob, mobX, mobY-deltaMovement);
+        	mob.setDir(Direction.DOWN);
+        }
+       
     }
-
+    
     /**
-     * Getter for a specific layer in the TiledMap.
-     * 
-     * @param pos1 Starting position of a character
-     * @param pos2 current positiong of a character
-     * @return True if the 2 positions are different, False if they're equal
+     * Moves the mob given as a parameter according to a simple pathfinding algorithm.
+     * @param mob   Mobview of the mob
+     * @param newX  the mob's x coordinate after he moved
+     * @param newY  the mob's y coordinate after he moved
      */
-    private Boolean hasCharacterMoved(final Position pos1, final Position pos2) {
-        return pos1 != pos2;
+    private void updatePosition(final MobView mob,float newX, float newY){
+    	mob.getCharacter().setPos(newX, newY);
     }
-
+    
     /**
-     * Method to move the mob in a certain direction.
-     * 
-     * @param mob Mobview of the mob we want to move
-     * @param dir Direction in which to move it
+     * Checks if a character is vertically alligned with
+     * another character accounting for their hitboxes
+     * @param CharacterView of the character we want to check
+     * @param CharacterView of the character we want to check against
+     * @return True if the first character is vertically allined with the second, false otherwise
      */
-    private void moveMob(final MobView mob, final Direction dir) {
-        final Movement move = new Movement(dir);
-        move.executeCommand(mob);
-    }
-
-    /**
-     * Method that tries to move the mob in random directions until it's position
-     * changes.
-     * 
-     * @param mob MobView of the mob that's stuck
-     * @param map the DescentMap in which he is
-     */
-    private void unstuckMob(final MobView mob, final DescentMap map) {
-        final Position startPos = new Position(mob.getCharacter().getPos());
-        Position newPos;
-        do {
-            moveMob(mob, Pathfinding.randomDirection());
-            newPos = mob.getCharacter().getPos();
-        } while (newPos == startPos);
+    private boolean isAlligned(CharacterView mobView, CharacterView heroView) {
+    	float heroX = heroView.getCharacter().getPos().getxCoord();
+    	float mobX = mobView.getCharacter().getPos().getxCoord();
+    	float hitbox = heroView.getWidth();
+    	return (heroX-hitbox < mobX && mobX < heroX+hitbox);
     }
 
 }
