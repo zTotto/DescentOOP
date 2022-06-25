@@ -309,7 +309,7 @@ public class GameScreen implements Screen {
                     m.setAttackTime(0);
                 }
             } else {
-                batch.draw(m.getAnimFromDir(m.getLastDir(), elapsedTime),
+                batch.draw(m.getAnimFromDir(m.getDir(), elapsedTime),
                         m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                         m.getCharacter().getPos().getyCoord());
             }
