@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
     private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
     private final Texture debug = new Texture("characters/debug.png");
-  
+
     private float elapsedTime;
     private float attackTime;
     private float gameTime;
@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
     private final Label levelNumber;
 
     private final InputHandler input = new InputHandler();
-    
+
     private final AudioManagerImpl audioManager = new AudioManagerImpl();
 
     /**
@@ -152,7 +152,10 @@ public class GameScreen implements Screen {
         lvlView.setHeroView(heroView);
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
-        
+
+//        currentLvl.getMap().getFirst().setBackgroundSong("audio/music/Danmachi.mp3");
+//        audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0);
+
         heroView.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
         heroView.getCharacter().setPos(heroView.getCharacter().getCurrentMap().getStartingPosition());
 
@@ -251,7 +254,7 @@ public class GameScreen implements Screen {
         if (this.heroView.getHero().isDead()) {
             this.isPaused = true;
             Gdx.app.postRunnable(() -> {
-            	audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
+                audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                 audioManager.disposeMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                 game.setScreen(new GameOverMenu(game, "You Died!"));
             });
@@ -323,13 +326,13 @@ public class GameScreen implements Screen {
 
         // Last hero direction and music stopped during any kind of pause
         if (this.isPaused || this.isSkillMenuOpen) {
-        	audioManager.pauseMusic(currentLvl.getMap().getFirst().getBackgroundSong());
+            audioManager.pauseMusic(currentLvl.getMap().getFirst().getBackgroundSong());
             batch.draw(heroView.getAnimFromDir(heroView.getDir(), elapsedTime), heroTextureX, heroY);
         }
 
         if (!this.isPaused && !this.isSkillMenuOpen) {
 
-        	audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0.5);
+            audioManager.playMusic(currentLvl.getMap().getFirst().getBackgroundSong(), true, (float) 0.5);
             gameTime += Gdx.graphics.getDeltaTime();
 
             // Timed stuff
@@ -473,8 +476,7 @@ public class GameScreen implements Screen {
             // heroView.getHero().addExp(200);
             System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
             System.out.println(heroView.getHero().getPos());
-            System.out.println("Speed: " + heroView.getHero().getSpeed());
-            System.out.println("Range: " + heroView.getHero().getRange());
+            System.out.println("Mana: " + heroView.getHero().getMaxMana());
             System.out.println("Door: " + currentLvl.getDoorPosition());
         }
     }

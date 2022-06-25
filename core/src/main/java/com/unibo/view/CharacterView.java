@@ -99,25 +99,25 @@ public abstract class CharacterView {
         TextureRegion[] characterTextureAttackUp = new TextureRegion[2];
         characterTextureAttackUp[0] = tmp[18];
         characterTextureAttackUp[1] = tmp[19];
-        animationAttackUp = new Animation<>(1f / 6f, characterTextureAttackUp);
+        animationAttackUp = new Animation<>(1f / 4f, characterTextureAttackUp);
 
         TextureRegion[] characterTextureAttackDown = new TextureRegion[3];
         characterTextureAttackDown[0] = tmp[23];
         characterTextureAttackDown[1] = tmp[24];
         characterTextureAttackDown[2] = tmp[25];
-        animationAttackDown = new Animation<>(1f / 6f, characterTextureAttackDown);
+        animationAttackDown = new Animation<>(1f / 4f, characterTextureAttackDown);
 
         TextureRegion[] characterTextureAttackRight = new TextureRegion[3];
         characterTextureAttackRight[0] = tmp[20];
         characterTextureAttackRight[1] = tmp[21];
         characterTextureAttackRight[2] = tmp[22];
-        animationAttackRight = new Animation<>(1f / 6f, characterTextureAttackRight);
+        animationAttackRight = new Animation<>(1f / 4f, characterTextureAttackRight);
 
         TextureRegion[] characterTextureAttackLeft = new TextureRegion[3];
         characterTextureAttackLeft[0] = tmp[26];
         characterTextureAttackLeft[1] = tmp[27];
         characterTextureAttackLeft[2] = tmp[28];
-        animationAttackLeft = new Animation<>(1f / 6f, characterTextureAttackLeft);
+        animationAttackLeft = new Animation<>(1f / 4f, characterTextureAttackLeft);
     }
 
     /**
