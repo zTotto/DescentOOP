@@ -3,8 +3,9 @@ package com.unibo.game;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -152,6 +153,9 @@ public class GameScreen implements Screen {
 
         heroView = new HeroView(new Hero("Ross", MAX_HP, MAX_SPEED, MAX_MANA, EXP_TO_LVL_UP), this.input, audioManager);
         lvlView.setHeroView(heroView);
+        lvlView.getMobTextures().forEach(x -> x.getCharacter().            //imposta la mappa per ogni mob
+        		setCurrentMap(currentLvl.getMap().getFirst()));
+        
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -418,22 +422,22 @@ public class GameScreen implements Screen {
             elapsedTime += Gdx.graphics.getDeltaTime();
 
             heroView.move();
-
-            // Draws line of sights for debugging
-            for (final MobView mob : lvlView.getMobTextures()) {
-                mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
-                mob.update(lvlView, currentLvl);
-                final float mobX = mob.getCharacter().getPos().getxCoord();
-                final float mobY = mob.getCharacter().getPos().getyCoord();
-                shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-                shapeRenderer.begin(ShapeType.Line);
-                if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
-                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
-                } else {
-                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.BLUE, Color.BLUE);
-                }
-                shapeRenderer.end();
-            }
+            
+            lvlView.getMobTextures().forEach(x -> x.update(lvlView, currentLvl));
+ // Draws line of sights for debugging
+//            for (final MobView mob : lvlView.getMobTextures()) {
+//                mob.update(lvlView, currentLvl);
+//                final float mobX = mob.getCharacter().getPos().getxCoord();
+//                final float mobY = mob.getCharacter().getPos().getyCoord();
+//                shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+//                shapeRenderer.begin(ShapeType.Line);
+//                if (LineOfSight.isHeroSeen(mob, lvlView, currentLvl.getMap().getFirst())) {
+//                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.RED, Color.RED);
+//                } else {
+//                    shapeRenderer.line(mobX, mobY, heroX, heroY, Color.BLUE, Color.BLUE);
+//                }
+//                shapeRenderer.end();
+//            }
 
             currentLvl.getMap().getFirst().checkTeleport(heroView);
         }
