@@ -92,13 +92,13 @@ public class Hero extends Character {
      */
     public void useManaPotion() {
         ManaPotion pot = null;
-        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+        for (final Pair<Item, Integer> p : this.getInv().getInv()) {
             if (p.getFirst() instanceof ManaPotion) {
                 pot = (ManaPotion) p.getFirst();
                 break;
             }
         }
-        if (!(pot == null) && pot.canUse(this)) {
+        if (pot != null && pot.canUse(this)) {
             pot.use(this);
             this.getInv().removeItem(pot);
         }
