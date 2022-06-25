@@ -69,7 +69,6 @@ public class GameScreen implements Screen {
     private final Texture bloodPuddle;
     private final Animation<TextureRegion> doorPointerAnim;
     private final Label potionQuantity;
-    private final Texture debug = new Texture("characters/debug.png");
 
     private float elapsedTime;
     private float attackTime;
@@ -172,7 +171,7 @@ public class GameScreen implements Screen {
         levelNumber.setFontScale(0.5f);
         levelNumber.setPosition(0, 0);
         expbar.getStage().addActor(this.levelNumber);
-        
+
         // Camera setup
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
@@ -246,8 +245,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
-    	
-    	// renderer for line of sight debugging
+
+        // renderer for line of sight debugging
         final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
         // Dead Hero check
@@ -348,9 +347,10 @@ public class GameScreen implements Screen {
             }
 
             // Item pick up
-            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> {t.executeCommand(heroView);
-            	audioManager.playSoundEffect(ITEM_PICKUP_SOUND, SOUND_VOLUME);
-            	});
+            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> {
+                t.executeCommand(heroView);
+                audioManager.playSoundEffect(ITEM_PICKUP_SOUND, SOUND_VOLUME);
+            });
 
             // Use Health potion
             this.input.handleInput(KeyBindings.USE_HEALTH_POTION).ifPresent(t -> t.executeCommand(heroView));
@@ -414,16 +414,6 @@ public class GameScreen implements Screen {
                     currentLvl.getDoorPosition().getyCoord()
                             + doorPointerAnim.getKeyFrame(elapsedTime).getRegionHeight() / 2);
 
-            // Range Debug
-            batch.draw(debug, heroX + heroView.getHero().getCurrentWeapon().getRange(),
-                    heroY + heroView.getHero().getCurrentWeapon().getRange());
-            batch.draw(debug, heroX - heroView.getHero().getCurrentWeapon().getRange(),
-                    heroY + heroView.getHero().getCurrentWeapon().getRange());
-            batch.draw(debug, heroX - heroView.getHero().getCurrentWeapon().getRange(),
-                    heroY - heroView.getHero().getCurrentWeapon().getRange());
-            batch.draw(debug, heroX + heroView.getHero().getCurrentWeapon().getRange(),
-                    heroY - heroView.getHero().getCurrentWeapon().getRange());
-
             // Animations timer
             elapsedTime += Gdx.graphics.getDeltaTime();
 
@@ -472,15 +462,6 @@ public class GameScreen implements Screen {
         expbar.update(heroView.getHero());
         expbar.getStage().act();
         expbar.getStage().draw();
-
-        // Debug
-        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            // heroView.getHero().addExp(200);
-            System.out.println("\n\nHp: " + heroView.getHero().getCurrentHp() + " of " + heroView.getHero().getMaxHp());
-            System.out.println(heroView.getHero().getPos());
-            System.out.println("Mana: " + heroView.getHero().getMaxMana());
-            System.out.println("Door: " + currentLvl.getDoorPosition());
-        }
     }
 
     @Override
