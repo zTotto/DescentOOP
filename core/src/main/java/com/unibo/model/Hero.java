@@ -70,14 +70,11 @@ public class Hero extends Character {
         }
     }
 
-    /**
-     * If there's any, uses a health potion.
-     */
-    public void useHealthPotion() {
-        HealthPotion pot = null;
-        for (final Pair<Item, Integer> p : this.getInv().getInv()) {
-            if (p.getFirst() instanceof HealthPotion) {
-                pot = (HealthPotion) p.getFirst();
+    private void usePotionByType(final String potType) {
+        ConsumableItem pot = null;
+        for (Pair<Item, Integer> p : this.getInv().getInv()) {
+            if (p.getFirst().getClass().getSimpleName().contains(potType)) {
+                pot = (ConsumableItem) p.getFirst();
                 break;
             }
         }
@@ -88,22 +85,18 @@ public class Hero extends Character {
     }
 
     /**
+     * If there's any, uses a health potion.
+     */
+    public void useHealthPotion() {
+        this.usePotionByType("Health");
+    }
+
+    /**
      * If there's any, uses a mana potion.
      */
     public void useManaPotion() {
-        ManaPotion pot = null;
-        for (Pair<Item, Integer> p : this.getInv().getInv()) {
-            if (p.getFirst() instanceof ManaPotion) {
-                pot = (ManaPotion) p.getFirst();
-                break;
-            }
-        }
-        if (!(pot == null) && pot.canUse(this)) {
-            pot.use(this);
-            this.getInv().removeItem(pot);
-        }
+        this.usePotionByType("Mana");
     }
-
 
     /**
      * {@inheritDoc}
@@ -169,8 +162,7 @@ public class Hero extends Character {
             if (this.isExpEnough()) {
                 this.levelUp();
             }
-        }
-        else {
+        } else {
             this.resetXP();
         }
     }
@@ -203,7 +195,7 @@ public class Hero extends Character {
             this.incrementLevel();
             this.increaseExpToLevelUp();
             this.increaseStats();
-            
+
             if (this.isExpEnough()) {
                 this.levelUp();
             }
@@ -214,19 +206,19 @@ public class Hero extends Character {
 
     private void increaseExpToLevelUp() {
         if (this.getLevel() < MAX_LEVEL / 2) {
-            this.setExpToLevelUp(Math
-                    .round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
+            this.setExpToLevelUp(
+                    Math.round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / EXP_ALG_DIVIDER)));
         } else {
-            this.setExpToLevelUp(Math.
-                    round(this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
-        }        
+            this.setExpToLevelUp(Math.round(
+                    this.getExpToLevelUp() * Math.log10(this.getExpToLevelUp() / (EXP_ALG_DIVIDER * this.getLevel()))));
+        }
     }
 
     private void increaseStats() {
         this.setMaxHp((int) (this.getMaxHp() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setMaxMana((int) (this.getMaxMana() * HP_MANA_LEVELUP_MULTIPLAYER));
         this.setCurrentHp(this.getMaxHp());
-        this.setCurrentMana(this.getMaxMana());        
+        this.setCurrentMana(this.getMaxMana());
     }
 
     private void resetXP() {

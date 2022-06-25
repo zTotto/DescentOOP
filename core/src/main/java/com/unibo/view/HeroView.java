@@ -1,7 +1,5 @@
 package com.unibo.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.unibo.audio.AudioManager;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
