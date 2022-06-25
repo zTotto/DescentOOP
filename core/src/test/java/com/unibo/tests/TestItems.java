@@ -1,11 +1,14 @@
+package com.unibo.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import com.unibo.model.Hero;
 import com.unibo.model.items.ConsumableItem;
+import com.unibo.model.items.HealthPotion;
 import com.unibo.model.items.ManaPotion;
 import com.unibo.model.items.WearableItem;
+import com.unibo.util.HealthPotionStats;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 
@@ -22,6 +25,45 @@ public class TestItems {
         this.hero = new Hero("Tester", 100, 100, 100, 100);
     }
 
+    @Test
+    public void testBasicHealthPotion() {
+        final ConsumableItem healthPotion = new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0");
+        
+        assertEquals("Basic Health Potion", healthPotion.getName());
+        assertEquals("0", healthPotion.getId());
+        assertEquals(0.15, healthPotion.getModifier());
+        assertTrue(healthPotion.isPosNull());
+        
+        healthPotion.setPos(new Position(100, 250));
+        assertFalse(healthPotion.isPosNull());
+        assertEquals(new Position(100, 250), healthPotion.getPos());
+        
+        hero.getInv().addItem(healthPotion);
+        assertTrue(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
+        assertEquals(100, hero.getMaxHp());
+        
+        assertFalse(healthPotion.canUse(hero));
+        hero.setCurrentHp(50);
+        assertTrue(healthPotion.canUse(hero));
+        hero.useHealthPotion();
+        assertEquals(65, hero.getCurrentHp());
+        assertFalse(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
+    }
+    
+    @Test
+    public void testLargeHealthPotion() {
+        final ConsumableItem healthPotion = new HealthPotion(HealthPotionStats.LARGE_HEALTH_POTION, "0");
+        
+        hero.getInv().addItem(healthPotion);
+        assertTrue(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
+        
+        hero.setCurrentHp(50);
+        assertTrue(healthPotion.canUse(hero));
+        hero.useHealthPotion();
+        assertEquals(100, hero.getCurrentHp());
+        assertFalse(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
+    }
+    
     @Test
     public void testManaPotion() {
         final ConsumableItem manaPotion = new ManaPotion("Mana Potion", "0", 0.5);
