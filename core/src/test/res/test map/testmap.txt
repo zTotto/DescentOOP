@@ -1,0 +1,10 @@
+//Format:
+//EnumName ITEM_NAME xCoordinate,yCoordinate
+//MapImpl path xSpawnCoordinate,ySpawnCoordinate unitScale
+
+MapImpl levels/Level1/Outside.tmx 300,200 0.166 audio/music/TheSixthStation.mp3
+HealthPotionStats BASIC_HEALTH_POTION 185,185
+DoorKey 384,384
+DoorPosition 256,64
+MobStats TROLL 5 384,196
+WeaponStats LONGSWORD 175,100

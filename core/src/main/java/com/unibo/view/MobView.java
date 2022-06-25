@@ -1,23 +1,23 @@
 package com.unibo.view;
 
+import com.unibo.ai.LineOfSight;
+import com.unibo.ai.Pathfinding;
+import com.unibo.ai.SimplePathfinding;
 import com.unibo.audio.AudioManager;
 import com.unibo.model.Level;
 import com.unibo.model.Mob;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
-import com.unibo.util.LineOfSight;
-import com.unibo.util.Pathfinding;
-import com.unibo.util.AI;
 
 /**
  * Mob's view class.
  */
 public class MobView extends CharacterView {
-
 	private int moveBuffer = 0;
 	private Direction lastDir = Direction.UP;
 	private float attackTime = 0;
 	private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
+	private final Pathfinding pathfinding = new SimplePathfinding();
 
 	/**
 	 * Constructor for the Mob view.
@@ -26,50 +26,46 @@ public class MobView extends CharacterView {
 	 * @param audioManager for the mob's sound
 	 */
 	public MobView(final Mob mob, final AudioManager audioManager) {
-		super(mob, "characters/" + mob.getName() + ".png", DEFAULT_ATTACK_SOUND_PATH, audioManager); // TODO add sounds
-																										// for mobs
+		super(mob, "characters/" + mob.getName() + ".png", DEFAULT_ATTACK_SOUND_PATH, audioManager); 																										
 	}
 
-	public void moveAI(final LevelView levelView, final Level level) {
-		if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
+	@Override
+	public void move() {
+		
+	}
+	
+	/**
+	 * Method to be called each time the screen is rendered.
+	 * It decides whether the mob attacks or moves and if it
+	 * moves randomly or according to a pathfinding algorithm.
+	 * 
+	 * @param levelView		the levelview of the level the mob is in
+	 * @param level		the level the mob is in
+	 */
+	public void update(final LevelView levelView, final Level level) {
+		
+		if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
+			this.setIsAttacking(true);
+			this.getCharacter().hitEnemy(levelView.getHeroView().getCharacter());
+		}
+		
+		else if (!LineOfSight.isHeroSeen(this, levelView, level.getMap().getFirst())) {
 			final Movement move;
 			if (moveBuffer <= 15) {
 				moveBuffer++;
 				move = new Movement(lastDir);
 				move.executeCommand(this);
 				return;
-			}
-			Direction newDir = AI.randomDirection(this, level.getMap().getFirst());
+				}
+			Direction newDir = Pathfinding.randomDirection();
 			move = new Movement(newDir);
 			move.executeCommand(this);
 			lastDir = newDir;
 			moveBuffer = 0;
 			return;
-		} else {
-			Pathfinding.moveMob(this, levelView, level.getMap().getFirst());
-		}
-	}
-
-	@Override
-	public void move() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	/**
-	 * Method to be called each time the screen is rendered.
-	 * It decides whether the mob attacks or moves.
-	 * 
-	 * @param levelView		the levelview of the level the mob is in
-	 * @param level		the level the mob is in
-	 */
-	public void update(final LevelView levelView, final Level level) {
-		if (!this.getIsAttacking() && this.getCharacter().canHit(levelView.getHeroView().getCharacter())) {
-			this.setIsAttacking(true);
-			this.getCharacter().hitEnemy(levelView.getHeroView().getCharacter());
-		} else {
-			this.moveAI(levelView, level);
-		}
+			} else {
+				pathfinding.moveMob(this, levelView, level.getMap().getFirst());
+				}
 	}
 
 	/**

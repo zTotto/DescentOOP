@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.unibo.util.LevelListReader;
 
 /**
- * Main Menu to star the game, open the settings or quit.
+ * Main Menu to start the game, open the settings or quit.
  */
 public class MainMenu implements Screen {
 

@@ -28,7 +28,7 @@ public class DescentMapImpl implements DescentMap {
     private final Position startingPosition;
     private final float unitScale;
     private String backgroundMusic;
-    private static final float VOLUME = (float) 1.0;
+    private static final float TILE_DAMAGE = 25;
 
     /**
      * Constructor for a map.
@@ -60,20 +60,27 @@ public class DescentMapImpl implements DescentMap {
         return polyScanner(charView, new Position(newX, newY), collisionLayer, TileAction.COLLISION);
     }
 
-    @Override
+    /**
+     * @param charView the characterView of the character that's on top of the tile
+     * @return True if the tile is a teleport tile, false otherwise
+     */
     public Boolean checkTeleport(final CharacterView charView) {
         return teleportLayer == null ? false
                 : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
                         charView.getCharacter().getPos().getyCoord()), teleportLayer, TileAction.TELEPORT);
     }
-
-    @Override
+    
+    /**
+     * @param charView the characterView of the character that's on top of the tile
+     * @return True if the tile is a damage tile, false otherwise
+     */
     public Boolean checkDamageTile(final CharacterView charView) {
         return specialTilesLayer == null ? false
                 : polyScanner(charView, new Position(charView.getCharacter().getPos().getxCoord(),
                         charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.DAMAGE);
     }
-
+    
+  
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
             final TileAction action) {
         Polygon poly = getProjectedCharacterPolygon(charView, pos);
@@ -110,22 +117,32 @@ public class DescentMapImpl implements DescentMap {
         }
     }
 
-    @Override
+    /**
+     * @param the layer's number
+     * @return the TiledMapTileLayer with that index
+     */
     public TiledMapTileLayer getLayer(final int layerNumber) {
         return (TiledMapTileLayer) map.getLayers().get(layerNumber);
     }
 
-    @Override
+    /**
+     * @param the layer's name
+     * @return the TiledMapTileLayer with that name
+     */
     public TiledMapTileLayer getLayer(final String path) {
         return (TiledMapTileLayer) map.getLayers().get(path);
     }
 
-    @Override
+    /**
+     * @return the MapLayer that holds the objects used for collision
+     */
     public MapLayer getCollisionLayer() {
         return collisionLayer;
     }
 
-    @Override
+    /**
+     * @return an Optional of the layer that holds the teleport tiles
+     */
     public Optional<MapLayer> getTeleportLayer() {
         return Optional.ofNullable(teleportLayer);
     }
@@ -135,21 +152,31 @@ public class DescentMapImpl implements DescentMap {
         return Optional.ofNullable(specialTilesLayer);
     }
 
-    @Override
+    /**
+     * @return the hero's starting Position
+     */
     public Position getStartingPosition() {
         return startingPosition;
     }
 
-    @Override
+    /**
+     * @return the DescentMapImpl's tiled map
+     */
     public TiledMap getTiledMap() {
         return this.map;
     }
-   
-    @Override
+    /**
+     * @return a float indicating by how much the map is resized
+     */
     public Float getUnitScale() {
     	return this.unitScale;
     }
-    
+    /**
+   	 * Calculates the polygon representing the character's hitbox if he moved to the defined position.
+   	 * @param character CharacterView of the character
+   	 * @param pos the position the character wants to move to
+   	 * @return a polygon
+   	 */
     private Polygon getProjectedCharacterPolygon(final CharacterView character, final Position pos) {
     	final Rectangle rect = character.getCharRect();
         rect.setPosition(pos.getxCoord() - rect.getWidth() / 2, pos.getyCoord());

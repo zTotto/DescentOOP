@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,7 +19,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.unibo.audio.AudioManager;
+import com.unibo.ai.LineOfSight;
 import com.unibo.audio.AudioManagerImpl;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
@@ -33,7 +32,6 @@ import com.unibo.model.SpeedUpSkill;
 import com.unibo.model.items.Item;
 import com.unibo.util.Direction;
 import com.unibo.util.LevelListReader;
-import com.unibo.util.LineOfSight;
 import com.unibo.util.Pair;
 import com.unibo.util.Position;
 import com.unibo.view.Expbar;
@@ -174,7 +172,8 @@ public class GameScreen implements Screen {
         levelNumber.setFontScale(0.5f);
         levelNumber.setPosition(0, 0);
         expbar.getStage().addActor(this.levelNumber);
-
+        
+        // Camera setup
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Descent.GAME_WIDTH, Descent.GAME_HEIGHT);
         batch = new SpriteBatch();
@@ -247,8 +246,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(final float delta) {
-
-        final ShapeRenderer shapeRenderer = new ShapeRenderer(); // for line of sight debug
+    	
+    	// renderer for line of sight debugging
+        final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
         // Dead Hero check
         if (this.heroView.getHero().isDead()) {
@@ -427,7 +427,7 @@ public class GameScreen implements Screen {
 
             heroView.move();
 
-            // Debug
+            // Draws line of sights for debugging
             for (final MobView mob : lvlView.getMobTextures()) {
                 mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
                 mob.update(lvlView, currentLvl);

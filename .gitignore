@@ -117,3 +117,5 @@ Thumbs.db
 ## Plug-in
 /config/checkstyle/checkstyle.xml
 /core/.checkstyle
+
+config/
