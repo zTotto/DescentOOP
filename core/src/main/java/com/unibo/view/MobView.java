@@ -69,7 +69,7 @@ public class MobView extends CharacterView {
 	 * Sets the attack time to the input value.
 	 * 
 	 * @param attackTime New value
-	 */
+	 */	
 	public void setAttackTime(final float attackTime) {
 		this.attackTime = attackTime;
 	}
