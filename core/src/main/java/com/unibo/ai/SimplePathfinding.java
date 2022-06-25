@@ -22,25 +22,25 @@ public class SimplePathfinding implements Pathfinding {
     /**
      * Moves the mob given as a parameter according to a simple pathfinding
      * algorithm. The mob follows the player only if he's in sight.
+     * 
      * @param mob   Mobview
      * @param level LevelView
      * @param map   Map
      */
     public void moveMob(final MobView mob, final LevelView level, final DescentMap map) {
- 
+
         final float heroX = level.getHeroView().getCharacter().getPos().getxCoord();
         final float heroY = level.getHeroView().getCharacter().getPos().getyCoord();
         final float mobX = mob.getCharacter().getPos().getxCoord();
         final float mobY = mob.getCharacter().getPos().getyCoord();
         final Character mobChar = mob.getCharacter();
         final Position mobPos = mobChar.getPos();
-        
-        
-       if (!LineOfSight.isHeroSeen(mob, level, map)) {
-    	   simpleMove(mob);
-       }
 
-       else if (heroX > mobX) {
+        if (!LineOfSight.isHeroSeen(mob, level, map)) {
+            simpleMove(mob);
+        }
+
+        else if (heroX > mobX) {
             moveMob(mob, Direction.RIGHT);
             if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
                 moveMob(mob, Direction.UP);
@@ -81,23 +81,23 @@ public class SimplePathfinding implements Pathfinding {
             }
         }
     }
-    
-    private void simpleMove(MobView mob) {
-    	Movement move;
-    	if (mob.getMoveBuffer() <= 15) {
-			mob.increaseMoveBuffer();;
-			move = new Movement(mob.getDir());
-			move.executeCommand(mob);
-			return;
-			}
-		Direction newDir = Pathfinding.randomDirection();
-		move = new Movement(newDir);
-		move.executeCommand(mob);
-		mob.resetMoveBuffer();
-	}
-    
 
-	/**
+    private void simpleMove(MobView mob) {
+        Movement move;
+        if (mob.getMoveBuffer() <= 15) {
+            mob.increaseMoveBuffer();
+            ;
+            move = new Movement(mob.getDir());
+            move.executeCommand(mob);
+            return;
+        }
+        Direction newDir = Pathfinding.randomDirection();
+        move = new Movement(newDir);
+        move.executeCommand(mob);
+        mob.resetMoveBuffer();
+    }
+
+    /**
      * Getter for a specific layer in the TiledMap.
      * 
      * @param pos1 Starting position of a character
@@ -107,7 +107,7 @@ public class SimplePathfinding implements Pathfinding {
     private Boolean hasCharacterMoved(final Position pos1, final Position pos2) {
         return pos1 != pos2;
     }
-    
+
     /**
      * Method to move the mob in a certain direction.
      * 
