@@ -93,6 +93,7 @@ public class AudioManagerImpl implements AudioManager {
 	 * Sets the current song's volume and whether or not it's looping.
 	 * Should not be used if a song isn't already set.
 	 * 
+	 * @param path		the path of the song's file
 	 * @param looping	True if song needs to loop, false otherwise
 	 * @param volume	the volume of the song
 	 */

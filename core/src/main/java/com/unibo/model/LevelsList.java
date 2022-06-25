@@ -76,7 +76,7 @@ public final class LevelsList {
         String s = "\nLevelList: ";
         if (!this.getLevels().isEmpty()) {
             s += "total levels = " + this.getLevels().size() + ", current level = "
-                    + this.getLevels().indexOf(this.getCurrentLevel()) + 1;
+                    + (this.getLevels().indexOf(this.getCurrentLevel()) + 1);
         } else {
             s += "no levels";
         }

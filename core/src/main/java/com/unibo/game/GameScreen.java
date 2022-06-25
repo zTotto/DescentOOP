@@ -53,6 +53,9 @@ public class GameScreen implements Screen {
     private static final long EXP_TO_LVL_UP = 60;
     private static final double SPEED_MULTIPLIER = 0.75;
     private static final double TEN_PERCENT_MULTIPIER = 0.2;
+    private static final String ITEM_PICKUP_SOUND = "audio/sounds/itemPickUp.mp3";
+    private static final String MAP_CHANGE_SOUND = "audio/sounds/mapChange.mp3";
+    private static final float SOUND_VOLUME = 1.0f;
     private final Descent game;
     private final PauseMenu menu;
     private final SkillMenu skillMenu;
@@ -211,7 +214,7 @@ public class GameScreen implements Screen {
                     if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
                         if (this.lvlList.hasNextLevel()) {
                             this.currentLvl = this.lvlList.getNextLevel();
-
+                            audioManager.playSoundEffect(MAP_CHANGE_SOUND, SOUND_VOLUME);
                             Gdx.app.postRunnable(() -> {
                                 lvlView.updateLevel(currentLvl);
                                 renderer.getMap().dispose();
@@ -345,7 +348,9 @@ public class GameScreen implements Screen {
             }
 
             // Item pick up
-            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> t.executeCommand(heroView));
+            this.input.handleInput(KeyBindings.PICK_UP).ifPresent(t -> {t.executeCommand(heroView);
+            	audioManager.playSoundEffect(ITEM_PICKUP_SOUND, SOUND_VOLUME);
+            	});
 
             // Use Health potion
             this.input.handleInput(KeyBindings.USE_HEALTH_POTION).ifPresent(t -> t.executeCommand(heroView));
