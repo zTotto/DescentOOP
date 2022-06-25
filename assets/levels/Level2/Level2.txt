@@ -8,7 +8,7 @@ HealthPotionStats BASIC_HEALTH_POTION 1273,428
 HealthPotionStats MEDIUM_HEALTH_POTION 1164,606
 HealthPotionStats MEDIUM_HEALTH_POTION 1459,967
 HealthPotionStats MEDIUM_HEALTH_POTION 1459,950
-//ManaPotion 0.25 800,272
+ManaPotion 0.25 800,372
 Wearable HealthRing Hp:0.25 800,272
 DoorKey 215,815
 DoorPosition 798,638
