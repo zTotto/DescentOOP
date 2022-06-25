@@ -9,16 +9,25 @@ import com.unibo.model.items.Weapon;
 import com.unibo.util.Position;
 import com.unibo.util.WeaponStats;
 
+/**
+ * Class to test the weapons
+ */
 public class TestWeapons {
 
     private final Hero hero;
     private Weapon weapon;
 
+    /**
+     * Initialize the hero and the weapon in order to test the weapons
+     */
     public TestWeapons() {
         this.hero = new Hero("Tester", 100, 100, 100, 100);
         this.weapon = hero.getCurrentWeapon();
     }
     
+    /**
+     * Test the weapon "Fist"
+     */
     @Test
     public void testFists() {        
         assertEquals("Fists", weapon.getName());
@@ -35,6 +44,9 @@ public class TestWeapons {
         assertEquals(0, hero.getCurrentWeaponIndex());
     }
         
+    /**
+     * Test the weapon "Longsword" and "Greataxe"
+     */
     @Test
     public void testWeapons() {
         weapon = new Weapon(WeaponStats.LONGSWORD, "0");

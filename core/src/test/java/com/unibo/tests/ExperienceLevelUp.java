@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import com.unibo.model.Hero;
 
 /**
- * 
+ *  Class test for experience, leveling and skills of hero
  */
 public class ExperienceLevelUp {
     
@@ -17,6 +17,9 @@ public class ExperienceLevelUp {
         this.hero = new Hero("Test", 100, 200, 100, 60);
     }
     
+    /**
+     * Test the experience and leveling system of hero
+     */
     @Test
     public void testAddExperienceLevelUp()
     {
@@ -75,6 +78,9 @@ public class ExperienceLevelUp {
         
     }
     
+    /**
+     * Test if the hero can use the skill
+     */
     @Test
     public void testSkills() {
         this.hero = new Hero("TestSkill", 100, 200, 100, 60);

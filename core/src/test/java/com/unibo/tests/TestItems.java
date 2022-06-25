@@ -21,10 +21,16 @@ public class TestItems {
 
     private final Hero hero;
 
+    /**
+     * Initialize the hero
+     */
     public TestItems() {
         this.hero = new Hero("Tester", 100, 100, 100, 100);
     }
 
+    /**
+     * Test the basic health potion
+     */
     @Test
     public void testBasicHealthPotion() {
         final ConsumableItem healthPotion = new HealthPotion(HealthPotionStats.BASIC_HEALTH_POTION, "0");
@@ -50,6 +56,9 @@ public class TestItems {
         assertFalse(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
     }
     
+    /**
+     * Test the large health potion
+     */
     @Test
     public void testLargeHealthPotion() {
         final ConsumableItem healthPotion = new HealthPotion(HealthPotionStats.LARGE_HEALTH_POTION, "0");
@@ -64,6 +73,9 @@ public class TestItems {
         assertFalse(hero.getInv().getInv().contains(new Pair<>(healthPotion, 1)));
     }
     
+    /**
+     * Test the mana potion
+     */
     @Test
     public void testManaPotion() {
         final ConsumableItem manaPotion = new ManaPotion("Mana Potion", "0", 0.5);
@@ -87,6 +99,9 @@ public class TestItems {
         assertFalse(hero.getInv().getInv().contains(new Pair<>(manaPotion, 1)));
     }
 
+    /**
+     * Test the wearable items
+     */
     @Test
     public void testWearableItem() {
         WearableItem wearable = new WearableItem.Builder("Wearable", "0")
@@ -121,6 +136,9 @@ public class TestItems {
 
     }
     
+    /**
+     * Test the builder of the wearable items
+     */
     @Test
     public void testWearableItemBuilder() {
         assertThrows(IllegalStateException.class, () -> new WearableItem.Builder("Wearable", "0")
