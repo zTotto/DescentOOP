@@ -2,7 +2,6 @@ package com.unibo.maps;
 
 import java.util.Optional;
 
-import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -80,7 +79,15 @@ public class DescentMapImpl implements DescentMap {
                         charView.getCharacter().getPos().getyCoord()), specialTilesLayer, TileAction.DAMAGE);
     }
     
-  
+    /**
+     * 
+     * 
+     * @param charView the characterView of the character that's on top of the tile
+     * @param pos Position of the character
+     * @param layer the layer whose polygons we're checking
+     * @param action	the TileAction we're checking of
+     * @return true if the character can't move there, false otherwise
+     */
     private Boolean polyScanner(final CharacterView charView, final Position pos, final MapLayer layer,
             final TileAction action) {
         Polygon poly = getProjectedCharacterPolygon(charView, pos);

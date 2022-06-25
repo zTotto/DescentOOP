@@ -9,7 +9,7 @@ import com.unibo.model.Mob;
  * Mob's view class.
  */
 public class MobView extends CharacterView {
-	private int moveBuffer = 0;
+	private int moveBuffer = 0; 
 	private float attackTime = 0;
 	private static final String DEFAULT_ATTACK_SOUND_PATH = "audio/sounds/KnifeStab.mp3";
 	private final Pathfinding pathfinding = new SimplePathfinding();

@@ -9,7 +9,7 @@ import com.unibo.view.CharacterView;
 import com.unibo.util.Position;
 
 /**
- * Interface for a map.
+ * Interface for a map created with Tiled
  */
 public interface DescentMap {
     /**
@@ -103,7 +103,7 @@ public interface DescentMap {
     
     /**
      * Setter for the path to the background song of the map.
-     * @param path	a String with the song's file path
+     * @param path a String with the song's file path
      */
      void setBackgroundSong(String path);
 }

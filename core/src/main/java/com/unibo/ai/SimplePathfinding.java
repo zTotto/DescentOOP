@@ -1,12 +1,10 @@
 package com.unibo.ai;
 
-import com.badlogic.gdx.Gdx;
 import com.unibo.maps.DescentMap;
 import com.unibo.model.Character;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
-import com.unibo.view.CharacterView;
 import com.unibo.view.LevelView;
 import com.unibo.view.MobView;
 
@@ -41,14 +39,14 @@ public class SimplePathfinding implements Pathfinding {
        }
 
        else if (heroX > mobX) {
-            moveMob(mob, Direction.RIGHT);
+            move(mob, Direction.RIGHT);
             if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.UP);
+                move(mob, Direction.UP);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
                     unstuckMob(mob, map);
                 }
             } else if (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.DOWN);
+                move(mob, Direction.DOWN);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
                     unstuckMob(mob, map);
                 }
@@ -56,14 +54,14 @@ public class SimplePathfinding implements Pathfinding {
                 unstuckMob(mob, map);
             }
         } else if (heroX < mobX) {
-            moveMob(mob, Direction.LEFT);
+            move(mob, Direction.LEFT);
             if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.UP);
+                move(mob, Direction.UP);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
                     unstuckMob(mob, map);
                 }
             } else if (heroY < mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
-                moveMob(mob, Direction.DOWN);
+                move(mob, Direction.DOWN);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
                     unstuckMob(mob, map);
                 }
@@ -72,9 +70,9 @@ public class SimplePathfinding implements Pathfinding {
             }
         } else {
             if (heroY > mobY) {
-                moveMob(mob, Direction.UP);
+                move(mob, Direction.UP);
             } else if (heroY < mobY) {
-                moveMob(mob, Direction.DOWN);
+                move(mob, Direction.DOWN);
             }
             if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
                 unstuckMob(mob, map);
@@ -82,6 +80,10 @@ public class SimplePathfinding implements Pathfinding {
         }
     }
     
+    /**
+     * Method to move the mob when hero is not in sight.
+     * @param mob Mobview of the mob.
+     */
     private void simpleMove(MobView mob) {
     	Movement move;
     	if (mob.getMoveBuffer() <= 15) {
@@ -114,7 +116,7 @@ public class SimplePathfinding implements Pathfinding {
      * @param mob Mobview of the mob we want to move
      * @param dir Direction in which to move it
      */
-    private void moveMob(final MobView mob, final Direction dir) {
+    private void move(final MobView mob, final Direction dir) {
         final Movement move = new Movement(dir);
         move.executeCommand(mob);
     }
@@ -130,7 +132,7 @@ public class SimplePathfinding implements Pathfinding {
         final Position startPos = new Position(mob.getCharacter().getPos());
         Position newPos;
         do {
-            moveMob(mob, Pathfinding.randomDirection());
+            move(mob, Pathfinding.randomDirection());
             newPos = mob.getCharacter().getPos();
         } while (newPos == startPos);
     }
