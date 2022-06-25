@@ -147,7 +147,9 @@ public class DescentMapImpl implements DescentMap {
         return Optional.ofNullable(teleportLayer);
     }
 
-    @Override
+    /**
+     * @return an Optional of the layer that holds tiles with special effects
+     */
     public Optional<MapLayer> getSpecialTilesLayer() {
         return Optional.ofNullable(specialTilesLayer);
     }

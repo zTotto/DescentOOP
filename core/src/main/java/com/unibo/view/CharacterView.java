@@ -38,6 +38,7 @@ public abstract class CharacterView {
      * @param character
      * @param texturePath     path of the character movement animation
      * @param attackSoundPath path of the attack sound
+     * @param manager	audiomanager for the character
      */
     public CharacterView(final Character character, final String texturePath, final String attackSoundPath, final AudioManager manager) {
         this.character = character;

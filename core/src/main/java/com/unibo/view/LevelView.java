@@ -25,6 +25,7 @@ public class LevelView {
 
     /**
      * @param level Level from where to get the items and characters
+     * @param audioManager	audiomanager for the levelview
      */
     public LevelView(final Level level, final AudioManager audioManager) {
         this.itemTextures = new LinkedList<>();

@@ -203,7 +203,6 @@ public class Hero extends Character {
             this.incrementLevel();
             this.increaseExpToLevelUp();
             this.increaseStats();
-            
             if (this.isExpEnough()) {
                 this.levelUp();
             }
