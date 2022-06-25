@@ -1,5 +1,6 @@
 package com.unibo.ai;
 
+import com.badlogic.gdx.Gdx;
 import com.unibo.maps.DescentMap;
 import com.unibo.model.Character;
 import com.unibo.model.Movement;
@@ -19,13 +20,13 @@ public class SimplePathfinding implements Pathfinding {
 
     /**
      * Moves the mob given as a parameter according to a simple pathfinding
-     * algorithm. The mob follows the player only he's in sight.
+     * algorithm. The mob follows the player only if he's in sight.
      * @param mob   Mobview
      * @param level LevelView
      * @param map   Map
      */
     public void moveMob(final MobView mob, final LevelView level, final DescentMap map) {
-
+ 
         final float heroX = level.getHeroView().getCharacter().getPos().getxCoord();
         final float heroY = level.getHeroView().getCharacter().getPos().getyCoord();
         final float mobX = mob.getCharacter().getPos().getxCoord();
@@ -74,7 +75,6 @@ public class SimplePathfinding implements Pathfinding {
             }
         }
     }
-
 
     /**
      * Getter for a specific layer in the TiledMap.
