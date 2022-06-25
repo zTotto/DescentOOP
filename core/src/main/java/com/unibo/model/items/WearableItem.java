@@ -41,6 +41,7 @@ public class WearableItem extends Item {
     public void wear(final Character pg) {
         if (this.health.isPresent()) {
             pg.setMaxHp(pg.getMaxHp() + (int) (pg.getMaxHp() * this.health.get()));
+            pg.setCurrentHp(pg.getMaxHp());
         }
         if (this.power.isPresent()) {
             final Weapon weapon = pg.getCurrentWeapon();

@@ -31,6 +31,7 @@ public class ManaPotion extends ConsumableItem {
     @Override
     public void use(final Character pg) {
         pg.setMaxMana((int) (pg.getMaxMana() + this.getModifier() * pg.getMaxMana()));
+        pg.setCurrentMana(pg.getMaxMana());
     }
 
     /**

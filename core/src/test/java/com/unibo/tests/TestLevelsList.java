@@ -1,3 +1,4 @@
+package com.unibo.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.LinkedList;
