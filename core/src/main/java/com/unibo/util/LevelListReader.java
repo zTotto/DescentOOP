@@ -29,8 +29,8 @@ public class LevelListReader {
         lvlList = new LinkedList<>();
         errorList = new LinkedList<>();
         this.file = file;
-        final List<String> levelLines = Arrays.asList(file.child("LevelList.txt").readString().split("\\r?\\n")).stream()
-                .filter(l -> !l.contains("//")).collect(Collectors.toList());
+        final List<String> levelLines = Arrays.asList(file.child("LevelList.txt").readString().split("\\r?\\n"))
+                .stream().filter(l -> !l.contains("//")).collect(Collectors.toList());
         for (final String s : levelLines) {
             try {
                 loadLevel(s, isFileExt);
