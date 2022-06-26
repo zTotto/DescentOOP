@@ -1,12 +1,10 @@
 package com.unibo.ai;
 
-import com.badlogic.gdx.Gdx;
 import com.unibo.maps.DescentMap;
 import com.unibo.model.Character;
 import com.unibo.model.Movement;
 import com.unibo.util.Direction;
 import com.unibo.util.Position;
-import com.unibo.view.CharacterView;
 import com.unibo.view.LevelView;
 import com.unibo.view.MobView;
 
@@ -38,10 +36,16 @@ public class SimplePathfinding implements Pathfinding {
 
         if (!LineOfSight.isHeroSeen(mob, level, map)) {
             simpleMove(mob);
-        }
-
-        else if (heroX > mobX) {
+            mob.setAnimDir(mob.getDir());
+        } else if (heroX > mobX) {
             moveMob(mob, Direction.RIGHT);
+            if (heroX - mobX > Math.abs(heroY - mobY)) {
+                mob.setAnimDir(Direction.RIGHT);
+            } else if (heroY > mobY) {
+                mob.setAnimDir(Direction.UP);
+            } else {
+                mob.setAnimDir(Direction.DOWN);
+            }
             if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
                 moveMob(mob, Direction.UP);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {
@@ -57,6 +61,13 @@ public class SimplePathfinding implements Pathfinding {
             }
         } else if (heroX < mobX) {
             moveMob(mob, Direction.LEFT);
+            if (mobX - heroX > Math.abs(heroY - mobY)) {
+                mob.setAnimDir(Direction.LEFT);
+            } else if (heroY > mobY) {
+                mob.setAnimDir(Direction.UP);
+            } else {
+                mob.setAnimDir(Direction.DOWN);
+            }
             if (heroY > mobY && !hasCharacterMoved(mobPos, mobChar.getPos())) {
                 moveMob(mob, Direction.UP);
                 if (!hasCharacterMoved(mobPos, mobChar.getPos())) {

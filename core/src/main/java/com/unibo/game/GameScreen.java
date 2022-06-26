@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,12 +12,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.unibo.ai.LineOfSight;
 import com.unibo.audio.AudioManagerImpl;
 import com.unibo.keybindings.InputHandler;
 import com.unibo.keybindings.KeyBindings;
@@ -153,7 +150,7 @@ public class GameScreen implements Screen {
         lvlView.setHeroView(heroView);
 //        lvlView.getMobTextures().forEach(x -> x.getCharacter().            //imposta la mappa per ogni mob
 //        		setCurrentMap(currentLvl.getMap().getFirst()));
-        
+
         this.skillMenu = new SkillMenu(this, heroView.getCharacter());
         this.skillMenu.getMenu().setVisible(true);
 
@@ -213,7 +210,7 @@ public class GameScreen implements Screen {
                     this.isPaused = false;
                 }).addCommand(KeyBindings.USE_KEY, t -> {
                     if (((Hero) t.getCharacter()).canOpenDoor(this.currentLvl.getDoorPosition())) {
-                    	audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
+                        audioManager.stopMusic(currentLvl.getMap().getFirst().getBackgroundSong());
                         if (this.lvlList.hasNextLevel()) {
                             this.currentLvl = this.lvlList.getNextLevel();
                             audioManager.playSoundEffect(MAP_CHANGE_SOUND, SOUND_VOLUME);
@@ -302,19 +299,19 @@ public class GameScreen implements Screen {
         int barIndex = 0;
         for (final MobView m : lvlView.getMobTextures()) {
             if (m.getIsAttacking()) {
-                batch.draw(m.getAttackFrame(m.getAttackTime(), m.getDir()),
+                batch.draw(m.getAttackFrame(m.getAttackTime(), m.getAnimDir()),
                         m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                         m.getCharacter().getPos().getyCoord());
 
                 // Attack Time
                 m.setAttackTime(m.getAttackTime() + Gdx.graphics.getDeltaTime());
 
-                if (m.getAttackAnim(m.getDir()).isAnimationFinished(m.getAttackTime())) {
+                if (m.getAttackAnim(m.getAnimDir()).isAnimationFinished(m.getAttackTime())) {
                     m.setIsAttacking(false);
                     m.setAttackTime(0);
                 }
             } else {
-                batch.draw(m.getAnimFromDir(m.getDir(), elapsedTime),
+                batch.draw(m.getAnimFromDir(m.getAnimDir(), elapsedTime),
                         m.getCharacter().getPos().getxCoord() - (int) (m.getWidth() / 2),
                         m.getCharacter().getPos().getyCoord());
             }
@@ -421,10 +418,10 @@ public class GameScreen implements Screen {
             elapsedTime += Gdx.graphics.getDeltaTime();
 
             heroView.move();
-            
+
             lvlView.getMobTextures().forEach(x -> x.getCharacter().setCurrentMap(currentLvl.getMap().getFirst()));
             lvlView.getMobTextures().forEach(x -> x.update(lvlView, currentLvl));
-            //Draws line of sights for debugging
+            // Draws line of sights for debugging
 //            for (final MobView mob : lvlView.getMobTextures()) {
 //            	mob.getCharacter().setCurrentMap(currentLvl.getMap().getFirst());
 //                mob.update(lvlView, currentLvl);
