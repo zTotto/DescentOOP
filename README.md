@@ -9,6 +9,7 @@ Collect items and key with E and press K on the door to go to the next level
 Press T to open the skill menu  
 Press A to heal yourself and hold SHIFT to run faster (once you level up enough)  
 Use Health Potions with F, Mana Potions with M  
+Equip items with W
 
 ### Credits 
 #### Sound Effects:  
