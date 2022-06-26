@@ -3,17 +3,22 @@
 ## Made by: Corrado Stortini, Francesco Carlucci, Jonathan Lupini, Lorenzo Todisco
 
 ### Instructions
-Move with directional arrows
-Attack with SPACE
-Collect keys with E and press K on the door to go to the next level
-Press T to see the skill menu
-Use HealthPotions with F, ManaPotion with M
+Move with directional arrows  
+Attack with SPACE  
+Collect items and key with E and press K on the door to go to the next level  
+Press T to open the skill menu  
+Press A to heal yourself and hold SHIFT to run faster (once you level up enough)  
+Use Health Potions with F, Mana Potions with M  
 
 ### Credits 
-Terraria, sound effect della camminata
-Item pickup, counterstrike 1.6 della Valve
+#### Sound Effects:  
+Terraria, Walking sound  
+Counter Strike 1.6 (Valve), Item pickup  
 
-Canzoni:
-Livello 1: spirited away dello studio ghibli
-Livello 2 : DanMachi dello studio C.Staff
-Livello 3: Kingdom hearts 2 della square enix
+#### Songs:  
+Level 1: Spirited Away,Studio Ghibli  
+Level 2 : DanMachi, J.C.Staff Studio  
+Level 3: Kingdom hearts 2, uare Enix  
+
+#### Character and Items Sprites:  
+Special thanks to [**Giusy**](https://www.instagram.com/giusy.hri/)
