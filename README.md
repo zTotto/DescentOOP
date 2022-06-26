@@ -19,7 +19,7 @@ Counter Strike 1.6 (Valve), Item pickup
 #### Songs:  
 Level 1: Spirited Away,Studio Ghibli  
 Level 2 : DanMachi, J.C.Staff Studio  
-Level 3: Kingdom hearts 2, uare Enix  
+Level 3: Kingdom hearts 2, Square Enix  
 
 #### Character and Items Sprites:  
 Special thanks to [**Giusy**](https://www.instagram.com/giusy.hri/)
